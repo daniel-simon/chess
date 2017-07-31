@@ -1,4 +1,4 @@
-<h1>Login to your account</h1>
+<h1>Log in</h1>
 
 <%= form_for :user, url: '/users' do |f| %>
   <div class="field">
@@ -13,5 +13,5 @@
     %>
   </div>
   <%= f.submit "Log in", class: "button" %>
-  <%= button_to "Create an account", new_user_path, class: "button secondary" %>
+  <%= link_to "Sign Up", new_user_path, class: "button secondary" %>
 <% end %>

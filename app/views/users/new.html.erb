@@ -1,6 +1,6 @@
 <h1>Create your account</h1>
 
-<%= form_for :user, url: '/users' do |f| %>
+<%= form_for @user do |f| %>
 
   <div class="field">
     <%= f.text_field :username,
@@ -25,7 +25,7 @@
       placeholder: 'Confirm Password'
     %>
   </div>
-  <%= f.submit "Create account", class: "button" %>
-  <%= link_to "Login page", new_session_path, class: "button secondary" %>
+  <%= f.submit "Sign Up", class: "button" %>
+  <%= link_to "Log in", new_session_path, class: "button secondary" %>
 
 <% end %>
