@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for containers/BoardInterface.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">containers/</a> BoardInterface.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">31.08% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>46/148</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">38.27% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>31/81</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">77.27% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>17/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">8.74% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>9/103</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">7 statements, 11 functions, 16 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { Component } from 'react'
+import Square from '../components/Square'
+let getLegalSquares = require('../helpers/GetLegalSquares.js')
+let castleHelper = require('../helpers/CastleHelper.js')
+let gameConstants = require('../helpers/GameConstants.js')
+let squareMethods = require('../helpers/SquareMethods.js')
+let myColor = 'white'
+&nbsp;
+class BoardInterface extends Component {
+<span class="fstat-no" title="function not covered" >  constructor (props) <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >{</span></span></span></span>
+    super(props)
+<span class="cstat-no" title="statement not covered" >    t</span>his.state = {
+      selectedSquare: [],
+      availableSquares: [],
+      availableCastlingRooks: [],
+      activeColor: 'white'
+    }
+<span class="cstat-no" title="statement not covered" >    t</span>his.selectPiece = this.selectPiece.bind(this)
+<span class="cstat-no" title="statement not covered" >    t</span>his.selectDestinationAndMovePiece = this.selectDestinationAndMovePiece.bind(this)
+<span class="cstat-no" title="statement not covered" >    t</span>his.castleWithRook = this.castleWithRook.bind(this)
+<span class="cstat-no" title="statement not covered" >    t</span>his.clearSelection = this.clearSelection.bind(this)
+  }
+&nbsp;
+  selectPiece (col, row) {
+<span class="cstat-no" title="statement not covered" >    l</span>et player = this.state.activeColor
+<span class="cstat-no" title="statement not covered" >    l</span>et pieceSelected = this.props.boardState[col][row]
+<span class="cstat-no" title="statement not covered" >    l</span>et moveHistory = this.props.moveHistory
+<span class="cstat-no" title="statement not covered" >    l</span>et availableSquares = getLegalSquares.forPiece(col, row, this.props.boardState)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    l</span>et castlingRooks = []
+<span class="cstat-no" title="statement not covered" >    if (</span>
+      pieceSelected.type === 'king' &amp;&amp;
+      castleHelper.kingHasNotMoved(moveHistory, player)
+    ) {
+<span class="cstat-no" title="statement not covered" >        c</span>astlingRooks = castleHelper.getAvailableCastlingRooks(moveHistory, player, this.props.boardState)
+    }
+<span class="cstat-no" title="statement not covered" >    t</span>his.setState({
+      selectedSquare: [col, row],
+      availableSquares: availableSquares,
+      availableCastlingRooks: castlingRooks
+    })
+  }
+&nbsp;
+  selectDestinationAndMovePiece (col, row) {
+<span class="cstat-no" title="statement not covered" >    l</span>et origin = this.state.selectedSquare
+<span class="cstat-no" title="statement not covered" >    l</span>et destination = [col, row]
+<span class="cstat-no" title="statement not covered" >    l</span>et newMove = {
+      origin: origin,
+      destination: destination,
+      player: this.state.activeColor,
+      castle: false
+    }
+<span class="cstat-no" title="statement not covered" >    t</span>his.props.recordMove(newMove)
+<span class="cstat-no" title="statement not covered" >    t</span>his.props.movePiece(origin, destination)
+<span class="cstat-no" title="statement not covered" >    t</span>his.endTurn()
+  }
+&nbsp;
+  castleWithRook (col, row) {
+<span class="cstat-no" title="statement not covered" >    l</span>et side
+<span class="cstat-no" title="statement not covered" >    if (col === 7) {</span>
+<span class="cstat-no" title="statement not covered" >      s</span>ide = 'kingside'
+    } else <span class="cstat-no" title="statement not covered" >if (col === 0) {</span>
+<span class="cstat-no" title="statement not covered" >      s</span>ide = 'queenside'
+    }
+<span class="cstat-no" title="statement not covered" >    l</span>et player = this.state.activeColor
+<span class="cstat-no" title="statement not covered" >    l</span>et homeRow = gameConstants.firstRowFor(player)
+<span class="cstat-no" title="statement not covered" >    l</span>et kingToCol = gameConstants.castleDestinationFor('king', side)
+<span class="cstat-no" title="statement not covered" >    l</span>et rookToCol = gameConstants.castleDestinationFor('rook', side)
+<span class="cstat-no" title="statement not covered" >    let kingFromCol = 4 //no hardcoding</span>
+<span class="cstat-no" title="statement not covered" >    l</span>et rookFromCol = col
+<span class="cstat-no" title="statement not covered" >    l</span>et kingOrigin = [kingFromCol, homeRow]
+<span class="cstat-no" title="statement not covered" >    l</span>et rookOrigin = [rookFromCol, homeRow]
+<span class="cstat-no" title="statement not covered" >    l</span>et kingDestination = [kingToCol, homeRow]
+<span class="cstat-no" title="statement not covered" >    l</span>et rookDestination = [rookToCol, homeRow]
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    l</span>et newMove = {
+      origin: kingOrigin,
+      destination: kingDestination,
+      player: this.state.activeColor,
+      castle: true
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    t</span>his.props.recordMove(newMove)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    t</span>his.props.movePiece(kingOrigin, kingDestination)
+<span class="cstat-no" title="statement not covered" >    t</span>his.props.movePiece(rookOrigin, rookDestination)
+<span class="cstat-no" title="statement not covered" >    t</span>his.endTurn()
+  }
+&nbsp;
+  endTurn() {
+<span class="cstat-no" title="statement not covered" >    l</span>et nextPlayer = (this.state.activeColor === 'white') ? 'black' : 'white'
+<span class="cstat-no" title="statement not covered" >    t</span>his.clearSelection()
+<span class="cstat-no" title="statement not covered" >    t</span>his.setState({ activeColor: nextPlayer })
+  }
+&nbsp;
+  clearSelection() {
+<span class="cstat-no" title="statement not covered" >    t</span>his.setState({
+      selectedSquare: [],
+      availableSquares: [],
+      availableCastlingRooks: []
+    })
+  }
+&nbsp;
+  renderSquare (col, row) <span class="cstat-no" title="statement not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >    l</span>et occupant = this.props.boardState[col][row]
+<span class="cstat-no" title="statement not covered" >    l</span>et currentSquare = [col, row]
+<span class="cstat-no" title="statement not covered" >    l</span>et selected = false
+<span class="cstat-no" title="statement not covered" >    l</span>et available = false
+<span class="cstat-no" title="statement not covered" >    l</span>et victim = false
+<span class="cstat-no" title="statement not covered" >    l</span>et castlingRook = false
+<span class="cstat-no" title="statement not covered" >    if (squareMethods.sameSquare(this.state.selectedSquare, currentSquare)) {</span>
+<span class="cstat-no" title="statement not covered" >      s</span>elected = true
+    } else <span class="cstat-no" title="statement not covered" >if (squareMethods.includesSquare(this.state.availableSquares, currentSquare)) {</span>
+<span class="cstat-no" title="statement not covered" >      a</span>vailable = true
+<span class="cstat-no" title="statement not covered" >      if (occupant) <span class="cstat-no" title="statement not covered" >v</span></span>ictim = true
+    } else <span class="cstat-no" title="statement not covered" >if (squareMethods.includesSquare(this.state.availableCastlingRooks, currentSquare)) {</span>
+<span class="cstat-no" title="statement not covered" >      a</span>vailable = true
+<span class="cstat-no" title="statement not covered" >      c</span>astlingRook = true
+    }
+<span class="cstat-no" title="statement not covered" >    l</span>et selectable
+<span class="cstat-no" title="statement not covered" >    l</span>et handleClick
+<span class="cstat-no" title="statement not covered" >    if (!selected &amp;&amp; !castlingRook &amp;&amp; occupant &amp;&amp; occupant.color === this.state.activeColor) {</span>
+<span class="cstat-no" title="statement not covered" >      h</span>andleClick = <span class="fstat-no" title="function not covered" >() =&gt; {</span> <span class="cstat-no" title="statement not covered" >t</span>his.selectPiece(...currentSquare) }
+<span class="cstat-no" title="statement not covered" >      s</span>electable = true
+    } else <span class="cstat-no" title="statement not covered" >if (available) {</span>
+<span class="cstat-no" title="statement not covered" >      l</span>et moveToMe = <span class="fstat-no" title="function not covered" >() =&gt; {</span> <span class="cstat-no" title="statement not covered" >t</span>his.selectDestinationAndMovePiece(...currentSquare) }
+<span class="cstat-no" title="statement not covered" >      l</span>et castleWithMe = <span class="fstat-no" title="function not covered" >() =&gt; {</span> <span class="cstat-no" title="statement not covered" >t</span>his.castleWithRook(...currentSquare) }
+<span class="cstat-no" title="statement not covered" >      h</span>andleClick = castlingRook ? castleWithMe : moveToMe
+<span class="cstat-no" title="statement not covered" >      s</span>electable = true
+    } else {
+<span class="cstat-no" title="statement not covered" >      h</span>andleClick = <span class="fstat-no" title="function not covered" >() =&gt; {</span> <span class="cstat-no" title="statement not covered" >t</span>his.clearSelection() }
+<span class="cstat-no" title="statement not covered" >      s</span>electable = false
+    }
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (
+      &lt;Square
+        key={col}
+        col={col}
+        row={row}
+        occupant={occupant}
+        handleClick={handleClick}
+        selected={selected}
+        selectable={selectable}
+        available={available}
+        victim={victim}
+        pieceSet={this.props.pieceSet}
+        asViewedBy={myColor}
+      /&gt;
+    )
+  }
+&nbsp;
+  renderRow (row) {
+    // let myColor = this.state.activeColor
+<span class="cstat-no" title="statement not covered" >    l</span>et rowSquares = []
+<span class="cstat-no" title="statement not covered" >    l</span>et cssBorderClass = 'chess-row'
+    //TODO: label row and col names
+    // maybe for labeling rows/cols on the board?:
+    // let colName
+    // let colLetters = "ABCDEFGH"
+    // let colName = colLetters.charAt(col)
+<span class="cstat-no" title="statement not covered" >    l</span>et colStep = (myColor === 'white') ? 1 : -1
+<span class="cstat-no" title="statement not covered" >    l</span>et startCol = (myColor === 'white') ? 0 : 7
+<span class="cstat-no" title="statement not covered" >    l</span>et endCol = (myColor === 'white') ? 7 : 0
+<span class="cstat-no" title="statement not covered" >    l</span>et topRow = (myColor === 'white') ? 7 : 0
+<span class="cstat-no" title="statement not covered" >    l</span>et bottomRow = (myColor === 'white') ? 0 : 7
+<span class="cstat-no" title="statement not covered" >    for (let col = startCol; col !== endCol + colStep; col += colStep) {</span>
+<span class="cstat-no" title="statement not covered" >      r</span>owSquares.push(this.renderSquare(col, row))
+    }
+<span class="cstat-no" title="statement not covered" >    if (row === topRow) {</span>
+<span class="cstat-no" title="statement not covered" >      c</span>ssBorderClass += ' top'
+    }
+<span class="cstat-no" title="statement not covered" >    if (row === bottomRow) {</span>
+<span class="cstat-no" title="statement not covered" >      c</span>ssBorderClass += ' bottom'
+    }
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (
+      &lt;div key={row} className={`${cssBorderClass} row`}&gt;
+        {/* TODO: row labels **COULD** go here? */}
+        {rowSquares}
+      &lt;/div&gt;
+    )
+  }
+&nbsp;
+  renderGrid () {
+    // let myColor = this.state.activeColor
+<span class="cstat-no" title="statement not covered" >    l</span>et gridRows = []
+<span class="cstat-no" title="statement not covered" >    l</span>et rowStep = (myColor === 'white') ? -1 : 1
+<span class="cstat-no" title="statement not covered" >    l</span>et startRow = (myColor === 'white') ? 7 : 0
+<span class="cstat-no" title="statement not covered" >    l</span>et endRow = (myColor === 'white') ? 0 : 7
+<span class="cstat-no" title="statement not covered" >    for (let row = startRow; row !== endRow + rowStep; row += rowStep) {</span>
+<span class="cstat-no" title="statement not covered" >      g</span>ridRows.push(this.renderRow(row))
+    }
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (
+      &lt;div className="chess-board"&gt;
+        {gridRows}
+      &lt;/div&gt;
+    )
+  }
+&nbsp;
+  render () {
+<span class="cstat-no" title="statement not covered" >    l</span>et chessBoard = this.renderGrid()
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (
+      &lt;div&gt;
+        {chessBoard}
+      &lt;/div&gt;
+    )
+  }
+}
+&nbsp;
+export default BoardInterface
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jul 30 2017 20:44:59 GMT-0400 (EDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

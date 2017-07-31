@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for helpers/PieceMoves.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">helpers/</a> PieceMoves.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>144/144</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>34/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>21/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>112/112</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">20 statements, 1 function, 13 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">202×</span>
+<span class="cline-any cline-yes">202×</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-yes">376×</span>
+<span class="cline-any cline-yes">376×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">43×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">236×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">239×</span>
+<span class="cline-any cline-yes">239×</span>
+<span class="cline-any cline-yes">239×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">239×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">239×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">287×</span>
+<span class="cline-any cline-yes">287×</span>
+<span class="cline-any cline-yes">861×</span>
+<span class="cline-any cline-yes">2583×</span>
+<span class="cline-any cline-yes">2583×</span>
+<span class="cline-any cline-yes">2296×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">287×</span>
+<span class="cline-any cline-yes">287×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">287×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-yes">726×</span>
+<span class="cline-any cline-yes">1452×</span>
+<span class="cline-any cline-yes">1452×</span>
+<span class="cline-any cline-yes">1452×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">263×</span>
+<span class="cline-any cline-yes">263×</span>
+<span class="cline-any cline-yes">263×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">263×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">2714×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">2123×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">2588×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-yes">2249×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">691×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">1921×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">2090×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">1921×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">2090×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-yes">2292×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">573×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3181×</span>
+<span class="cline-any cline-yes">13700×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3181×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5200×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5200×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">650×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1264×</span>
+<span class="cline-any cline-yes">1264×</span>
+<span class="cline-any cline-yes">1264×</span>
+<span class="cline-any cline-yes">5056×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1264×</span>
+<span class="cline-any cline-yes">5056×</span>
+<span class="cline-any cline-yes">11669×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1264×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5056×</span>
+<span class="cline-any cline-yes">11669×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11669×</span>
+<span class="cline-any cline-yes">11669×</span>
+<span class="cline-any cline-yes">1261×</span>
+<span class="cline-any cline-yes">1261×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5056×</span>
+<span class="cline-any cline-yes">5056×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">let gameConstants = require('./GameConstants.js')
+&nbsp;
+let pieceMoves = {
+&nbsp;
+  pawn (color, col, row, boardState, lastMove) {
+    let availableSquares = []
+    let homeRow = gameConstants.secondRowFor(color)
+    let rowStep = gameConstants.forwardStepFor(color)
+    let nextRow = row + rowStep
+&nbsp;
+    if (boardState[col][nextRow] == null) {
+      availableSquares.push([col, nextRow])
+      if (row === homeRow &amp;&amp; boardState[col][nextRow + rowStep] == null) {
+        availableSquares.push([col, nextRow + rowStep])
+      }
+    }
+&nbsp;
+    let diagonals = this.pawnDiagonals(color, col, row, boardState)
+    diagonals.forEach(square =&gt; {
+      let occupant = boardState[square[0]][square[1]]
+      if (occupant &amp;&amp; occupant.color !== color) {
+        // TODO: or if the last move was an enemy pawn jumping this square
+        availableSquares.push(square)
+      }
+    })
+    return availableSquares
+  },
+&nbsp;
+  pawnDiagonals (color, col, row, boardState) {
+    let rowStep = gameConstants.forwardStepFor(color)
+    let nextRow = row + rowStep
+    let diagonals = [
+      [col - 1, nextRow],
+      [col + 1, nextRow]
+    ]
+    let attackedSquares = this.filterSquaresOutsideBoard(diagonals)
+&nbsp;
+    return attackedSquares
+  },
+&nbsp;
+  king (color, col, row, boardState) {
+    let translations = []
+    for (let rowShift of [-1, 0, 1]) {
+      for (let colShift of [-1, 0, 1]) {
+        if (colShift !== 0 || rowShift !== 0) {
+          translations.push([colShift, rowShift])
+        }
+      }
+    }
+    let possibleSquares = this.convertRelativeToAbsolute(translations, col, row)
+    let squaresWithinBoard = this.filterSquaresOutsideBoard(possibleSquares)
+&nbsp;
+    return squaresWithinBoard
+  },
+&nbsp;
+  knight (color, col, row, boardState) {
+    let translations = []
+    for (let xSign of [-1, 1]) {
+      for (let ySign of [-1, 1]) {
+        translations.push([2 * xSign, ySign])
+        translations.push([xSign, 2 * ySign])
+      }
+    }
+    let possibleSquares = this.convertRelativeToAbsolute(translations, col, row)
+    let squaresWithinBoard = this.filterSquaresOutsideBoard(possibleSquares)
+&nbsp;
+    return squaresWithinBoard
+  },
+&nbsp;
+  queen (color, col, row, boardState) {
+    let rookSquares = this.rook(color, col, row, boardState)
+    let bishopSquares = this.bishop(color, col, row, boardState)
+    let availableSquares = rookSquares.concat(bishopSquares)
+&nbsp;
+    return availableSquares
+  },
+&nbsp;
+  rook (color, col, row, boardState) {
+    let possibleRow, possibleCol
+    let newLane = []
+    let outwardLanes = []
+    for (possibleRow = row - 1 ; possibleRow &gt;= 0; possibleRow--) {
+      newLane.push([col, possibleRow])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (possibleRow = row + 1; possibleRow &lt;= 7; possibleRow++) {
+      newLane.push([col, possibleRow])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (possibleCol = col - 1; possibleCol &gt;= 0; possibleCol--) {
+      newLane.push([possibleCol, row])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (possibleCol = col + 1; possibleCol &lt;= 7; possibleCol++) {
+      newLane.push([possibleCol, row])
+    }
+    outwardLanes.push(newLane)
+&nbsp;
+    let possibleSquares = this.getSquaresFromLanes(outwardLanes, boardState)
+&nbsp;
+    return possibleSquares
+  },
+&nbsp;
+  bishop (color, col, row, boardState) {
+    let index
+    let diagLanePlus = row + col
+    let diagLaneMinus = row - col
+    let outwardLanes = []
+    let newLane = []
+    for (index = col - 1; index &gt;= 0; index--) {
+      newLane.push([index, diagLanePlus - index])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (index = col + 1; index &lt;= 7; index++) {
+      newLane.push([index, diagLanePlus - index])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (index = col - 1; index &gt;= 0; index--) {
+      newLane.push([index, index + diagLaneMinus])
+    }
+    outwardLanes.push(newLane)
+    newLane = []
+    for (index = col + 1; index &lt;= 7; index++) {
+      newLane.push([index, index + diagLaneMinus])
+    }
+    outwardLanes.push(newLane)
+&nbsp;
+    outwardLanes = outwardLanes.map(lane =&gt; {
+      return this.filterSquaresOutsideBoard(lane)
+    })
+&nbsp;
+    let possibleSquares = this.getSquaresFromLanes(outwardLanes, boardState)
+&nbsp;
+    return possibleSquares
+  },
+&nbsp;
+  //helper methods below
+&nbsp;
+  filterSquaresOutsideBoard (possibleSquares) {
+    let squaresWithinBoard = possibleSquares.filter(coords =&gt; {
+      return (
+        coords[0] &gt;= 0 &amp;&amp;
+        coords[0] &lt;= 7 &amp;&amp;
+        coords[1] &gt;= 0 &amp;&amp;
+        coords[1] &lt;= 7
+      )
+    })
+    return squaresWithinBoard
+  },
+&nbsp;
+  convertRelativeToAbsolute (translations, col, row) {
+    let squares = translations.map(translation =&gt; {
+      let [colShift, rowShift] = translation
+      return [col + colShift, row + rowShift]
+    })
+    return squares
+  },
+&nbsp;
+  getSquaresFromLanes (outwardLanes, boardState) {
+    let availableSquares = []
+    let truncatedLanes = outwardLanes.map(lane =&gt; {
+      return this.getOpenPath(lane, boardState)
+    })
+    truncatedLanes.forEach(lane =&gt; {
+      lane.forEach(square =&gt; {
+        availableSquares.push(square)
+      })
+    })
+    return availableSquares
+  },
+&nbsp;
+  getOpenPath (pathArray, boardState) {
+    let pathLength = pathArray.length
+    for (let index = 0; index &lt; pathLength; index++) {
+      let [col, row] = pathArray[index]
+      let occupant = boardState[col][row]
+      if (occupant) {
+        pathLength = index + 1
+        break
+      }
+    }
+    let openPath = pathArray.slice(0, pathLength)
+    return openPath
+  }
+}
+&nbsp;
+module.exports = pieceMoves
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jul 30 2017 20:44:59 GMT-0400 (EDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

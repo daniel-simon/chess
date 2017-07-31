@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for helpers/TestBoard.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">helpers/</a> TestBoard.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.43% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>108/112</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88.89% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>32/36</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>22/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.55% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>58/62</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">22 statements, 2 functions, 17 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">179×</span>
+<span class="cline-any cline-yes">179×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">179×</span>
+<span class="cline-any cline-yes">179×</span>
+<span class="cline-any cline-yes">179×</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362×</span>
+<span class="cline-any cline-yes">2896×</span>
+<span class="cline-any cline-yes">23168×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-yes">1064×</span>
+<span class="cline-any cline-yes">8512×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">304×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">50×</span>
+<span class="cline-any cline-yes">50×</span>
+<span class="cline-any cline-yes">50×</span>
+<span class="cline-any cline-yes">50×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-yes">700×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">let gameConstants = require('../../src/helpers/GameConstants.js')
+&nbsp;
+class TestBoard {
+  constructor (firstMethodName, firstMethodArg) {
+    this.state = [
+      [],[],[],[],[],[],[],[]
+    ]
+    this.moveHistory = []
+    this.clearAll()
+    if (firstMethodName) {
+      this[firstMethodName](firstMethodArg)
+    }
+  }
+&nbsp;
+  clearAll () {
+    for (let col = 0; col &lt;= 7; col++) {
+      for (let row = 0; row &lt;= 7; row++) {
+        this.state[col][row] = null
+      }
+    }
+  }
+&nbsp;
+  clearSquare (col, row) {
+<span class="cstat-no" title="statement not covered" >    t</span>his.state[col][row] = null
+  }
+&nbsp;
+  setTestState (boardState) {
+    boardState.map((colArray, col) =&gt; {
+      colArray.map((occupant, row) =&gt; {
+        this.state[col][row] = occupant
+      })
+    })
+  }
+&nbsp;
+  addPiece (color, col, row, type) {
+    this.state[col][row] = {
+      type: type,
+      color: color
+    }
+  }
+&nbsp;
+  addKingAndRooks (color) {
+    let colors = []
+    if (color == undefined) {
+      colors = ['white', 'black']
+    } else {
+      colors = [color]
+    }
+    colors.forEach(color =&gt; {
+      let row = gameConstants.firstRowFor(color)
+      this.addPiece(color, 4, row, 'king')
+      this.addPiece(color, 0, row, 'rook')
+      this.addPiece(color, 7, row, 'rook')
+    })
+  }
+&nbsp;
+  addNonPawns (color) {
+    let colors = []
+    if (color == undefined) {
+      colors = ['white', 'black']
+      this.addKingAndRooks()
+    } else {
+      colors = [color]
+      this.addKingAndRooks(color)
+    }
+    colors.forEach(color =&gt; {
+      let row = gameConstants.firstRowFor(color)
+      this.addPiece(color, 1, row, 'knight')
+      this.addPiece(color, 6, row, 'knight')
+      this.addPiece(color, 2, row, 'bishop')
+      this.addPiece(color, 5, row, 'bishop')
+      this.addPiece(color, 3, row, 'queen')
+    })
+  }
+&nbsp;
+  addPawns (color) {
+    let row = gameConstants.secondRowFor(color)
+    for (let col = 0; col &lt;= 7; col++) {
+      this.addPiece(color, col, row, 'pawn')
+    }
+  }
+&nbsp;
+  movePiece (origin, destination) {
+    let [fromCol, fromRow] = origin
+    let [toCol, toRow] = destination
+    let movedPiece = this.state[fromCol][fromRow]
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (movedPiece == null) {
+<span class="cstat-no" title="statement not covered" >      t</span>hrow new Error(`Invalid move: no piece at square ${fromCol}, ${fromRow}`)
+    }
+    let player = movedPiece.color
+    let move = {
+      origin: origin,
+      destination: destination,
+      player: player,
+      castle: false
+    }
+    this.recordMove(move)
+    this.state[toCol][toRow] = movedPiece
+    this.state[fromCol][fromRow] = null
+  }
+&nbsp;
+  recordMove (move) {
+    let lastMove = {}
+    for (let property in move) {
+      lastMove[property] = move[property]
+    }
+    let [fromCol, fromRow] = move.origin
+    let [toCol, toRow] = move.destination
+    lastMove.movedPiece = this.state[fromCol][fromRow]
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (move.castle) {
+<span class="cstat-no" title="statement not covered" >      l</span>astMove.capturedPiece = null
+<span class="cstat-no" title="statement not covered" >      l</span>astMove.castleSide = toCol &gt; 4 ? 'kingside' : 'queenside'
+    }
+    this.moveHistory.push(lastMove)
+  }
+}
+&nbsp;
+export default TestBoard
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jul 30 2017 20:44:59 GMT-0400 (EDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

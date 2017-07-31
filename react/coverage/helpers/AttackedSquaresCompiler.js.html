@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for helpers/AttackedSquaresCompiler.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">helpers/</a> AttackedSquaresCompiler.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">18.18% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>4/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">18.18% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>4/22</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">let getMoveSquares = require('./AvailableSquaresJudge.js')
+let gameConstants = require('./GameConstants.js')
+let squareMethods = require('./SquareMethods.js')
+&nbsp;
+module.exports = <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >{</span></span>
+&nbsp;
+  getCoordsOfAlliedPieces(color, boardState) {
+<span class="cstat-no" title="statement not covered" >    l</span>et listOfCoords = []
+<span class="cstat-no" title="statement not covered" >    b</span>oardState.forEach(<span class="fstat-no" title="function not covered" >(colArray, col) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      c</span>olArray.forEach(<span class="fstat-no" title="function not covered" >(occupant, row) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (occupant &amp;&amp; occupant.color == color) {</span>
+<span class="cstat-no" title="statement not covered" >          l</span>istOfCoords.push([col, row]);
+        }
+      })
+    })
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (listOfCoords);
+  },
+&nbsp;
+  getMyUnsafeSquares(myColor, boardState) {
+<span class="cstat-no" title="statement not covered" >    l</span>et unsafeSquares = [];
+<span class="cstat-no" title="statement not covered" >    l</span>et enemyColor = gameConstants.enemyOf(myColor);
+<span class="cstat-no" title="statement not covered" >    l</span>et enemyPieceCoords = this.getCoordsOfAlliedPieces(enemyColor, boardState);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    e</span>nemyPieceCoords.forEach(<span class="fstat-no" title="function not covered" >enemySquare =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      l</span>et col = enemySquare[0];
+<span class="cstat-no" title="statement not covered" >      l</span>et row = enemySquare[1];
+<span class="cstat-no" title="statement not covered" >      l</span>et occupant = boardState[col][row];
+<span class="cstat-no" title="statement not covered" >      l</span>et squaresThreatenedByThisPiece = getMoveSquares.threatenedByPieceAt(col, row, boardState);
+<span class="cstat-no" title="statement not covered" >      s</span>quaresThreatenedByThisPiece.forEach(<span class="fstat-no" title="function not covered" >square =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        u</span>nsafeSquares.push(square)
+      })
+    })
+<span class="cstat-no" title="statement not covered" >    l</span>et unsafeSquaresUnique = squareMethods.toUnique(unsafeSquares)
+<span class="cstat-no" title="statement not covered" >    r</span>eturn (unsafeSquaresUnique)
+  }
+}
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jul 24 2017 22:49:28 GMT-0400 (EDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
