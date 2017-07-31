@@ -61,6 +61,8 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
+    faker (1.7.3)
+      i18n (~> 0.5)
     ffi (1.9.18)
     foundation (1.0.4)
       thor (>= 0.18.1)
@@ -202,6 +204,7 @@ DEPENDENCIES
   capybara
   database_cleaner (~> 1.5, >= 1.5.3)
   factory_girl_rails
+  faker
   foundation
   jquery-rails
   launchy

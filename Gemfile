@@ -16,6 +16,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'faker'
   gem 'database_cleaner', '~> 1.5', '>= 1.5.3'
   gem 'capybara'
   gem 'factory_girl_rails'
