@@ -4297,3 +4297,19 @@ Migrating to CreateGames (20170801024915)
   [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
   [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+Started POST "/sessions" for 127.0.0.1 at 2017-08-01 11:41:50 -0400
+  [1m[35m (1.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"an/WknskK7d9o/ohlGc/xxvsi/cjq9IzRd6O0n93s7LL9Nvk5+ctcCsGKZpzHqyuex4k+G/4ubI1B4VCjGo+KQ==", "user"=>{"email"=>"dan@dan.dan", "password"=>"[FILTERED]"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "dan@dan.dan"], ["LIMIT", 1]]
+Redirected to http://localhost:3000/games
+Completed 302 Found in 145ms (ActiveRecord: 10.0ms)
+
+
+Started GET "/games" for 127.0.0.1 at 2017-08-01 11:41:51 -0400
+Processing by GamesController#index as HTML
+  Rendering games/index.html.erb within layouts/application
+  Rendered games/index.html.erb within layouts/application (1.5ms)
+Completed 200 OK in 2143ms (Views: 2142.4ms | ActiveRecord: 0.0ms)
+
+

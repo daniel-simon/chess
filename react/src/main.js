@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom'
 import App from './containers/App'
 
 document.addEventListener('DOMContentLoaded', function() {
-  let reactElement = document.getElementById('app')
+  let gamesIndex = document.getElementById('games-index')
 
-  if (reactElement) {
+  if (gamesIndex) {
     ReactDOM.render(
       <App />,
-      reactElement
+      gamesIndex
     )
   }
 })
