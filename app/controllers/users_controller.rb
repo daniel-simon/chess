@@ -6,8 +6,9 @@ class UsersController < ApplicationController
     flash[:alert] = ''
     render :new
   end
-
   def create
+    flash[:errors] = ''
+    flash[:alert] = ''
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
@@ -16,7 +17,6 @@ class UsersController < ApplicationController
     else
       flash[:alert] = "Failed to create account"
       flash[:errors] = @user.errors.full_messages.to_sentence
-
       render :new
     end
   end
