@@ -6,6 +6,8 @@ class SessionsController < ApplicationController
   end
 
   def create
+    flash[:errors] = ''
+    flash[:alert] = ''
     @user = User.find_by(email: login_params[:email])
     if @user && @user.authenticate(login_params[:password])
       session[:user_id] = @user.id

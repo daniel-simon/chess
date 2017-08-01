@@ -9,7 +9,7 @@
     <% flash.each do |key, value| %>
       <% if value.class == Array %>
         <% value.each do |message| %>
-          <%= message %> <br/>
+          <%= message %> <br>
         <% end %>
       <% elsif !value.blank? %>
         <%= value %>
