@@ -6,4 +6,5 @@ RSpec.describe User, type: :model do
   it { should_not have_valid(:username).when('Dan S') }
   it { should_not have_valid(:username).when('Ds') }
   it { should_not have_valid(:username).when('', nil) }
+  it { should have_secure_password }
 end
