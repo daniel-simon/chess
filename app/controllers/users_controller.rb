@@ -6,6 +6,7 @@ class UsersController < ApplicationController
     flash[:alert] = ''
     render :new
   end
+  
   def create
     flash[:errors] = ''
     flash[:alert] = ''
