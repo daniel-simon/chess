@@ -6,12 +6,16 @@
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
-
-    <% flash.each do |k,v| %>
-      <%= "#{k}: #{v}" %> <br />
+    <% flash.each do |key, value| %>
+      <% if value.class == Array %>
+        <% value.each do |message| %>
+          <%= message %> <br/>
+        <% end %>
+      <% elsif !value.blank? %>
+        <%= value %>
+      <% end %>
     <% end %>
   </head>
-
   <body>
     <%= yield %>
   </body>

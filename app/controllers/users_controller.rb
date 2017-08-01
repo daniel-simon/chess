@@ -2,6 +2,9 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    flash[:errors] = ''
+    flash[:alert] = ''
+    render :new
   end
 
   def create
