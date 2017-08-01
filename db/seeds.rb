@@ -5,3 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+dan = FactoryGirl.create(:user, username: "dantheman", email: "d@n.com", password: "dan")
+game1 = Game.create(creator: dan)

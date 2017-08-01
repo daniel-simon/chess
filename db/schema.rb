@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20170801024915) do
   create_table "games", force: :cascade do |t|
     t.bigint "creator_id", null: false
     t.bigint "joiner_id"
-    t.boolean "public", null: false
-    t.boolean "show_legal_moves", null: false
+    t.boolean "public_game", default: false, null: false
+    t.boolean "show_legal_moves", default: true, null: false
     t.boolean "started", default: false, null: false
     t.bigint "active_player_id"
     t.bigint "inactive_player_id"

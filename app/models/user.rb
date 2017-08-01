@@ -3,5 +3,6 @@ class User < ApplicationRecord
     presence: true,
     length: { in: 3..20 },
     format: { with: /\A[a-zA-Z0-9_-]+\z/ }
+  validates :email, presence: true
   has_secure_password
 end

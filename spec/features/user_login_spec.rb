@@ -15,7 +15,7 @@ feature 'User logs in' do
 
     click_on 'Log in'
 
-    expect(page).to have_content('IT WORKED!')
+    expect(page).to have_content('Logged in successfully')
   end
 
   scenario 'user does not enter a password' do
@@ -26,7 +26,7 @@ feature 'User logs in' do
     click_on 'Log in'
 
     expect(page).to have_content('Please enter a password')
-    expect(page).to have_no_content('IT WORKED!')
+    expect(page).to have_no_content('Logged in successfully')
   end
 
   scenario 'user does not enter an email address' do
@@ -37,7 +37,7 @@ feature 'User logs in' do
     click_on 'Log in'
 
     expect(page).to have_content('Please enter an email address')
-    expect(page).to have_no_content('IT WORKED!')
+    expect(page).to have_no_content('Logged in successfully')
   end
 
   scenario 'user does not enter an email/password pair found in the database' do
@@ -49,7 +49,7 @@ feature 'User logs in' do
     click_on 'Log in'
 
     expect(page).to have_content('Invalid email address or password')
-    expect(page).to have_no_content('IT WORKED!')
+    expect(page).to have_no_content('Logged in successfully')
   end
 
 end
