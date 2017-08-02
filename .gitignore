@@ -5,8 +5,8 @@ react/coverage/*
 !/log/.keep
 !/tmp/.keep
 
-/coverage
-/node_modules
+/coverage/
+/node_modules/
 /app/assets/javascripts/bundle.js
 /react/coverage
 /yarn-error.log
