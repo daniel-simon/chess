@@ -57,6 +57,10 @@ module.exports = function(config) {
           {
             include: /\.json$/,
             loader: 'json-loader'
+          },
+          {
+            test: /\.(png|jpg)$/,
+            loader: 'url-loader'
           }
         ]
       },
