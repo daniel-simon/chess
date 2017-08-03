@@ -22,6 +22,7 @@ class GamesIndex extends Component {
       }
     })
     .then(response => {
+
       this.setState({ fetched: true, games: response.games })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
@@ -29,12 +30,21 @@ class GamesIndex extends Component {
 
   render() {
     let gameTiles = []
+    let availableGames = []
     if (this.state.fetched) {
-      gameTiles = this.state.games.map(gameObj => {
+      availableGames = this.state.games.filter(gameObj => {
+        return(
+          gameObj.started === false
+          // && gameObj.public_game === true
+        )
+      })
+      gameTiles = availableGames.map(gameObj => {
         return(
           <GameTile
             key={gameObj.id}
-            creator={gameObj.creator}
+            gameId={gameObj.id}
+            creatorName={gameObj.creator.username}
+            creatorEmail={gameObj.creator.email}
             showLegalMoves={gameObj.show_legal_moves}
             createdAt={gameObj.created_at}
           />
@@ -43,6 +53,7 @@ class GamesIndex extends Component {
     }
     return(
       <div>
+        <h2 className="public-games">Public games</h2>
         {gameTiles}
       </div>
     )

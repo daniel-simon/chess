@@ -19,7 +19,8 @@ ActiveRecord::Schema.define(version: 20170801024915) do
     t.bigint "creator_id", null: false
     t.bigint "joiner_id"
     t.boolean "show_legal_moves", default: true, null: false
-    t.boolean "in_progress", default: false, null: false
+    t.boolean "started", default: false, null: false
+    t.boolean "finished", default: false, null: false
     t.bigint "active_player_id"
     t.bigint "winner_id"
     t.bigint "loser_id"
