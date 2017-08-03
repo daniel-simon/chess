@@ -1,15 +1,23 @@
-import './main.scss'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './containers/App'
+import GameShowPage from './containers/GameShowPage'
+import GamesIndexPage from './containers/GamesIndexPage'
 
 document.addEventListener('DOMContentLoaded', function() {
-  let reactElement = document.getElementById('app')
+  let gameShowPage = document.getElementById('game-show')
+  let gamesIndexPage = document.getElementById('games-index')
 
-  if (reactElement) {
+  if (gameShowPage) {
     ReactDOM.render(
-      <App />,
-      reactElement
+      <GameShowPage />,
+      gameShowPage
+    )
+  }
+
+  if (gamesIndexPage) {
+    ReactDOM.render(
+      <GamesIndexPage />,
+      gamesIndexPage
     )
   }
 })

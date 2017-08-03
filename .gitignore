@@ -1,1 +1,18 @@
 react/coverage/*
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+app/views/games/log/*
+
+/coverage
+/node_modules
+/app/assets/javascripts/bundle.js
+/react/coverage
+/yarn-error.log
+/public/uploads
+
+.byebug_history
+.env

@@ -7,6 +7,7 @@ const Square = props => {
   if (props.col == lastCol) {
     foundationClass += ' end'
   }
+
   let highlightCssClass = '';
   if (props.selected) {
     highlightCssClass = ' selected';
@@ -16,8 +17,10 @@ const Square = props => {
   if (props.selectable) {
     highlightCssClass += ' selectable'
   }
+
   let squareColors = ['black', 'white'];
   let colorIndex = (props.col + props.row) % 2;
+
   let cssClass = `${squareColors[colorIndex]}${highlightCssClass}${foundationClass} square`
 
   let occupant = null;
