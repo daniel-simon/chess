@@ -1,7 +1,7 @@
 import React from 'react';
 import Board from './Board'
 
-const App = props => {
+const GameShowPage = props => {
 
   return(
     <div>
@@ -10,4 +10,4 @@ const App = props => {
   );
 }
 
-export default App;
+export default GameShowPage;
