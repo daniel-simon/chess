@@ -31,36 +31,34 @@ RSpec.describe Move, type: :model do
     end
 
     describe "#origin" do
-      let(:origin) { @test_move.origin }
 
       it "should return an array" do
-        expect(origin).to be_a Array
+        expect(@test_move.origin).to be_a Array
       end
 
       it "should return an array with two elements" do
-        expect(origin.length).to eq 2
+        expect(@test_move.origin.length).to eq 2
       end
 
       it "should return an array in the format of [col, row]" do
-        expect(origin[0]).to eq @test_move.origin_col
-        expect(origin[1]).to eq @test_move.origin_row
+        expect(@test_move.origin[0]).to eq @test_move.origin_col
+        expect(@test_move.origin[1]).to eq @test_move.origin_row
       end
     end
 
     describe "#destination" do
-      let(:destination) { @test_move.destination }
 
       it "should return an array" do
-        expect(destination).to be_a Array
+        expect(@test_move.destination).to be_a Array
       end
 
       it "should return an array with two elements" do
-        expect(destination.length).to eq 2
+        expect(@test_move.destination.length).to eq 2
       end
 
       it "should return an array in the format of [col, row]" do
-        expect(destination[0]).to eq @test_move.destination_col
-        expect(destination[1]).to eq @test_move.destination_row
+        expect(@test_move.destination[0]).to eq @test_move.destination_col
+        expect(@test_move.destination[1]).to eq @test_move.destination_row
       end
     end
   end
