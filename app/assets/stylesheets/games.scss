@@ -1,3 +1,112 @@
 // Place all the styles related to the games controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$font-family-sans-serif: 'Zilla Slab', sans-serif;
+$font-family-serif: 'Zilla Slab', serif;
+
+$white-square: #a29275; //#d6cfc2;
+$hover-non-selectable-white-square: #7d776c;
+
+$black-square: #6a3c1f; //#2f221a;
+$hover-non-selectable-black-square: #5e503d;
+
+$selected-square: #008dff;
+$hover-selectable-square: #4bc9ff;
+
+$available-square: #27d11a;
+$hover-available-square: #bae725;
+
+$victim-square: #d10000;
+$hover-victim-square: #ff2121;
+
+$square-size: 74px;
+$hover-victim-square-border-color: #f67e51;
+
+$board-border-width: 10px;
+$square-border-color: #221e16;
+
+$main-background-color: #dddab2;
+
+body {
+
+  button:focus {
+    outline: 0;
+  }
+  .game-tile {
+    h2 {
+      text-align: left!important;
+    }
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .piece {
+    position: relative;
+    top: 15px;
+  }
+  .square {
+    font-size: 14px; // <-- temporary
+    height: $square-size;
+    width: $square-size;
+    margin-bottom: 0%;
+    text-align: center;
+    $border-width: 1px;
+    border: $border-width solid $square-border-color;
+    &.white {
+      background-color: $white-square;
+    }
+    &.black {
+      background-color: $black-square;
+    }
+    &.available {
+      background-color: $available-square;
+    }
+    &.victim {
+      background-color: $victim-square;
+    }
+    &:hover {
+      &.white {
+        background-color: $hover-non-selectable-white-square;
+      }
+      &.black {
+        background-color: $hover-non-selectable-black-square;
+      }
+      &.selectable {
+        background-color: $hover-selectable-square;
+        border-color: $hover-selectable-square
+      }
+      &.selected {
+        border-color: $selected-square;
+        background-color: $selected-square;
+      }
+      &.available {
+        background-color: $hover-available-square;
+        border-color: $hover-available-square;
+      }
+      &.victim {
+        background-color: $hover-victim-square;
+        border-color: $hover-victim-square;
+      }
+    }
+    &.selected {
+      background-color: $selected-square;
+    }
+  }
+  .chess-row {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: $board-border-width solid #77604e;
+    border-right: $board-border-width solid #77604e;
+    width: 8 * $square-size + (2 * $board-border-width);
+    &.top {
+      border-top: $board-border-width solid #50370c;
+    }
+    &.bottom {
+      border-bottom: $board-border-width solid #50370c;
+    }
+  }
+  .chess-board{
+    line-height: 0px;
+  }
+}

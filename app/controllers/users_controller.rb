@@ -2,22 +2,17 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    flash[:errors] = ''
-    flash[:alert] = ''
     render :new
   end
 
   def create
-    flash[:errors] = ''
-    flash[:alert] = ''
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
       flash[:notice] = "Account successfully created. Welcome, #{@user.username}!"
       redirect_to '/games'
     else
-      flash[:alert] = "Failed to create account"
-      flash[:errors] = @user.errors.full_messages.to_sentence
+      flash[:alert] = "Failed to create account: #{@user.errors.full_messages.to_sentence}"
       render :new
     end
   end

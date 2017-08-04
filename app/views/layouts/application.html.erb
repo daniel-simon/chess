@@ -1,22 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Chess</title>
-    <%= csrf_meta_tags %>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
-    <% flash.each do |key, value| %>
-      <% if value.class == Array %>
-        <% value.each do |message| %>
-          <%= message %> <br>
-        <% end %>
-      <% elsif !value.blank? %>
-        <%= value %>
-      <% end %>
-    <% end %>
+    <title>playChess</title>
+
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "vendor/modernizr" %>
+    <%= csrf_meta_tags %>
   </head>
+
   <body>
-    <%= yield %>
-  </body>
+    <div class="small-12 columns">
+      <nav class="top-bar" data-topbar role='navigation'>
+        <ul class='title-area'>
+          <li>
+            <%= link_to "playChess", games_path %>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+        <section class='top-bar-section'>
+          <ul class='right'>
+            <% if @current_user %>
+            <li class='has-dropdown'>
+              <a href='#'>
+                Signed in as <%= @current_user.username %>
+              </a>
+              <ul class='dropdown'>
+                <li>
+                  <%= link_to "Sign out", session_path(session[:user_id]), method: :delete %>
+                </li>
+              </ul>
+            </li>
+            <% else %>
+            <li class='active'><%= link_to "Sign Up", new_user_path %></li>
+            <li><%= link_to "Log in", new_session_path %></li>
+            <% end %>
+          </ul>
+        </section>
+      </nav>
+      <% if flash[:notice] %>
+      <div data-alert class="alert-box success">
+        <%= flash[:notice] %>
+        <a href="#" class="close">&times;</a>
+      </div>
+      <% end %>
+      <% if flash[:alert] %>
+      <div data-alert class="alert-box alert">
+        <%= flash[:alert] %>
+        <a href="#" class="close">&times;</a>
+      </div>
+      <% end %>
+      <%= yield %>
+      <%= javascript_include_tag "application" %>
+    </body>
+  </div>
 </html>

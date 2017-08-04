@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import Board from './Board'
 
 const GameShowPage = props => {
@@ -10,4 +10,4 @@ const GameShowPage = props => {
   );
 }
 
-export default GameShowPage;
+export default GameShowPage

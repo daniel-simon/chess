@@ -6,7 +6,7 @@ gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
-gem 'foundation'
+gem 'foundation-rails'
 gem 'bcrypt', '~> 3.1.7'
 gem 'active_model_serializers'
 
@@ -21,7 +21,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 1.5', '>= 1.5.3'
   gem 'capybara'
   gem 'factory_girl_rails'
-  gem 'launchy', require: false
+  gem 'launchy'
   gem 'pry-rails'
   gem 'rspec-rails', '~> 3.5'
   gem 'shoulda'

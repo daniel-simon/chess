@@ -1,9 +1,9 @@
 class GamesController < ApplicationController
   def index
-    render :index
+    authorize
   end
 
   def show
-    render :show
+    authorize
   end
 end

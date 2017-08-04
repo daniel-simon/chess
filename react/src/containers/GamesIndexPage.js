@@ -11,7 +11,9 @@ class GamesIndex extends Component {
   }
 
   componentDidMount () {
-    fetch('/api/v1/games')
+    fetch('/api/v1/games', {
+      credentials: 'same-origin'
+    })
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -22,7 +24,6 @@ class GamesIndex extends Component {
       }
     })
     .then(response => {
-
       this.setState({ fetched: true, games: response.games })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
@@ -33,23 +34,28 @@ class GamesIndex extends Component {
     let availableGames = []
     if (this.state.fetched) {
       availableGames = this.state.games.filter(gameObj => {
-        return(
-          gameObj.started === false
-          // && gameObj.public_game === true
+        return (
+          gameObj.started === false ||
+          gameObj.playing_this_game === true
         )
+      })
+      let now = Date.now()
+      availableGames.forEach(gameObj => {
+        let ageMs = now - Date.parse(gameObj.created_at)
+        let ageSec = ageMs / 1000
+        gameObj.ageMin = ageSec / 60
+        gameObj.ageHour = gameObj.ageMin / 60
+        gameObj.ageDay = gameObj.ageHour / 24
       })
       gameTiles = availableGames.map(gameObj => {
         return(
           <GameTile
             key={gameObj.id}
-            gameId={gameObj.id}
-            creatorName={gameObj.creator.username}
-            creatorEmail={gameObj.creator.email}
-            showLegalMoves={gameObj.show_legal_moves}
-            createdAt={gameObj.created_at}
+            data={gameObj}
           />
         )
       })
+
     }
     return(
       <div>
