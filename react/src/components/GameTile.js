@@ -39,7 +39,7 @@ const GameTile = props => {
         <br />
         <p className="row">Move suggestions: {showMovesText}</p>
         <br />
-        <a className="panel" href={`games/${gameId}`}>
+        <a className="join-button panel" href={`games/${gameId}`}>
           Join this game
         </a>
       </div>
