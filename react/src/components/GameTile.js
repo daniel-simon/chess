@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const GameTile = props => {
   let creatorName = props.data.creator_name
