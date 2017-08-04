@@ -29,7 +29,7 @@ class Board extends Component {
 
   componentDidMount () {
     const setupType = 'real'  //real or 960
-    const pawns = false // just for development
+    const pawns = true
     if (this.state.newGame) {
       this.setUpPieces(setupType, pawns)
     }
@@ -200,6 +200,7 @@ class Board extends Component {
         moveHistory={this.state.moveHistory}
         lastMove={this.state.lastMove}
         pieceSet={pieceSet}
+        myColor={this.props.myColor}
       />
     )
   }
