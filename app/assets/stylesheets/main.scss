@@ -1,0 +1,12 @@
+$font-family-sans-serif: 'Zilla Slab', sans-serif;
+$font-family-serif: 'Zilla Slab', serif;
+$main-background-color: #dddab2;
+
+body {
+  h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+  }
+  // font-family: $font-family-serif;
+  font-size: 24px;
+  background-color: $main-background-color;
+}
