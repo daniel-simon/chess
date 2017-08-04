@@ -17,7 +17,7 @@ feature 'User registration' do
     fill_in 'Password', with: 'TestUserPassword'
     fill_in 'Confirm Password', with: 'TestUserPassword'
 
-    click_on 'Sign up'
+    click_on 'Submit'
 
     expect(page).to have_content('Account successfully created')
   end
@@ -30,7 +30,7 @@ feature 'User registration' do
     fill_in 'Password', with: 'TestUserPassword'
     fill_in 'Confirm Password', with: 'TestUserPassword'
 
-    click_on 'Sign up'
+    click_on 'Submit'
 
     expect(page).to have_content('Failed to create account')
   end
@@ -43,21 +43,21 @@ feature 'User registration' do
     fill_in 'Password', with: 'TestUserPassword'
     fill_in 'Confirm Password', with: 'TestUserPassword'
 
-    click_on 'Sign up'
+    click_on 'Submit'
 
     expect(page).to have_content('Failed to create account')
   end
 
   scenario "password and confirmation don't match" do
     visit '/'
-    click_on 'Sign u'
+    click_on 'Sign up'
 
     fill_in 'Username', with: 'TestUser'
     fill_in 'Email', with: 'TestUser@launch.com'
     fill_in 'Password', with: 'I got my own '
     fill_in 'Confirm Password', with: ' password wrong :('
 
-    click_on 'Sign up'
+    click_on 'Submit'
 
     expect(page).to have_content('Failed to create account')
   end
