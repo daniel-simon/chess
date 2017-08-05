@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::GamesController, type: :controller do
-  describe "GET#index" do
+  fdescribe "GET#index" do
 
     before(:each) do
       @bobby_f = FactoryGirl.create(:user, username: "bfischer")
@@ -15,11 +15,17 @@ RSpec.describe Api::V1::GamesController, type: :controller do
       session[:user_id] = nil
     end
 
+    it "should respond by rendering a javascript object in JSON" do
+      get :index
+
+      expect(response.status).to eq 200
+      expect(response.content_type).to eq "application/json"
+      returned_json = JSON.parse(response.body)
+    end
+
     it "should render a list of games with the correct length" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       expect(returned_json.length).to eq 1
       expect(returned_json["games"].length).to eq 2
@@ -28,8 +34,6 @@ RSpec.describe Api::V1::GamesController, type: :controller do
     it "should render a list of games with the correct creator information" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       bobbys_game = returned_json["games"][0]
       johns_game = returned_json["games"][1]
@@ -41,8 +45,6 @@ RSpec.describe Api::V1::GamesController, type: :controller do
     it "should render a list of games with the correct 'my_game' information" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       bobbys_game = returned_json["games"][0]
       johns_game = returned_json["games"][1]
@@ -54,8 +56,6 @@ RSpec.describe Api::V1::GamesController, type: :controller do
     it "should render a list of games with the correct 'playing_this_game' information" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       bobbys_game = returned_json["games"][0]
       johns_game = returned_json["games"][1]
@@ -67,8 +67,6 @@ RSpec.describe Api::V1::GamesController, type: :controller do
     it "should render a list of games with the correct :show_legal_moves information" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       bobbys_game = returned_json["games"][0]
       johns_game = returned_json["games"][1]
@@ -80,8 +78,6 @@ RSpec.describe Api::V1::GamesController, type: :controller do
     it "should render a list of games with the correct :started information" do
       get :index
       returned_json = JSON.parse(response.body)
-      expect(response.status).to eq 200
-      expect(response.content_type).to eq "application/json"
 
       bobbys_game = returned_json["games"][0]
       johns_game = returned_json["games"][1]
