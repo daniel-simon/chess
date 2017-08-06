@@ -15,17 +15,19 @@ class Api::V1::MovesController < ApplicationController
 
   def create
     move_request_hash = JSON.parse(request.body.read)["move"]
-    new_move_obj = Move.new({
-      game_id: move_request_hash["gameId"],
-      move_number: move_request_hash["moveNumber"],
-      origin_col: move_request_hash["origin"][0],
-      origin_row: move_request_hash["origin"][1],
-      destination_col: move_request_hash["destination"][0],
-      destination_row: move_request_hash["destination"][1],
-      moved_piece: move_request_hash["movedPiece"]["type"],
-      player_color: move_request_hash["player"],
-      castle: move_request_hash["castle"]
-    })
+    new_move_obj = Move.new(
+      {
+        game_id: move_request_hash["gameId"],
+        move_number: move_request_hash["moveNumber"],
+        origin_col: move_request_hash["origin"][0],
+        origin_row: move_request_hash["origin"][1],
+        destination_col: move_request_hash["destination"][0],
+        destination_row: move_request_hash["destination"][1],
+        moved_piece: move_request_hash["movedPiece"]["type"],
+        player_color: move_request_hash["player"],
+        castle: move_request_hash["castle"]
+      }
+    )
     if new_move_obj.save
       render json: { move: new_move_obj }, adapter: :json
     else
