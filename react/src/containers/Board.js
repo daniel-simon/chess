@@ -155,6 +155,8 @@ class Board extends Component {
 
   recordMove (move) {
     let lastMove = {}
+    move.moveNumber = this.state.moveHistory.length
+    
     for (let property in move) {
       lastMove[property] = move[property]
     }
@@ -164,16 +166,40 @@ class Board extends Component {
 
     if (!move.castle) {
       lastMove.capturedPiece = this.state.board[toCol][toRow]
-      lastMove.castleSide = ''
+      lastMove.castleSide = null
     } else {
       lastMove.capturedPiece = null
       lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
     }
 
+    //if (move.enPassant) { etc... }
+
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
+
+    this.persistMove(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+  }
+
+  persistMove (move) {
+    move.gameId = this.props.gameId
+    let moveRequest = { move: move }
+    // move.playerColor = this.props.playerColor
+    fetch(`/api/v1/moves`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: JSON.stringify(moveRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   movePiece (origin, destination) {
@@ -185,7 +211,7 @@ class Board extends Component {
       movedPiece.type === 'pawn' &&
       toRow === gameConstants.lastRowFor(movedPiece.color)
     ) {
-        movedPiece.type = 'queen'
+      movedPiece.type = 'queen'
     }
 
     let newBoardState = this.state.board

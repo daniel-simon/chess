@@ -30,6 +30,9 @@ class Api::V1::GamesController < ApplicationController
     end
   end
 
+  def create
+  end
+
   private
 
   def join_game_params
