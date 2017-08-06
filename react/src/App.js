@@ -3,7 +3,6 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import GameShow from './containers/GameShow'
 import GamesIndex from './containers/GamesIndex'
 
-
 const App = props => {
 
   return(

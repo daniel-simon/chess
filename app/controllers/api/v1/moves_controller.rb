@@ -6,7 +6,6 @@ class Api::V1::MovesController < ApplicationController
       moves << move_model.serializable_hash
       moves[i]['origin'] = move_model.origin
       moves[i]['destination'] = move_model.destination
-
     end
     move_history = moves.sort_by { |move| move['move_number'] }
     render json: { moves: move_history }, adapter: :json
