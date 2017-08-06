@@ -39,6 +39,11 @@ class TestBoard {
     }
   }
 
+  newGame () {
+    this.addKingAndRooks();
+    this.addNonPawns();
+  }
+
   addKingAndRooks (color) {
     let colors = []
     if (color == undefined) {
@@ -85,7 +90,7 @@ class TestBoard {
     let [toCol, toRow] = destination
     let movedPiece = this.state[fromCol][fromRow]
     if (movedPiece == null) {
-      throw new Error(`Invalid move: no piece at square ${fromCol}, ${fromRow}`)
+      throw new Error(`TestBoard error: no piece at square ${fromCol}, ${fromRow}`)
     }
     let player = movedPiece.color
     let move = {

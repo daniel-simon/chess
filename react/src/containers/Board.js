@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
+import TestBoard from '../helpers/TestBoard'
 let gameConstants = require('../helpers/GameConstants')
 
 class Board extends Component {
@@ -12,7 +13,6 @@ class Board extends Component {
 
   emptyBoard () {
     let blankBoard = {
-      newGame: true,
       board: [
         [],[],[],[],[],[],[],[]
       ],
@@ -30,9 +30,15 @@ class Board extends Component {
   componentDidMount () {
     const setupType = 'real'  //real or 960
     const pawns = true
-    if (this.state.newGame) {
-      this.setUpPieces(setupType, pawns)
-    }
+    this.setUpPieces(setupType, pawns)
+    this.loadBoardState(this.props.initialMoveHistory)
+  }
+
+  loadBoardState (moveHistory) {
+    let testBoard = new TestBoard('newGame')
+    //apply moveHistory
+    let newBoardState = testBoard.state
+    this.setState({ moveHistory: moveHistory, board: newBoardState })
   }
 
   setUpPieces (setupType, pawns) {
@@ -143,7 +149,6 @@ class Board extends Component {
       }
     }
     this.setState({
-      newGame: false,
       board: newBoard
     })
   }
