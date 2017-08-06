@@ -12,3 +12,4 @@ dave = FactoryGirl.create(:user, username: "davey", email: "d@ve.com", password:
 game1 = Game.create(creator: dan)
 game2 = Game.create(creator: dave, started: true)
 game3 = Game.create(creator: dave)
+test_moves = FactoryGirl.create_list(:move, 8, game: game3)
