@@ -179,8 +179,36 @@ class Board extends Component {
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
-    this.persistMove(lastMove)
+    this.updateGame(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+  }
+
+  updateGame (move) {
+    this.persistMove(move)
+    this.toggleActivePlayer(move)
+  }
+
+  toggleActivePlayer (move) {
+    let newActiveColor = gameConstants.enemyOf(move.player)
+    let changeActivePlayerRequest = {
+      patchType: "switch-turns",
+      activeColor: newActiveColor
+    }
+    fetch(`/api/v1/games/${this.props.gameId}`,{
+      method: 'PATCH',
+      credentials: 'same-origin',
+      body: JSON.stringify(changeActivePlayerRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error updating game active player: ${error.message}`))
+
   }
 
   persistMove (move) {
@@ -200,7 +228,7 @@ class Board extends Component {
         throw new Error(errorMessage)
       }
     })
-    .catch(error => console.error(`Error in fetch: ${error.message}`))
+    .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
   movePiece (origin, destination) {

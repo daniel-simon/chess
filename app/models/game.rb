@@ -6,11 +6,11 @@ class Game < ApplicationRecord
   belongs_to :loser, class_name: "User", foreign_key: "loser_id", optional: true
   has_many :moves
 
-  def white
+  def white_id
     return creator.id
   end
 
-  def black
+  def black_id
     return joiner.id
   end
 

@@ -36,9 +36,11 @@ class GamesIndex extends Component {
   }
 
   handleGameJoin (gameId) {
+    let joinGameRequest = { patchType: "join-game" }
     fetch(`/api/v1/games/${gameId}`, {
       method: 'PATCH',
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      body: JSON.stringify(joinGameRequest)
     })
     .then(response => {
       if (response.ok) {
