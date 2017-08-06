@@ -7,6 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 dan = FactoryGirl.create(:user, username: "dantheman", email: "d@n.com", password: "dan")
+FactoryGirl.create(:user, username: "test", email: "test", password: "test")
 dave = FactoryGirl.create(:user, username: "davey", email: "d@ve.com", password: "dave")
 game1 = Game.create(creator: dan)
 game2 = Game.create(creator: dave, started: true)
