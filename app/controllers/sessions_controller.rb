@@ -1,6 +1,10 @@
 class SessionsController < ApplicationController
   def new
-    render :new
+    if current_user
+      redirect_to games_path
+    else
+      render :new
+    end
   end
 
   def create

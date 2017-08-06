@@ -1,8 +1,12 @@
 class UsersController < ApplicationController
 
   def new
-    @user = User.new
-    render :new
+    if current_user
+      redirect_to games_path
+    else
+      @user = User.new
+      render :new
+    end
   end
 
   def create

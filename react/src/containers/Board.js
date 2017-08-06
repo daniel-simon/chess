@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
+import TestBoard from '../helpers/TestBoard'
 let gameConstants = require('../helpers/GameConstants')
 
 class Board extends Component {
@@ -12,7 +13,6 @@ class Board extends Component {
 
   emptyBoard () {
     let blankBoard = {
-      newGame: true,
       board: [
         [],[],[],[],[],[],[],[]
       ],
@@ -30,9 +30,17 @@ class Board extends Component {
   componentDidMount () {
     const setupType = 'real'  //real or 960
     const pawns = true
-    if (this.state.newGame) {
-      this.setUpPieces(setupType, pawns)
-    }
+    this.setUpPieces(setupType, pawns)
+    this.loadBoardState(this.props.initialMoveHistory)
+  }
+
+  loadBoardState (moveHistory) {
+    let testBoard = new TestBoard('newGame')
+    moveHistory.forEach(move => {
+      testBoard.movePiece(move.origin, move.destination)
+    })
+    let newBoardState = testBoard.state
+    this.setState({ moveHistory: moveHistory, board: newBoardState })
   }
 
   setUpPieces (setupType, pawns) {
@@ -143,13 +151,14 @@ class Board extends Component {
       }
     }
     this.setState({
-      newGame: false,
       board: newBoard
     })
   }
 
   recordMove (move) {
     let lastMove = {}
+    move.moveNumber = this.state.moveHistory.length
+
     for (let property in move) {
       lastMove[property] = move[property]
     }
@@ -159,16 +168,39 @@ class Board extends Component {
 
     if (!move.castle) {
       lastMove.capturedPiece = this.state.board[toCol][toRow]
-      lastMove.castleSide = ''
+      lastMove.castleSide = null
     } else {
       lastMove.capturedPiece = null
       lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
     }
 
+    //if (move.enPassant) { etc... }
+
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
+    this.persistMove(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+  }
+
+  persistMove (move) {
+    move.gameId = this.props.gameId
+    let moveRequest = { move: move }
+    // move.playerColor = this.props.playerColor
+    fetch(`/api/v1/moves`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: JSON.stringify(moveRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   movePiece (origin, destination) {

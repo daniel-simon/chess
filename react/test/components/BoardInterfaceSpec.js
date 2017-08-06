@@ -64,45 +64,55 @@ describe('BoardInterface', () => {
   describe("selectPiece()", () => {
     let randomCoord = (range) => { return(Math.floor(Math.random() * range)) }
     let randomSquare = () => { return( [randomCoord(8), randomCoord(8)] ) }
-
-    it("should set this.state.selectedSquare to its arguments", () => {
-      let [col, row] = [4, 1]
+    let randomPiece = () => {
+      let col
+      let row
       do {
         [col, row] = randomSquare()
       } while (boardState[col][row] == null)
+      return [col, row]
+    }
+    let randomPawn = () => {
+      let col
+      let row
+      do {
+        [col, row] = randomSquare()
+      } while (boardState[col][row] == null || boardState[col][row].type != 'pawn')
+      return [col, row]
+    }
+
+    it("should set this.state.selectedSquare to its arguments", () => {
+      let [col, row] = randomPiece()
       wrapper.instance().selectPiece(col, row)
       expect(wrapper.state().selectedSquare).toEqual([col, row])
     })
 
-    it("should set this.state.availableSquares to the squares available to the piece on that square", () => {
-      let col = randomCoord(8)
-      wrapper.instance().selectPiece(col, 1)
-      expect(wrapper.state().availableSquares).toEqual( [ [col, 2], [col, 3] ] )
-
-      col = randomCoord(8)
-      wrapper.instance().selectPiece(col, 6)
-      expect(wrapper.state().availableSquares).toEqual( [ [col, 5], [col, 4] ] )
-
-      wrapper.instance().selectPiece(1, 0)
-      expect(wrapper.state().availableSquares).toEqual( [ [0, 2], [2, 2] ] )
-    })
-
-    it("should set this.state.availableCastlingRooks to the squares containing rooks available to castle", () => {
-      boardState[1][0] = null
-      boardState[2][0] = null
-      boardState[3][0] = null
-      boardState[5][0] = null
-      boardState[6][0] = null
-
-      wrapper = shallow(
-        <BoardInterface
-          boardState={boardState}
-          moveHistory={[]}
-        />
-      )
-      wrapper.instance().selectPiece(4, 0)
-      expect(wrapper.state().availableCastlingRooks).toEqual( [ [0, 0], [7, 0] ] )
-    })
+    // it("should change the value of this.state.availableSquares", () => {
+    //   let [col, row] = randomPawn()
+    //   expect(wrapper.state().availableSquares).toEqual( [] )
+    //   wrapper.instance().selectPiece(col, row)
+    //   expect(wrapper.state().availableSquares).not.toEqual( [] )
+    //   expect(wrapper.state().availableSquares.length).toBeDefined()
+    //   expect(wrapper.state().availableSquares.length).toBeGreaterThan(0)
+    // })
+    //
+    // it("should set this.state.availableCastlingRooks to the squares containing rooks available to castle", () => {
+    //   boardState[1][0] = null
+    //   boardState[2][0] = null
+    //   boardState[3][0] = null
+    //   boardState[5][0] = null
+    //   boardState[6][0] = null
+    //
+    //   wrapper = shallow(
+    //     <BoardInterface
+    //       boardState={boardState}
+    //       moveHistory={[]}
+    //     />
+    //   )
+    //   expect(wrapper.state().availableCastlingRooks).toEqual( [] )
+    //   wrapper.instance().selectPiece(4, 0)
+    //   expect(wrapper.state().availableCastlingRooks).toEqual( [ [0, 0], [7, 0] ] )
+    // })
 
   })
 

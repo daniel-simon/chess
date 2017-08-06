@@ -20,7 +20,6 @@ $hover-available-square: #bae725;
 $victim-square: #d10000;
 $hover-victim-square: #ff2121;
 
-$square-size: 74px;
 $hover-victim-square-border-color: #f67e51;
 
 $board-border-width: 10px;
@@ -28,7 +27,12 @@ $square-border-color: #221e16;
 
 $main-background-color: #dddab2;
 
+$square-size: 63px;
+
 body {
+  .game-show-page {
+    padding-top: 2em;
+  }
 
   button:focus {
     outline: 0;

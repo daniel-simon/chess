@@ -2,15 +2,21 @@ import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
 
 class GamesIndex extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       fetched: false,
       games: []
     }
+    this.handleGameJoin = this.handleGameJoin.bind(this)
   }
 
   componentDidMount () {
+    this.refreshGamesList()
+  }
+
+  refreshGamesList () {
+    this.setState({ fetched: false })
     fetch('/api/v1/games', {
       credentials: 'same-origin'
     })
@@ -29,7 +35,23 @@ class GamesIndex extends Component {
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
-  render() {
+  handleGameJoin (gameId) {
+    fetch(`/api/v1/games/${gameId}`, {
+      method: 'PATCH',
+      credentials: 'same-origin'
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error in fetch (patch): ${error.message}`))
+  }
+
+  render () {
     let gameTiles = []
     let availableGames = []
     if (this.state.fetched) {
@@ -48,14 +70,15 @@ class GamesIndex extends Component {
         gameObj.ageDay = gameObj.ageHour / 24
       })
       gameTiles = availableGames.map(gameObj => {
+        let joinThisGame = () => { this.handleGameJoin(gameObj.id) }
         return(
           <GameTile
             key={gameObj.id}
             data={gameObj}
+            joinThisGame={joinThisGame}
           />
         )
       })
-
     }
     return(
       <div>
