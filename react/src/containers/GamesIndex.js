@@ -35,7 +35,6 @@ class GamesIndex extends Component {
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
-
   handleGameJoin (gameId) {
     fetch(`/api/v1/games/${gameId}`, {
       method: 'PATCH',
@@ -58,8 +57,8 @@ class GamesIndex extends Component {
     if (this.state.fetched) {
       availableGames = this.state.games.filter(gameObj => {
         return (
-          gameObj.started === false //||
-          //gameObj.playing_this_game === true
+          gameObj.started === false ||
+          gameObj.playing_this_game === true
         )
       })
       let now = Date.now()
