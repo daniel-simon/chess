@@ -34,13 +34,14 @@ class GameShow extends Component {
     .catch(error => console.error(`Couldn't fetch move history: ${error.message}`))
   }
 
-
   render() {
     return(
-      <div className="game-show">
-        <Board
-          initialMoveHistory={this.state.initialMoveHistory}
-        />
+      <div className="game-show-page">
+        <div className="game-board">
+          <Board
+            initialMoveHistory={this.state.initialMoveHistory}
+          />
+        </div>
       </div>
     )
   }

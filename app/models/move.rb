@@ -6,7 +6,7 @@ class Move < ApplicationRecord
     only_integer: true,
     greater_than_or_equal_to: 0
   }
-  validates :player_color, inclusion: { in: ['white','black'] }
+  validates :player_color, inclusion: { in: ['white', 'black'] }
   validates :moved_piece, inclusion: { in:
     ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king']
   }
