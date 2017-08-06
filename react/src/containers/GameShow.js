@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Board from './Board'
 
 class GameShow extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       initialMoveHistory: []
@@ -34,12 +34,13 @@ class GameShow extends Component {
     .catch(error => console.error(`Couldn't fetch move history: ${error.message}`))
   }
 
-  render() {
+  render () {
     return(
       <div className="game-show-page">
         <div className="game-board">
           <Board
             initialMoveHistory={this.state.initialMoveHistory}
+            gameId={this.props.params.id}
           />
         </div>
       </div>

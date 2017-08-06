@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
 
 class GamesIndex extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       fetched: false,
@@ -51,7 +51,7 @@ class GamesIndex extends Component {
     .catch(error => console.error(`Error in fetch (patch): ${error.message}`))
   }
 
-  render() {
+  render () {
     let gameTiles = []
     let availableGames = []
     if (this.state.fetched) {
