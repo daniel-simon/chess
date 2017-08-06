@@ -1,4 +1,5 @@
 class Api::V1::GamesController < ApplicationController
+  skip_before_action :verify_authenticity_token
 
   def index
     # for the games index page
@@ -19,4 +20,20 @@ class Api::V1::GamesController < ApplicationController
     end
     render json: { games: games }, adapter: :json
   end
+
+  def update
+    authorize
+    game_id = join_game_params
+    joined_game = Game.find(game_id)
+    if joined_game.update(joiner_id: current_user.id, started: true)
+      render json: { joined_game: joined_game.serializable_hash }, adapter: :json
+    end
+  end
+
+  private
+
+  def join_game_params
+    params.require(:id)
+  end
+
 end
