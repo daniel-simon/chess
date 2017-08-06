@@ -5,6 +5,7 @@ class GameShow extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      fetchedMoves: false,
       initialMoveHistory: []
     }
   }
@@ -28,6 +29,7 @@ class GameShow extends Component {
     })
     .then(response => {
       this.setState({
+        fetchedMoves: true,
         initialMoveHistory: response.moves
       })
     })
@@ -35,13 +37,18 @@ class GameShow extends Component {
   }
 
   render () {
+    let board = null
+    if (this.state.fetchedMoves) {
+      board = <Board
+        initialMoveHistory={this.state.initialMoveHistory}
+        gameId={this.props.params.id}
+      />
+    }
+
     return(
       <div className="game-show-page">
         <div className="game-board">
-          <Board
-            initialMoveHistory={this.state.initialMoveHistory}
-            gameId={this.props.params.id}
-          />
+          {board}
         </div>
       </div>
     )

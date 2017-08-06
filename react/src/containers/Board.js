@@ -36,7 +36,9 @@ class Board extends Component {
 
   loadBoardState (moveHistory) {
     let testBoard = new TestBoard('newGame')
-    //apply moveHistory
+    moveHistory.forEach(move => {
+      testBoard.movePiece(move.origin, move.destination)
+    })
     let newBoardState = testBoard.state
     this.setState({ moveHistory: moveHistory, board: newBoardState })
   }
@@ -156,7 +158,7 @@ class Board extends Component {
   recordMove (move) {
     let lastMove = {}
     move.moveNumber = this.state.moveHistory.length
-    
+
     for (let property in move) {
       lastMove[property] = move[property]
     }
@@ -176,7 +178,6 @@ class Board extends Component {
 
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
-
 
     this.persistMove(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
@@ -211,7 +212,7 @@ class Board extends Component {
       movedPiece.type === 'pawn' &&
       toRow === gameConstants.lastRowFor(movedPiece.color)
     ) {
-      movedPiece.type = 'queen'
+        movedPiece.type = 'queen'
     }
 
     let newBoardState = this.state.board
