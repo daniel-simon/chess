@@ -1,17 +1,19 @@
 <h1>Log in</h1>
 
 <%= form_for :user, url: '/sessions' do |f| %>
-  <div class="field">
-    <%= f.text_field :email,
-      placeholder: 'Email'
-    %>
+  <div class="small-6 small-centered columns">
+    <div class="field">
+      <%= f.text_field :email,
+        placeholder: 'Email'
+      %>
+    </div>
+    <div class="field">
+      <%= f.password_field :password,
+        autocomplete: "off",
+        placeholder: 'Password'
+      %>
+    </div>
+    <%= f.submit "Submit", class: "button left" %>
+    <%= link_to "Create new account", new_user_path, class: "button secondary right" %>
   </div>
-  <div class="field">
-    <%= f.password_field :password,
-      autocomplete: "off",
-      placeholder: 'Password'
-    %>
-  </div>
-  <%= f.submit "Submit", class: "button" %>
-  <%= link_to "Create new account", new_user_path, class: "button secondary" %>
 <% end %>

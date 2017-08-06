@@ -29,6 +29,9 @@ $square-border-color: #221e16;
 $main-background-color: #dddab2;
 
 body {
+  .game-show-page {
+    padding-top: 2em;
+  }
 
   button:focus {
     outline: 0;
