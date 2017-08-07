@@ -5,6 +5,14 @@
 $font-family-sans-serif: 'Zilla Slab', sans-serif;
 $font-family-serif: 'Zilla Slab', serif;
 
+$game-tile-bg-color: #887758;
+$game-created-color: black;
+$time-created-color: black;
+$join-button-color: #39a1c4;
+$join-button-font-color: #fff;
+$join-button-hover-color: #82bcd0;
+$join-button-hover-font-color: #fff;
+
 $white-square: #a29275; //#d6cfc2;
 $hover-non-selectable-white-square: #7d776c;
 
@@ -27,22 +35,40 @@ $square-border-color: #221e16;
 
 $main-background-color: #dddab2;
 
-$square-size: 63px;
+$square-size: 70px;
 
 body {
   .game-show-page {
     padding-top: 2em;
   }
-
   button:focus {
     outline: 0;
   }
   .game-tile {
-    h2 {
-      text-align: left!important;
+    background-color: $game-tile-bg-color;
+    $padding-v: 1em;
+    $padding-h: 1.8em;
+    padding-top: $padding-v;
+    padding-bottom: $padding-v;
+    padding-left: $padding-h;
+    padding-right: $padding-h;
+    border-radius: 40px;
+    .join-button {
+      border-radius: 15px;
+      background-color: $join-button-color;
+      color: $join-button-font-color;
+      &:hover {
+        background-color: $join-button-hover-color;
+        color: $join-button-hover-font-color;
+      }
     }
-    margin-left: auto;
-    margin-right: auto;
+    .game-created-by {
+      color: $game-created-color;
+    }
+    .time-created {
+      font-size: 0.8em;
+      color: $time-created-color;
+    }
   }
   .piece {
     position: relative;

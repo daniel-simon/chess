@@ -41,15 +41,15 @@ const GameTile = props => {
   }
   return(
     <div className="row">
-      <div className="small-8 small-centered panel columns">
+      <div className="small-12 medium-10 large-8 game-tile small-centered panel columns">
         <div className="row">
           <h3>
-            <span className="left">Game created by {creatorName}</span>
-            <span className="right">{ageStr}</span>
+            <span className="game-created-by left">Game created by {creatorName}</span>
+            <span className="time-created secondary right">{ageStr}</span>
           </h3>
         </div>
         <br />
-        <p className="row">Move suggestions: {showMovesText}</p>
+        <p className="move-suggestions row">Move suggestions: {showMovesText}</p>
         <br />
         <Link to={`/games/${gameId}`}>
           <div
