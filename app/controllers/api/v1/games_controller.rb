@@ -26,6 +26,31 @@ class Api::V1::GamesController < ApplicationController
     render json: { games: games }, adapter: :json
   end
 
+  def show
+    game_model = Game.find(game_id)
+    game_data_hash = game_model.serializable_hash
+    player_ids = [game_model.white_id, game_model.black_id]
+    unless player_ids.include?(current_user.id)
+      return render status: 403
+    end
+    opponent_id = player_ids.each do |id|
+      break id unless current_user.id == id
+    end
+
+    opponent = User.find(opponent_id)
+    white = User.find(game_model.white_id)
+    black = User.find(game_model.black_id)
+
+    game_data_hash["opponent_id"] = opponent.id
+    game_data_hash["opponent_username"] = opponent.username
+    game_data_hash["player_id"] = current_user.id
+    game_data_hash["player_username"] = current_user.username
+    game_data_hash["white_id"] = white.id
+    game_data_hash["black_id"] = black.id
+
+    render json: { game_data: game_data_hash }, adapter: :json
+  end
+
   def update
     game_update_request_hash = JSON.parse(request.body.read)
     game = Game.find(game_id)

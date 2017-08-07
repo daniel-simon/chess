@@ -6,12 +6,38 @@ class GameShow extends Component {
     super(props)
     this.state = {
       fetchedMoves: false,
-      initialMoveHistory: []
+      fetchedGameData: false,
+      initialMoveHistory: [],
+      gameData: {}
     }
   }
 
   componentDidMount () {
     this.fetchMoveHistory()
+    this.fetchGameData()
+  }
+
+  fetchGameData () {
+    let gameId = this.props.params.id
+    fetch(`/api/v1/games/${gameId}`, {
+      credentials: 'same-origin'
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .then(response => {
+      let gameData = response.game_data
+      this.setState({
+        fetchedGameData: true,
+        gameData: gameData
+      })
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   fetchMoveHistory () {
