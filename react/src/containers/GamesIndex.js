@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
+import AgeStringFromTimestamp from '../helpers/AgeStringFromTimestamp'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -68,11 +69,8 @@ class GamesIndex extends Component {
       })
       let now = Date.now()
       availableGames.forEach(gameObj => {
-        let ageMs = now - Date.parse(gameObj.created_at)
-        let ageSec = ageMs / 1000
-        gameObj.ageMin = ageSec / 60
-        gameObj.ageHour = gameObj.ageMin / 60
-        gameObj.ageDay = gameObj.ageHour / 24
+        gameObj.createdStr = AgeStringFromTimestamp(now, gameObj.created_at)
+        gameObj.updatedStr = AgeStringFromTimestamp(now, gameObj.updated_at)
       })
       gameTiles = availableGames.map(gameObj => {
         let joinThisGame = () => { this.handleGameJoin(gameObj.id) }
