@@ -69,7 +69,7 @@ class Api::V1::GamesController < ApplicationController
         username: opponent.username,
         color: (opponent.id == white.id ? "white" : "black")
       },
-      active_player_label: (active_id == user.id ? 'user' : 'opponent')
+      initial_active_player_label: (active_id == user.id ? 'user' : 'opponent')
     }
 
     render json: { game_show_data: game_data_hash }, adapter: :json
@@ -94,6 +94,14 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def create
+    create_game_request_hash = JSON.parse(request.body.read)
+    show_legal_moves = create_game_request_hash["showLegalMoves"]
+    new_game = Game.new(creator: current_user, show_legal_moves: show_legal_moves)
+    if new_game.save
+      render json: { new_game: new_game }, adapter: :json
+    else
+      render status: 422
+    end
   end
 
   private

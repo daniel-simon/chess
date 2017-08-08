@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::GamesController, type: :controller do
-  fcontext "With a user signed in and public games available" do
+  context "With a user signed in and public games available" do
 
     before(:each) do
       @bobby_f = FactoryGirl.create(:user, username: "bfischer")
