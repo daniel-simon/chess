@@ -32,7 +32,7 @@ class Api::V1::GamesController < ApplicationController
         end
       end
     end
-    render json: { games: games }, adapter: :json
+    render json: { games_index_data: games }, adapter: :json
   end
 
   def show

@@ -30,7 +30,10 @@ class GamesIndex extends Component {
       }
     })
     .then(response => {
-      this.setState({ fetched: true, games: response.games })
+      this.setState({
+        fetched: true,
+        games: response.games_index_data
+      })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
