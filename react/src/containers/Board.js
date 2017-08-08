@@ -173,17 +173,18 @@ class Board extends Component {
       lastMove.capturedPiece = null
       lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
     }
+    //move this logic down to the board interface
 
     //if (move.enPassant) { etc... }
 
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
-    this.updateGame(lastMove)
+    this.updateBackend(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
   }
 
-  updateGame (move) {
+  updateBackend (move) {
     this.persistMove(move)
     this.props.toggleActivePlayer()
   }
@@ -191,8 +192,7 @@ class Board extends Component {
   persistMove (move) {
     move.gameId = this.props.gameId
     let moveRequest = { move: move }
-    // move.playerColor = this.props.playerColor
-    fetch(`/api/v1/moves`, {
+    fetch('/api/v1/moves', {
       method: 'POST',
       credentials: 'same-origin',
       body: JSON.stringify(moveRequest)
@@ -230,14 +230,14 @@ class Board extends Component {
   render () {
     return(
       <BoardInterface
-        boardState={this.state.board}
-        recordMove={this.recordMove}
         movePiece={this.movePiece}
+        recordMove={this.recordMove}
+        boardState={this.state.board}
         moveHistory={this.state.moveHistory}
         lastMove={this.state.lastMove}
-        pieceSet={this.props.pieceSet}
         myColor={this.props.myColor}
         isMyTurn={this.props.isMyTurn}
+        pieceSet={this.props.pieceSet}
       />
     )
   }

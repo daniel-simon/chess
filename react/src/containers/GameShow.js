@@ -121,11 +121,11 @@ class GameShow extends Component {
     let board = null
     if (this.state.fetchedMoves && this.state.fetchedGameData) {
       board = <Board
-        initialMoveHistory={this.state.initialMoveHistory}
         gameId={this.props.params.id}
+        toggleActivePlayer={this.toggleActivePlayer}
+        initialMoveHistory={this.state.initialMoveHistory}
         myColor={this.state.myColor}
         isMyTurn={this.state.isMyTurn}
-        toggleActivePlayer={this.toggleActivePlayer}
         pieceSet={pieceSet}
       />
     }

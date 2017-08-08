@@ -85,6 +85,7 @@ class BoardInterface extends Component {
     this.endTurn()
   }
 
+  // could be reused in sandbox mode
   // endTurn () {
   //   let nextPlayer = (this.props.myColor === 'white') ? 'black' : 'white'
   //   this.clearSelection()
@@ -153,20 +154,19 @@ class BoardInterface extends Component {
   renderRow (row) {
     // let myColor = this.props.myColor
     let rowSquares = []
-    let cssBorderClass = 'chess-row'
     //TODO: label row and col names
     // maybe for labeling rows/cols on the board?:
     // let colName
     // let colLetters = "ABCDEFGH"
     // let colName = colLetters.charAt(col)
+    let startCol = bottomRow = (this.props.myColor === 'white') ? 0 : 7
+    let endCol = topRow = (this.props.myColor === 'white') ? 7 : 0
     let colStep = (this.props.myColor === 'white') ? 1 : -1
-    let startCol = (this.props.myColor === 'white') ? 0 : 7
-    let endCol = (this.props.myColor === 'white') ? 7 : 0
-    let topRow = (this.props.myColor === 'white') ? 7 : 0
-    let bottomRow = (this.props.myColor === 'white') ? 0 : 7
     for (let col = startCol; col !== endCol + colStep; col += colStep) {
       rowSquares.push(this.renderSquare(col, row))
     }
+
+    let cssBorderClass = 'chess-row row'
     if (row === topRow) {
       cssBorderClass += ' top'
     }
@@ -174,7 +174,7 @@ class BoardInterface extends Component {
       cssBorderClass += ' bottom'
     }
     return (
-      <div key={row} className={`${cssBorderClass} row`}>
+      <div key={row} className={cssBorderClass}>
         {/* TODO: row labels **COULD** go here? */}
         {rowSquares}
       </div>
