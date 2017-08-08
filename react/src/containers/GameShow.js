@@ -8,7 +8,10 @@ class GameShow extends Component {
       fetchedMoves: false,
       fetchedGameData: false,
       initialMoveHistory: [],
-      gameData: {}
+      gameData: {},
+      activePlayerData: {},
+      myColor: '',
+      isMyTurn: null
     }
   }
 
@@ -31,10 +34,16 @@ class GameShow extends Component {
       }
     })
     .then(response => {
-      let gameData = response.game_data
+      let playerData = response.game_show_data.player_data
+      let activePlayerData = playerData[playerData.active_player_label]
+      let myColor = playerData.user.color
+      let isMyTurn = playerData.active_player_label === 'user'
       this.setState({
         fetchedGameData: true,
-        gameData: gameData
+        gameData: response.game_show_data,
+        activePlayerData: activePlayerData,
+        myColor: myColor,
+        isMyTurn: isMyTurn
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
@@ -64,10 +73,12 @@ class GameShow extends Component {
 
   render () {
     let board = null
-    if (this.state.fetchedMoves) {
+    if (this.state.fetchedMoves && this.state.fetchedGameData) {
       board = <Board
         initialMoveHistory={this.state.initialMoveHistory}
         gameId={this.props.params.id}
+        myColor={this.state.myColor}
+        isMyTurn={this.state.isMyTurn}
       />
     }
 

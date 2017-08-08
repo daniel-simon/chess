@@ -6,7 +6,16 @@ class Api::V1::GamesController < ApplicationController
     games = []
     game_models = Game.where(finished: false)
     game_models.each_with_index do |game_model, i|
-      games[i] = game_model.serializable_hash(only: [:id, :started, :show_legal_moves, :created_at, :creator_id, :joiner_id])
+      games[i] = game_model.serializable_hash(
+        only: [
+          :id,
+          :started,
+          :show_legal_moves,
+          :created_at,
+          :creator_id,
+          :joiner_id
+        ]
+      )
       games[i]["my_game"] = false
       games[i]["playing_this_game"] = false
       games[i]["creator_name"] = User.find(game_model.creator_id).username
@@ -28,7 +37,15 @@ class Api::V1::GamesController < ApplicationController
 
   def show
     game_model = Game.find(game_id)
-    game_data_hash = game_model.serializable_hash
+    game_data_hash = game_model.serializable_hash(
+      except: [
+        :active_player_id,
+        :creator_id,
+        :joiner_id,
+        :winner_id,
+        :loser_id
+      ]
+    )
     player_ids = [game_model.white_id, game_model.black_id]
     unless player_ids.include?(current_user.id)
       return render status: 403
@@ -36,19 +53,26 @@ class Api::V1::GamesController < ApplicationController
     opponent_id = player_ids.each do |id|
       break id unless current_user.id == id
     end
-
     opponent = User.find(opponent_id)
+    user = current_user
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
+    active_id = game_model.active_player_id
+    game_data_hash["player_data"] = {
+      user: {
+        id: user.id,
+        username: user.username,
+        color: (user.id == white.id ? "white" : "black")
+      },
+      opponent: {
+        id: opponent.id,
+        username: opponent.username,
+        color: (opponent.id == white.id ? "white" : "black")
+      },
+      active_player_label: (active_id == user.id ? 'user' : 'opponent')
+    }
 
-    game_data_hash["opponent_id"] = opponent.id
-    game_data_hash["opponent_username"] = opponent.username
-    game_data_hash["player_id"] = current_user.id
-    game_data_hash["player_username"] = current_user.username
-    game_data_hash["white_id"] = white.id
-    game_data_hash["black_id"] = black.id
-
-    render json: { game_data: game_data_hash }, adapter: :json
+    render json: { game_show_data: game_data_hash }, adapter: :json
   end
 
   def update
