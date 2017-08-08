@@ -53,7 +53,7 @@ const GameTile = props => {
         <br />
         <Link to={`/games/${gameId}`}>
           <div
-            className="join-button row button panel"
+            className="button panel row"
             onClick={props.joinThisGame}
           >
             Join this game
