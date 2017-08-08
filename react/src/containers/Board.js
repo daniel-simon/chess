@@ -185,30 +185,7 @@ class Board extends Component {
 
   updateGame (move) {
     this.persistMove(move)
-    this.toggleActivePlayer(move)
-  }
-
-  toggleActivePlayer (move) {
-    let newActiveColor = gameConstants.enemyOf(move.player)
-    let changeActivePlayerRequest = {
-      patchType: "switch-turns",
-      activeColor: newActiveColor
-    }
-    fetch(`/api/v1/games/${this.props.gameId}`,{
-      method: 'PATCH',
-      credentials: 'same-origin',
-      body: JSON.stringify(changeActivePlayerRequest)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        throw new Error(errorMessage)
-      }
-    })
-    .catch(error => console.error(`Error updating game active player: ${error.message}`))
-
+    this.props.toggleActivePlayer()
   }
 
   persistMove (move) {
@@ -251,7 +228,6 @@ class Board extends Component {
   }
 
   render () {
-    let pieceSet = 1
     return(
       <BoardInterface
         boardState={this.state.board}
@@ -259,8 +235,9 @@ class Board extends Component {
         movePiece={this.movePiece}
         moveHistory={this.state.moveHistory}
         lastMove={this.state.lastMove}
-        pieceSet={pieceSet}
+        pieceSet={this.props.pieceSet}
         myColor={this.props.myColor}
+        isMyTurn={this.props.isMyTurn}
       />
     )
   }

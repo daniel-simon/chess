@@ -4,7 +4,6 @@ let getLegalSquares = require('../helpers/GetLegalSquares.js')
 let castleHelper = require('../helpers/CastleHelper.js')
 let gameConstants = require('../helpers/GameConstants.js')
 let squareMethods = require('../helpers/SquareMethods.js')
-let myColor = 'white'
 
 class BoardInterface extends Component {
   constructor (props) {
@@ -12,8 +11,7 @@ class BoardInterface extends Component {
     this.state = {
       selectedSquare: [],
       availableSquares: [],
-      availableCastlingRooks: [],
-      activeColor: 'white'
+      availableCastlingRooks: []
     }
     this.selectPiece = this.selectPiece.bind(this)
     this.selectDestinationAndMovePiece = this.selectDestinationAndMovePiece.bind(this)
@@ -22,7 +20,7 @@ class BoardInterface extends Component {
   }
 
   selectPiece (col, row) {
-    let player = this.state.activeColor
+    let player = this.props.myColor
     let pieceSelected = this.props.boardState[col][row]
     let moveHistory = this.props.moveHistory
     let availableSquares = getLegalSquares.forPiece(col, row, this.props.boardState)
@@ -47,12 +45,12 @@ class BoardInterface extends Component {
     let newMove = {
       origin: origin,
       destination: destination,
-      player: this.state.activeColor,
+      player: this.props.myColor,
       castle: false
     }
     this.props.recordMove(newMove)
     this.props.movePiece(origin, destination)
-    this.endTurn()
+    this.clearSelection()
   }
 
   castleWithRook (col, row) {
@@ -62,7 +60,7 @@ class BoardInterface extends Component {
     } else if (col === 0) {
       side = 'queenside'
     }
-    let player = this.state.activeColor
+    let player = this.props.myColor
     let homeRow = gameConstants.firstRowFor(player)
     let kingToCol = gameConstants.castleDestinationFor('king', side)
     let rookToCol = gameConstants.castleDestinationFor('rook', side)
@@ -76,7 +74,7 @@ class BoardInterface extends Component {
     let newMove = {
       origin: kingOrigin,
       destination: kingDestination,
-      player: this.state.activeColor,
+      player: this.props.myColor,
       castle: true
     }
 
@@ -87,11 +85,11 @@ class BoardInterface extends Component {
     this.endTurn()
   }
 
-  endTurn () {
-    let nextPlayer = (this.state.activeColor === 'white') ? 'black' : 'white'
-    this.clearSelection()
-    this.setState({ activeColor: nextPlayer })
-  }
+  // endTurn () {
+  //   let nextPlayer = (this.props.myColor === 'white') ? 'black' : 'white'
+  //   this.clearSelection()
+  //   this.setState({ activeColor: nextPlayer })
+  // }
 
   clearSelection () {
     this.setState({
@@ -102,35 +100,39 @@ class BoardInterface extends Component {
   }
 
   renderSquare (col, row) {
-    let occupant = this.props.boardState[col][row]
-    let currentSquare = [col, row]
     let selected = false
     let available = false
     let victim = false
     let castlingRook = false
-    if (squareMethods.sameSquare(this.state.selectedSquare, currentSquare)) {
-      selected = true
-    } else if (squareMethods.includesSquare(this.state.availableSquares, currentSquare)) {
-      available = true
-      if (occupant) victim = true
-    } else if (squareMethods.includesSquare(this.state.availableCastlingRooks, currentSquare)) {
-      available = true
-      castlingRook = true
+    let selectable = false
+    let handleClick = () => {}
+    let occupant = this.props.boardState[col][row]
+
+    if (this.props.isMyTurn) {
+      let currentSquare = [col, row]
+      if (squareMethods.sameSquare(this.state.selectedSquare, currentSquare)) {
+        selected = true
+      } else if (squareMethods.includesSquare(this.state.availableSquares, currentSquare)) {
+        available = true
+        if (occupant) victim = true
+      } else if (squareMethods.includesSquare(this.state.availableCastlingRooks, currentSquare)) {
+        available = true
+        castlingRook = true
+      }
+      if (!selected && !castlingRook && occupant && occupant.color === this.props.myColor) {
+        handleClick = () => { this.selectPiece(...currentSquare) }
+        selectable = true
+      } else if (available) {
+        let moveToMe = () => { this.selectDestinationAndMovePiece(...currentSquare) }
+        let castleWithMe = () => { this.castleWithRook(...currentSquare) }
+        handleClick = castlingRook ? castleWithMe : moveToMe
+        selectable = true
+      } else {
+        handleClick = () => { this.clearSelection() }
+        selectable = false
+      }
     }
-    let selectable
-    let handleClick
-    if (!selected && !castlingRook && occupant && occupant.color === this.state.activeColor) {
-      handleClick = () => { this.selectPiece(...currentSquare) }
-      selectable = true
-    } else if (available) {
-      let moveToMe = () => { this.selectDestinationAndMovePiece(...currentSquare) }
-      let castleWithMe = () => { this.castleWithRook(...currentSquare) }
-      handleClick = castlingRook ? castleWithMe : moveToMe
-      selectable = true
-    } else {
-      handleClick = () => { this.clearSelection() }
-      selectable = false
-    }
+
     return (
       <Square
         key={col}
@@ -143,13 +145,13 @@ class BoardInterface extends Component {
         available={available}
         victim={victim}
         pieceSet={this.props.pieceSet}
-        asViewedBy={myColor}
+        asViewedBy={this.props.myColor}
       />
     )
   }
 
   renderRow (row) {
-    // let myColor = this.state.activeColor
+    // let myColor = this.props.myColor
     let rowSquares = []
     let cssBorderClass = 'chess-row'
     //TODO: label row and col names
@@ -157,11 +159,11 @@ class BoardInterface extends Component {
     // let colName
     // let colLetters = "ABCDEFGH"
     // let colName = colLetters.charAt(col)
-    let colStep = (myColor === 'white') ? 1 : -1
-    let startCol = (myColor === 'white') ? 0 : 7
-    let endCol = (myColor === 'white') ? 7 : 0
-    let topRow = (myColor === 'white') ? 7 : 0
-    let bottomRow = (myColor === 'white') ? 0 : 7
+    let colStep = (this.props.myColor === 'white') ? 1 : -1
+    let startCol = (this.props.myColor === 'white') ? 0 : 7
+    let endCol = (this.props.myColor === 'white') ? 7 : 0
+    let topRow = (this.props.myColor === 'white') ? 7 : 0
+    let bottomRow = (this.props.myColor === 'white') ? 0 : 7
     for (let col = startCol; col !== endCol + colStep; col += colStep) {
       rowSquares.push(this.renderSquare(col, row))
     }
@@ -180,11 +182,11 @@ class BoardInterface extends Component {
   }
 
   renderGrid () {
-    // let myColor = this.state.activeColor
+    // let myColor = this.props.myColor
     let gridRows = []
-    let rowStep = (myColor === 'white') ? -1 : 1
-    let startRow = (myColor === 'white') ? 7 : 0
-    let endRow = (myColor === 'white') ? 0 : 7
+    let rowStep = (this.props.myColor === 'white') ? -1 : 1
+    let startRow = (this.props.myColor === 'white') ? 7 : 0
+    let endRow = (this.props.myColor === 'white') ? 0 : 7
     for (let row = startRow; row !== endRow + rowStep; row += rowStep) {
       gridRows.push(this.renderRow(row))
     }

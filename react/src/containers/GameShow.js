@@ -6,13 +6,15 @@ class GameShow extends Component {
     super(props)
     this.state = {
       fetchedMoves: false,
-      fetchedGameData: false,
       initialMoveHistory: [],
+      fetchedGameData: false,
       gameData: {},
+      playerData: {},
       activePlayerData: {},
       myColor: '',
       isMyTurn: null
     }
+    this.toggleActivePlayer = this.toggleActivePlayer.bind(this)
   }
 
   componentDidMount () {
@@ -20,9 +22,22 @@ class GameShow extends Component {
     this.fetchGameData()
   }
 
+  componentDidUpdate () {
+    if (
+      this.state.activePlayerData.color === this.state.myColor &&
+      this.state.isMyTurn === false
+    ) {
+        this.setState({ isMyTurn: true })
+    } else if (
+      this.state.activePlayerData.color !== this.state.myColor &&
+      this.state.isMyTurn === true
+    ) {
+        this.setState({ isMyTurn: false })
+    }
+  }
+
   fetchGameData () {
-    let gameId = this.props.params.id
-    fetch(`/api/v1/games/${gameId}`, {
+    fetch(`/api/v1/games/${this.props.params.id}`, {
       credentials: 'same-origin'
     })
     .then(response => {
@@ -35,12 +50,13 @@ class GameShow extends Component {
     })
     .then(response => {
       let playerData = response.game_show_data.player_data
-      let activePlayerData = playerData[playerData.active_player_label]
+      let activePlayerData = playerData[playerData.initial_active_player_label]
       let myColor = playerData.user.color
       let isMyTurn = playerData.active_player_label === 'user'
       this.setState({
         fetchedGameData: true,
         gameData: response.game_show_data,
+        playerData: playerData,
         activePlayerData: activePlayerData,
         myColor: myColor,
         isMyTurn: isMyTurn
@@ -50,8 +66,7 @@ class GameShow extends Component {
   }
 
   fetchMoveHistory () {
-    let gameId = this.props.params.id
-    fetch(`/api/v1/games/${gameId}/moves`, {
+    fetch(`/api/v1/games/${this.props.params.id}/moves`, {
       credentials: 'same-origin',
     })
     .then(response => {
@@ -71,7 +86,38 @@ class GameShow extends Component {
     .catch(error => console.error(`Couldn't fetch move history: ${error.message}`))
   }
 
+  toggleActivePlayer () {
+    let currentlyMyTurn = this.state.isMyTurn
+    let nextActivePlayerLabel = currentlyMyTurn ? 'opponent' : 'user'
+    let nextActivePlayerData = this.state.playerData[nextActivePlayerLabel]
+
+    let changeActivePlayerRequest = {
+      patchType: "switch-turns",
+      activeColor: nextActivePlayerData.color
+    }
+    fetch(`/api/v1/games/${this.props.params.id}`,{
+      method: 'PATCH',
+      credentials: 'same-origin',
+      body: JSON.stringify(changeActivePlayerRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .then(response => {
+      this.setState({
+        activePlayerData: nextActivePlayerData
+      })
+    })
+    .catch(error => console.error(`Error processing move: ${error.message}`))
+  }
+
   render () {
+    let pieceSet = 1
     let board = null
     if (this.state.fetchedMoves && this.state.fetchedGameData) {
       board = <Board
@@ -79,6 +125,8 @@ class GameShow extends Component {
         gameId={this.props.params.id}
         myColor={this.state.myColor}
         isMyTurn={this.state.isMyTurn}
+        toggleActivePlayer={this.toggleActivePlayer}
+        pieceSet={pieceSet}
       />
     }
 
