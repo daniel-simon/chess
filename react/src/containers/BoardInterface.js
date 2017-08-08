@@ -159,9 +159,10 @@ class BoardInterface extends Component {
     // let colName
     // let colLetters = "ABCDEFGH"
     // let colName = colLetters.charAt(col)
-    let startCol = bottomRow = (this.props.myColor === 'white') ? 0 : 7
-    let endCol = topRow = (this.props.myColor === 'white') ? 7 : 0
-    let colStep = (this.props.myColor === 'white') ? 1 : -1
+    let bottomRow, topRow, startCol, endCol, colStep
+    startCol = bottomRow = (this.props.myColor === 'white') ? 0 : 7
+    endCol = topRow = (this.props.myColor === 'white') ? 7 : 0
+    colStep = (this.props.myColor === 'white') ? 1 : -1
     for (let col = startCol; col !== endCol + colStep; col += colStep) {
       rowSquares.push(this.renderSquare(col, row))
     }

@@ -8,11 +8,11 @@ let boardSetter = {
     ]
     for (let col = 0; col <= 7; col++) {
       for (let row = 0; row <= 7; row++) {
-        emptyBoard[col]][row] = null
+        emptyBoard[col][row] = null
       }
     }
     return emptyBoard
-  }
+  },
 
   initialSetup (setupType, pawns) {
     let newBoard = this.getEmptyBoard()

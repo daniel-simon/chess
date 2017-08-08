@@ -91,6 +91,7 @@ class Api::V1::GamesController < ApplicationController
     game_update_request_hash = JSON.parse(request.body.read)
     game = Game.find(game_id)
     case game_update_request_hash["patchType"]
+      #fix bug here with a "begin game" option from the front end. really just fix the whole front end
     when "join-game"
       white_id = game.white_id
       if game.update(joiner_id: user.id, started: true, active_player_id: white_id)
