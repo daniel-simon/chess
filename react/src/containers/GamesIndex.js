@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
+import AgeStringFromTimestamp from '../helpers/AgeStringFromTimestamp'
 
 class GamesIndex extends Component {
   constructor (props) {
     super(props)
     this.state = {
       fetched: false,
-      games: []
+      activeGames: [],
+      availableGames: []
     }
     this.handleGameJoin = this.handleGameJoin.bind(this)
   }
@@ -30,15 +32,21 @@ class GamesIndex extends Component {
       }
     })
     .then(response => {
-      this.setState({ fetched: true, games: response.games })
+      this.setState({
+        fetched: true,
+        activeGames: response.games_index_data.active_games,
+        availableGames: response.games_index_data.available_games
+      })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   handleGameJoin (gameId) {
+    let joinGameRequest = { patchType: "join-game" }
     fetch(`/api/v1/games/${gameId}`, {
       method: 'PATCH',
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      body: JSON.stringify(joinGameRequest)
     })
     .then(response => {
       if (response.ok) {
@@ -52,38 +60,60 @@ class GamesIndex extends Component {
   }
 
   render () {
-    let gameTiles = []
+    let activeGames = []
+    let activeGameTiles = []
+    let activeGamesHeader = null
     let availableGames = []
+    let availableGameTiles = []
+    let availableGamesHeader = null
     if (this.state.fetched) {
-      availableGames = this.state.games.filter(gameObj => {
-        return (
-          gameObj.started === false ||
-          gameObj.playing_this_game === true
-        )
-      })
+      activeGames = this.state.activeGames
+      availableGames = this.state.availableGames
       let now = Date.now()
       availableGames.forEach(gameObj => {
-        let ageMs = now - Date.parse(gameObj.created_at)
-        let ageSec = ageMs / 1000
-        gameObj.ageMin = ageSec / 60
-        gameObj.ageHour = gameObj.ageMin / 60
-        gameObj.ageDay = gameObj.ageHour / 24
+        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.created_at)
       })
-      gameTiles = availableGames.map(gameObj => {
-        let joinThisGame = () => { this.handleGameJoin(gameObj.id) }
+      activeGames.forEach(gameObj => {
+        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.updated_at)
+      })
+      activeGameTiles = activeGames.map(gameObj => {
         return(
           <GameTile
             key={gameObj.id}
+            tileType="active"
             data={gameObj}
-            joinThisGame={joinThisGame}
+            handleClick={()=>{}}
           />
         )
       })
+      availableGameTiles = availableGames.map(gameObj => {
+        let joinAndBeginGame = () => { this.handleGameJoin(gameObj.id) }
+        return(
+          <GameTile
+            key={gameObj.id}
+            tileType="available"
+            data={gameObj}
+            handleClick={joinAndBeginGame}
+          />
+        )
+      })
+      if (activeGames.length > 0) {
+        activeGamesHeader = (
+          <h2 className="active-games">Your active games</h2>
+        )
+      }
+      if (availableGames.length > 0) {
+        availableGamesHeader = (
+          <h2 className="public-games">Public games</h2>
+        )
+      }
     }
     return(
       <div>
-        <h2 className="public-games">Public games</h2>
-        {gameTiles}
+        {activeGamesHeader}
+        {activeGameTiles}
+        {availableGamesHeader}
+        {availableGameTiles}
       </div>
     )
   }

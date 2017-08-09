@@ -8,21 +8,21 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @user = User.find_by(email: login_params[:email])
+    @user = User.find_by(username: login_params[:username])
     if @user && @user.authenticate(login_params[:password])
       session[:user_id] = @user.id
       flash[:notice] = "Logged in successfully"
-      redirect_to '/games'
+      redirect_to games_path
     else
       errors = ''
-      if login_params[:email].blank?
-        errors += "Please enter an email address. "
+      if login_params[:username].blank?
+        errors += "Please enter a username. "
       end
       if login_params[:password].blank?
         errors += "Please enter a password. "
       end
-      if !(login_params[:email].strip.blank? || login_params[:password].strip.blank?)
-        errors += "Invalid email address or password."
+      if !(login_params[:username].strip.blank? || login_params[:password].strip.blank?)
+        errors += "Invalid username or password."
       end
       flash[:alert] = errors
       render :new
@@ -38,6 +38,6 @@ class SessionsController < ApplicationController
   private
 
   def login_params
-    params.require(:user).permit(:email, :password)
+    params.require(:user).permit(:username, :password)
   end
 end

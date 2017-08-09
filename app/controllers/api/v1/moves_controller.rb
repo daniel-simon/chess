@@ -28,6 +28,9 @@ class Api::V1::MovesController < ApplicationController
         castle: move_request_hash["castle"]
       }
     )
+    if move_request_hash["capturedPiece"]
+      new_move_obj.captured_piece = move_request_hash["capturedPiece"]["type"]
+    end
     if new_move_obj.save
       render json: { move: new_move_obj }, adapter: :json
     else

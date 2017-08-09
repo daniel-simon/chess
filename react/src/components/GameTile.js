@@ -2,61 +2,56 @@ import React from 'react';
 import { Link } from 'react-router'
 
 const GameTile = props => {
-  let creatorName = props.data.creator_name
+  let showMovesText = props.data.show_legal_moves ? 'enabled' : 'disabled'
   let gameId = props.data.id
-  let showLegalMoves = props.data.show_legal_moves
+  let opponentHeader = ''
+  let timestampText = ''
+  let cssClass = ''
+  let buttonText = ''
+  let turnText = ''
 
-  let showMovesText = showLegalMoves ? "enabled" : "disabled"
-  let days = Math.floor(props.data.ageDay)
-  let hours = Math.floor(props.data.ageHour - (24 * days))
-  let minutes = Math.floor(props.data.ageMin - (60 * hours) - (60 * 24 * days))
-  let ageStr = ''
-  // let units = { day: days, hour: hours, minute: minutes }
-  // for (let unit in units) {
-  //   let quantity = units[unit]
-  // }
+  switch (props.tileType) {
+  case 'active':
+    let opponentName = props.data.opponent_username
+    opponentHeader = `Game against ${opponentName}`
+    timestampText = `Last move made ${props.data.timestampStr}`
+    cssClass = 'active-game'
+    if (props.data.my_turn) {
+      cssClass += ' my-turn'
+      turnText = "Your turn"
+    } else {
+      turnText = `${opponentName}'s turn`
+    }
+    buttonText = "Continue Game"
+    break
+  case 'available':
+    opponentHeader = `Open game created by ${props.data.creator_username}`
+    timestampText = `Created ${props.data.timestampStr}`
+    cssClass = 'available-game'
+    buttonText = "Join Game"
+    break
+  }
 
-  if (days > 0) {
-    ageStr += `${days} day`
-    if (days > 1) {
-      ageStr += 's'
-    }
-  }
-  if (hours > 0) {
-    ageStr += ` ${hours} hour`
-    if (hours > 1) {
-      ageStr += 's'
-    }
-  }
-  if (minutes > 0) {
-    ageStr += ` ${minutes} minute`
-    if (minutes > 1) {
-      ageStr += 's'
-    }
-  }
-  if (ageStr.length === 0) {
-    ageStr = 'Just now'
-  } else {
-    ageStr += ' ago'
-  }
   return(
     <div className="row">
-      <div className="small-8 small-centered panel columns">
+      <div className={cssClass + " game-tile small-12 medium-10 large-8 game-tile small-centered panel columns"}>
         <div className="row">
           <h3>
-            <span className="left">Game created by {creatorName}</span>
-            <span className="right">{ageStr}</span>
+            <span className="opponent-header left">{opponentHeader}</span>
+            <span className="timestamp secondary right">{timestampText}</span>
           </h3>
         </div>
         <br />
-        <p className="row">Move suggestions: {showMovesText}</p>
+        <div className="row">
+          <p className="game-info-text">
+            <span className="left">Move suggestions: {showMovesText}</span>
+            <span className="turn-text right">{turnText}</span>
+          </p>
+        </div>
         <br />
         <Link to={`/games/${gameId}`}>
-          <div
-            className="join-button row button panel"
-            onClick={props.joinThisGame}
-          >
-            Join this game
+          <div className="button panel row" onClick={props.handleClick}>
+            {buttonText}
           </div>
         </Link>
       </div>

@@ -11,7 +11,7 @@ const Square = props => {
   let highlightCssClass = '';
   if (props.selected) {
     highlightCssClass = ' selected';
-  } else if (props.available) {
+  } else if (props.showLegalMoves && props.available) {
     highlightCssClass = (props.victim) ? ' victim' : ' available'
   }
   if (props.selectable) {

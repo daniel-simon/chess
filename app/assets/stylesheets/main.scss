@@ -1,6 +1,6 @@
 $font-family-sans-serif: 'Zilla Slab', sans-serif;
 $font-family-serif: 'Zilla Slab', serif;
-$main-background-color: #dddab2;
+$main-background-color: #bdbba9;
 
 body {
   h1, h2, h3, h4, h5, h6 {
@@ -9,4 +9,9 @@ body {
   // font-family: $font-family-serif;
   font-size: 24px;
   background-color: $main-background-color;
+  .button {
+    border-color: black !important;
+    border-width: 2px;
+    border-radius: 15px;
+  }
 }

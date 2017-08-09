@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       flash[:notice] = "Account successfully created. Welcome, #{@user.username}!"
-      redirect_to '/games'
+      redirect_to games_path
     else
       flash[:alert] = "Failed to create account: #{@user.errors.full_messages.to_sentence}"
       render :new

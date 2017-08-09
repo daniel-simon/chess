@@ -25,24 +25,69 @@ $hover-victim-square-border-color: #f67e51;
 $board-border-width: 10px;
 $square-border-color: #221e16;
 
-$main-background-color: #dddab2;
+$main-background-color: #867056;
 
-$square-size: 63px;
+$game-tile-bg-color: #b98469;
+$game-tile-your-turn-bg-color: #9ed9d7;
+$active-game-tile-opponents-turn-bg-color: #d7c4a1;
+$game-created-color: black;
+$time-created-color: black;
+$join-button-color: #166985;
+$join-button-font-color: #fff;
+$join-button-hover-color: #20aede;
+$join-button-hover-font-color: #fff;
+
+$square-size: 70px;
 
 body {
   .game-show-page {
     padding-top: 2em;
   }
-
   button:focus {
     outline: 0;
   }
   .game-tile {
+
     h2 {
-      text-align: left!important;
+      color: black;
     }
-    margin-left: auto;
-    margin-right: auto;
+    border-color: black;
+    border-width: 2px;
+    background-color: $game-tile-bg-color;
+    $padding-v: 1em;
+    $padding-h: 1.8em;
+    padding-top: $padding-v;
+    padding-bottom: $padding-v;
+    padding-left: $padding-h;
+    padding-right: $padding-h;
+    border-radius: 40px;
+    &.active-game {
+      background-color: $active-game-tile-opponents-turn-bg-color;
+      // border-width: 5px;
+      &.my-turn {
+        // border-color: $game-tile-your-turn-border-color;
+        background-color: $game-tile-your-turn-bg-color;
+      }
+    }
+    .game-info-text {
+      font-size: 1em;
+    }
+    .button {
+      background-color: $join-button-color;
+      color: $join-button-font-color;
+
+      &:hover {
+        background-color: $join-button-hover-color;
+        color: $join-button-hover-font-color;
+      }
+    }
+    .game-created-by {
+      color: black;
+    }
+    .time-created {
+      font-size: 0.3em;
+      color: black;
+    }
   }
   .piece {
     position: relative;
