@@ -23,6 +23,7 @@ $hover-victim-square: #ff2121;
 $hover-victim-square-border-color: #f67e51;
 
 $board-border-width: 10px;
+$board-border-radius: 4px;
 $square-border-color: #221e16;
 
 $main-background-color: #867056;
@@ -47,7 +48,6 @@ body {
     outline: 0;
   }
   .game-tile {
-
     h2 {
       color: black;
     }
@@ -60,7 +60,7 @@ body {
     padding-bottom: $padding-v;
     padding-left: $padding-h;
     padding-right: $padding-h;
-    border-radius: 40px;
+    border-radius: 10px;
     &.active-game {
       background-color: $active-game-tile-opponents-turn-bg-color;
       // border-width: 5px;
@@ -150,8 +150,12 @@ body {
     width: 8 * $square-size + (2 * $board-border-width);
     &.top {
       border-top: $board-border-width solid #50370c;
+      border-top-right-radius: $board-border-radius;
+      border-top-left-radius: $board-border-radius;
     }
     &.bottom {
+      border-bottom-right-radius: $board-border-radius;
+      border-bottom-left-radius: $board-border-radius;
       border-bottom: $board-border-width solid #50370c;
     }
   }
