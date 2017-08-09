@@ -127,10 +127,16 @@ class BoardInterface extends Component {
         let moveToMe = () => { this.selectDestinationAndMovePiece(...currentSquare) }
         let castleWithMe = () => { this.castleWithRook(...currentSquare) }
         handleClick = castlingRook ? castleWithMe : moveToMe
-        selectable = true
+        if (this.props.showLegalMoves) {
+          selectable = true
+        }
       } else {
-        handleClick = () => { this.clearSelection() }
         selectable = false
+        if (this.props.showLegalMoves || selected) {
+          handleClick = () => { this.clearSelection() }
+        } else {
+          handleClick = () => {}
+        }
       }
     }
 
@@ -147,6 +153,7 @@ class BoardInterface extends Component {
         victim={victim}
         pieceSet={this.props.pieceSet}
         asViewedBy={this.props.myColor}
+        showLegalMoves={this.props.showLegalMoves}
       />
     )
   }

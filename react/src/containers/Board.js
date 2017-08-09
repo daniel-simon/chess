@@ -120,6 +120,7 @@ class Board extends Component {
         lastMove={this.state.lastMove}
         myColor={this.props.myColor}
         isMyTurn={this.props.isMyTurn}
+        showLegalMoves={this.props.showLegalMoves}
         pieceSet={this.props.pieceSet}
       />
     )

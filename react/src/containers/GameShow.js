@@ -126,6 +126,7 @@ class GameShow extends Component {
         initialMoveHistory={this.state.initialMoveHistory}
         myColor={this.state.myColor}
         isMyTurn={this.state.isMyTurn}
+        showLegalMoves={this.state.gameData.show_legal_moves}
         pieceSet={pieceSet}
       />
     }
