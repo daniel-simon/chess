@@ -1,4 +1,4 @@
-const AgeStringFromTimestamp = (now, timestamp) => {
+const GetTimestampString = (now, timestamp) => {
   let ageInMs = now - Date.parse(timestamp)
   let ageInSec = ageInMs / 1000
   let ageInMin = ageInSec / 60
@@ -37,4 +37,4 @@ const AgeStringFromTimestamp = (now, timestamp) => {
   return ageStr
 }
 
-export default AgeStringFromTimestamp
+export default GetTimestampString

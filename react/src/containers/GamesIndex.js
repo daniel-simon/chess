@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
-import AgeStringFromTimestamp from '../helpers/AgeStringFromTimestamp'
+import GetTimestampString from '../helpers/GetTimestampString'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -71,10 +71,10 @@ class GamesIndex extends Component {
       availableGames = this.state.availableGames
       let now = Date.now()
       availableGames.forEach(gameObj => {
-        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.created_at)
+        gameObj.timestampStr = GetTimestampString(now, gameObj.created_at)
       })
       activeGames.forEach(gameObj => {
-        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.updated_at)
+        gameObj.timestampStr = GetTimestampString(now, gameObj.updated_at)
       })
       activeGameTiles = activeGames.map(gameObj => {
         return(
@@ -82,7 +82,7 @@ class GamesIndex extends Component {
             key={gameObj.id}
             tileType="active"
             data={gameObj}
-            handleClick={()=>{}}
+            handleClick={ () => {} }
           />
         )
       })
