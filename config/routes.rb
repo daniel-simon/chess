@@ -2,9 +2,9 @@ Rails.application.routes.draw do
 
   root 'sessions#new'
 
-  resources    :users, only: [:new, :create, :destroy]
+  resources    :users, only: [:new, :create, :destroy, :index, :show]
   resources :sessions, only: [:new, :create, :destroy]
-  resources    :games, only: [:index, :show, :new, :create]
+  resources    :games, only: [:index, :show, :new]
 
   namespace :api do
     namespace :v1 do

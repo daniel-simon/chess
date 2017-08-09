@@ -2,32 +2,23 @@ class Api::V1::GamesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    if current_user
-      user = current_user
-    else
-      return render status: 403
-    end
+    user = authorize_user
     games = {
       active_games: active_games(user),
       available_games: available_games(user)
     }
-
     render json: { games_index_data: games }, adapter: :json
   end
 
   def show
-    if current_user
-      user = current_user
-    else
-      return render status: 403
-    end
-    game_model = Game.find(game_id)
+    user = authorize_user
+    game_model = Game.find(params_game_id)
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
-    unless [white.id, black.id].include?(user.id)
-      return render status: 403
-    else
+    if [white.id, black.id].include?(user.id)
       opponent = User.find( get_opponent_id(white.id, black.id) )
+    else
+      return render status: 403
     end
     game_data_hash = game_model.serializable_hash(
       except: [
@@ -57,13 +48,9 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def update
-    if current_user
-      user = current_user
-    else
-      return render status: 403
-    end
+    user = authorize_user
     game_update_request_hash = JSON.parse(request.body.read)
-    game = Game.find(game_id)
+    game = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
     when "join-game"
       white_id = game.white_id
@@ -160,7 +147,15 @@ class Api::V1::GamesController < ApplicationController
     return opponent_id
   end
 
-  def game_id
+  def authorize_user
+    if current_user
+      return current_user
+    else
+      return render status: 403
+    end
+  end
+
+  def params_game_id
     params.require(:id)
   end
 
