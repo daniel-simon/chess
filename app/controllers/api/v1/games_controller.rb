@@ -148,7 +148,7 @@ class Api::V1::GamesController < ApplicationController
     opponents_turn_games = active_games.select { |game_hash| !game_hash["my_turn"] }
     opponents_turn_games.sort_by! { |game_hash| game_hash["updated_at"] }
 
-    sorted_active_games = my_turn_games.reverse + opponents_turn_games
+    sorted_active_games = my_turn_games.reverse + opponents_turn_games.reverse
     return sorted_active_games
   end
 

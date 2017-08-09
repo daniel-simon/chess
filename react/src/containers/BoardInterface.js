@@ -82,7 +82,8 @@ class BoardInterface extends Component {
 
     this.props.movePiece(kingOrigin, kingDestination)
     this.props.movePiece(rookOrigin, rookDestination)
-    this.endTurn()
+    this.clearSelection()
+    // this.endTurn()
   }
 
   // could be reused in sandbox mode
