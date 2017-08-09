@@ -60,7 +60,7 @@ body {
     padding-bottom: $padding-v;
     padding-left: $padding-h;
     padding-right: $padding-h;
-    border-radius: 10px;
+    border-radius: 15px;
     &.active-game {
       background-color: $active-game-tile-opponents-turn-bg-color;
       // border-width: 5px;
@@ -70,12 +70,15 @@ body {
       }
     }
     .game-info-text {
-      font-size: 1em;
+      p {
+        font-size: 0.84em;
+      }
     }
     .button {
       background-color: $join-button-color;
       color: $join-button-font-color;
-
+      margin-right: -0.5em;
+      margin-bottom: -0.3em;
       &:hover {
         background-color: $join-button-hover-color;
         color: $join-button-hover-font-color;

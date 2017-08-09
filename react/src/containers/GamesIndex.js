@@ -8,9 +8,10 @@ class GamesIndex extends Component {
     this.state = {
       fetched: false,
       activeGames: [],
-      availableGames: []
+      availableGames: [],
     }
     this.handleGameJoin = this.handleGameJoin.bind(this)
+    this.refreshGamesList = this.refreshGamesList.bind(this)
   }
 
   componentDidMount () {
@@ -18,7 +19,7 @@ class GamesIndex extends Component {
   }
 
   refreshGamesList () {
-    this.setState({ fetched: false })
+    console.log('refreshed')
     fetch('/api/v1/games', {
       credentials: 'same-origin'
     })
@@ -26,9 +27,8 @@ class GamesIndex extends Component {
       if (response.ok) {
         return response.json()
       } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        let error = new Error(errorMessage)
-        throw(error)
+        let errorMessage = `Error refreshing list: ${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
       }
     })
     .then(response => {
@@ -38,7 +38,7 @@ class GamesIndex extends Component {
         availableGames: response.games_index_data.available_games
       })
     })
-    .catch(error => console.error(`Error in fetch: ${error.message}`))
+    .catch(error => console.error(error.message))
   }
 
   handleGameJoin (gameId) {
