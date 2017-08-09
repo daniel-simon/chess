@@ -47,6 +47,55 @@ body {
   button:focus {
     outline: 0;
   }
+  .playback-buttons-container {
+    width: 8 * $square-size + (2 * $board-border-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .button {
+    background-color: $join-button-color;
+    color: $join-button-font-color;
+    margin-right: -0.5em;
+    margin-bottom: -0.3em;
+    &:hover {
+      background-color: $join-button-hover-color;
+      color: $join-button-hover-font-color;
+    }
+    &.playback {
+      font-size: 1em;
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+      margin-top: 0.3em;
+      &.outer {
+        $playback-padding-v: 0.3em;
+        $playback-padding-h: 0.5em;
+        padding-top: $playback-padding-v - 0.1em;
+        padding-bottom: $playback-padding-v;
+        padding-left: $playback-padding-h;
+        padding-right: $playback-padding-h;
+        &.catch-up {
+          $highlight-forward-button: #298c80;
+          background-color: $highlight-forward-button;
+          border-color: darken($highlight-forward-button, 12%)!important;
+          &:hover{
+            background-color: lighten($highlight-forward-button, 15%);
+            border-color: #2a2a2a !important;
+          }
+        }
+      }
+      &.inner {
+        $playback-padding-v: 0.3em;
+        $playback-padding-h: 0.8em;
+        padding-top: $playback-padding-v - 0.1em;
+        padding-bottom: $playback-padding-v;
+        padding-left: $playback-padding-h;
+        padding-right: $playback-padding-h;
+      }
+      &.maxed {
+        background-color: #555;
+      }
+    }
+  }
   .game-tile {
     h2 {
       color: black;
@@ -72,16 +121,6 @@ body {
     .game-info-text {
       p {
         font-size: 0.84em;
-      }
-    }
-    .button {
-      background-color: $join-button-color;
-      color: $join-button-font-color;
-      margin-right: -0.5em;
-      margin-bottom: -0.3em;
-      &:hover {
-        background-color: $join-button-hover-color;
-        color: $join-button-hover-font-color;
       }
     }
     .game-created-by {
