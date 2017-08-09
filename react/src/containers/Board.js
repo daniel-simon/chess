@@ -30,8 +30,12 @@ class Board extends Component {
       }
       if (move.castle) {
         testBoard.movePiece(move.origin, move.destination)
-        //get kingside/queenside logic from testBoard
-        //also relocate the move-model-building logic to <BoardInterface />
+        let rookOriginCol = move.destination[0] > 4 ? 7 : 0
+        let rookDestinationCol = move.destination[0] > 4 ? 5 : 3
+        let homeRow = move.origin[1]
+        let rookOrigin = [rookOriginCol, homeRow]
+        let rookDestination = [rookDestinationCol, homeRow]
+        testBoard.movePiece(rookOrigin, rookDestination)
       }
     })
     let newBoardState = testBoard.state
