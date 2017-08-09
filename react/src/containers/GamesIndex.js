@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
-import AgeStringFromTimestamp from '../helpers/AgeStringFromTimestamp'
+import GetTimestampString from '../helpers/GetTimestampString'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -8,9 +8,9 @@ class GamesIndex extends Component {
     this.state = {
       fetched: false,
       activeGames: [],
-      availableGames: []
+      availableGames: [],
     }
-    this.handleGameJoin = this.handleGameJoin.bind(this)
+    this.refreshGamesList = this.refreshGamesList.bind(this)
   }
 
   componentDidMount () {
@@ -18,7 +18,7 @@ class GamesIndex extends Component {
   }
 
   refreshGamesList () {
-    this.setState({ fetched: false })
+    console.log('refreshed')
     fetch('/api/v1/games', {
       credentials: 'same-origin'
     })
@@ -26,9 +26,8 @@ class GamesIndex extends Component {
       if (response.ok) {
         return response.json()
       } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        let error = new Error(errorMessage)
-        throw(error)
+        let errorMessage = `Error refreshing list: ${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
       }
     })
     .then(response => {
@@ -38,25 +37,7 @@ class GamesIndex extends Component {
         availableGames: response.games_index_data.available_games
       })
     })
-    .catch(error => console.error(`Error in fetch: ${error.message}`))
-  }
-
-  handleGameJoin (gameId) {
-    let joinGameRequest = { patchType: "join-game" }
-    fetch(`/api/v1/games/${gameId}`, {
-      method: 'PATCH',
-      credentials: 'same-origin',
-      body: JSON.stringify(joinGameRequest)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        throw new Error(errorMessage)
-      }
-    })
-    .catch(error => console.error(`Error in fetch (patch): ${error.message}`))
+    .catch(error => console.error(error.message))
   }
 
   render () {
@@ -71,10 +52,10 @@ class GamesIndex extends Component {
       availableGames = this.state.availableGames
       let now = Date.now()
       availableGames.forEach(gameObj => {
-        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.created_at)
+        gameObj.timestampStr = GetTimestampString(now, gameObj.created_at)
       })
       activeGames.forEach(gameObj => {
-        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.updated_at)
+        gameObj.timestampStr = GetTimestampString(now, gameObj.updated_at)
       })
       activeGameTiles = activeGames.map(gameObj => {
         return(
@@ -82,18 +63,15 @@ class GamesIndex extends Component {
             key={gameObj.id}
             tileType="active"
             data={gameObj}
-            handleClick={()=>{}}
           />
         )
       })
       availableGameTiles = availableGames.map(gameObj => {
-        let joinAndBeginGame = () => { this.handleGameJoin(gameObj.id) }
         return(
           <GameTile
             key={gameObj.id}
             tileType="available"
             data={gameObj}
-            handleClick={joinAndBeginGame}
           />
         )
       })

@@ -9,18 +9,33 @@ const GameTile = props => {
   let cssClass = ''
   let buttonText = ''
   let turnText = ''
+  let movesCountText = ''
+  let whiteName, blackName
+
+  if (props.data.white_id === props.data.opponent_id) {
+    whiteName = props.data.opponent_username
+    blackName = 'You'
+  } else {
+    blackName = props.data.opponent_username
+    whiteName = 'You'
+  }
 
   switch (props.tileType) {
   case 'active':
     let opponentName = props.data.opponent_username
     opponentHeader = `Game against ${opponentName}`
-    timestampText = `Last move made ${props.data.timestampStr}`
     cssClass = 'active-game'
     if (props.data.my_turn) {
       cssClass += ' my-turn'
       turnText = "Your turn"
     } else {
       turnText = `${opponentName}'s turn`
+    }
+    movesCountText = `Total moves: ${props.data.moves_count}`
+    if (props.data.moves_count > 0) {
+      timestampText = `Last move made ${props.data.timestampStr}`
+    } else {
+      timestampText = `Game started ${props.data.timestampStr}`
     }
     buttonText = "Continue Game"
     break
@@ -42,18 +57,22 @@ const GameTile = props => {
           </h3>
         </div>
         <br />
-        <div className="row">
-          <p className="game-info-text">
-            <span className="left">Move suggestions: {showMovesText}</span>
-            <span className="turn-text right">{turnText}</span>
+        <div className="game-info-text">
+          <p className="row">
+            <span className="turn-text left">{turnText}</span>
+            <span className="move-suggestions-text right">Move suggestions: {showMovesText}</span>
+          </p>
+          <p className="row">
+            <span className="moves-count-text left">{movesCountText}</span>
           </p>
         </div>
-        <br />
-        <Link to={`/games/${gameId}`}>
-          <div className="button panel row" onClick={props.handleClick}>
-            {buttonText}
+        <div className="row">
+          <div className="right">
+            <Link to={`/games/${gameId}`} className="button panel row">
+              {buttonText}
+            </Link>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   )

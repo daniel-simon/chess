@@ -33,18 +33,18 @@ let gameConstants = {
   castleDestinationFor (pieceType, rookCol) {
     let castleDest = {}
     switch (rookCol) {
-      case 'kingside':
-        castleDest = {
-          king: 6,
-          rook: 5
-        }
-        break
-      case 'queenside':
-        castleDest = {
-          king: 2,
-          rook: 3
-        }
-        break
+    case 'kingside':
+      castleDest = {
+        king: 6,
+        rook: 5
+      }
+      break
+    case 'queenside':
+      castleDest = {
+        king: 2,
+        rook: 3
+      }
+      break
     }
     return castleDest[pieceType]
   },

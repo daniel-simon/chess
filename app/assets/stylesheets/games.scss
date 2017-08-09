@@ -23,6 +23,7 @@ $hover-victim-square: #ff2121;
 $hover-victim-square-border-color: #f67e51;
 
 $board-border-width: 10px;
+$board-border-radius: 4px;
 $square-border-color: #221e16;
 
 $main-background-color: #867056;
@@ -46,8 +47,56 @@ body {
   button:focus {
     outline: 0;
   }
+  .playback-buttons-container {
+    width: 8 * $square-size + (2 * $board-border-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .button {
+    background-color: $join-button-color;
+    color: $join-button-font-color;
+    margin-right: -0.5em;
+    margin-bottom: -0.3em;
+    &:hover {
+      background-color: $join-button-hover-color;
+      color: $join-button-hover-font-color;
+    }
+    &.playback {
+      font-size: 1em;
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+      margin-top: 0.3em;
+      &.outer {
+        $playback-padding-v: 0.3em;
+        $playback-padding-h: 0.5em;
+        padding-top: $playback-padding-v - 0.1em;
+        padding-bottom: $playback-padding-v;
+        padding-left: $playback-padding-h;
+        padding-right: $playback-padding-h;
+        &.catch-up {
+          $highlight-forward-button: #298c80;
+          background-color: $highlight-forward-button;
+          border-color: darken($highlight-forward-button, 12%)!important;
+          &:hover{
+            background-color: lighten($highlight-forward-button, 15%);
+            border-color: #2a2a2a !important;
+          }
+        }
+      }
+      &.inner {
+        $playback-padding-v: 0.3em;
+        $playback-padding-h: 0.8em;
+        padding-top: $playback-padding-v - 0.1em;
+        padding-bottom: $playback-padding-v;
+        padding-left: $playback-padding-h;
+        padding-right: $playback-padding-h;
+      }
+      &.maxed {
+        background-color: #555;
+      }
+    }
+  }
   .game-tile {
-
     h2 {
       color: black;
     }
@@ -60,7 +109,7 @@ body {
     padding-bottom: $padding-v;
     padding-left: $padding-h;
     padding-right: $padding-h;
-    border-radius: 40px;
+    border-radius: 15px;
     &.active-game {
       background-color: $active-game-tile-opponents-turn-bg-color;
       // border-width: 5px;
@@ -70,15 +119,8 @@ body {
       }
     }
     .game-info-text {
-      font-size: 1em;
-    }
-    .button {
-      background-color: $join-button-color;
-      color: $join-button-font-color;
-
-      &:hover {
-        background-color: $join-button-hover-color;
-        color: $join-button-hover-font-color;
+      p {
+        font-size: 0.84em;
       }
     }
     .game-created-by {
@@ -150,8 +192,12 @@ body {
     width: 8 * $square-size + (2 * $board-border-width);
     &.top {
       border-top: $board-border-width solid #50370c;
+      border-top-right-radius: $board-border-radius;
+      border-top-left-radius: $board-border-radius;
     }
     &.bottom {
+      border-bottom-right-radius: $board-border-radius;
+      border-bottom-left-radius: $board-border-radius;
       border-bottom: $board-border-width solid #50370c;
     }
   }

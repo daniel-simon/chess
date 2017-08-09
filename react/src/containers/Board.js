@@ -8,23 +8,46 @@ class Board extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      board: [
+      presentBoard: [
+        [],[],[],[],[],[],[],[]
+      ],
+      displayedBoard: [
         [],[],[],[],[],[],[],[]
       ],
       lastMove: {},
-      moveHistory: []
+      moveHistory: [],
+      boardStateHistory: [],
+      displayedStateIndex: null
     }
     this.movePiece = this.movePiece.bind(this)
     this.recordMove = this.recordMove.bind(this)
+    this.changeDisplayedState = this.changeDisplayedState.bind(this)
+    this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
+    this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
   }
 
   componentDidMount () {
     this.loadBoardState(this.props.initialMoveHistory)
   }
 
+  snapShotBoardState (state) {
+    let copiedState = [
+      [],[],[],[],[],[],[],[]
+    ]
+    state.map((colArray, col) => {
+      colArray.map((occupant, row) => {
+        copiedState[col][row] = occupant
+      })
+    })
+
+    return copiedState
+  }
+
   loadBoardState (moveHistory) {
     let testBoard = new TestBoard('newGame')
+    let boardStateHistory = []
     moveHistory.forEach(move => {
+      boardStateHistory.push(this.snapShotBoardState(testBoard.state))
       if (!move.castle) {
         testBoard.movePiece(move.origin, move.destination)
       }
@@ -38,37 +61,100 @@ class Board extends Component {
         testBoard.movePiece(rookOrigin, rookDestination)
       }
     })
+    boardStateHistory.push(this.snapShotBoardState(testBoard.state))
     let newBoardState = testBoard.state
-    this.setState({ moveHistory: moveHistory, board: newBoardState })
+    let totalMoves = moveHistory.length
+    let totalStates = moveHistory.length + 1
+    this.setState({
+      moveHistory: moveHistory,
+      lastMove: moveHistory[totalMoves - 1],
+      presentBoard: newBoardState,
+      displayedBoard: newBoardState,
+      boardStateHistory: boardStateHistory,
+      displayedStateIndex: totalStates - 1
+    })
   }
 
   recordMove (move) {
-    let lastMove = {}
+    let lastMove = move
     move.moveNumber = this.state.moveHistory.length
 
-    for (let property in move) {
-      lastMove[property] = move[property]
-    }
-    let [fromCol, fromRow] = move.origin
-    let [toCol, toRow] = move.destination
-    lastMove.movedPiece = this.state.board[fromCol][fromRow]
-
-    if (!move.castle) {
-      lastMove.capturedPiece = this.state.board[toCol][toRow]
-      lastMove.castleSide = null
-    } else {
-      lastMove.capturedPiece = null
-      lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
-    }
-    //move this logic down to the board interface
-
-    //if (move.enPassant) { etc... }
+    // for (let property in move) {
+    //   lastMove[property] = move[property]
+    // }
+    // let [fromCol, fromRow] = move.origin
+    // let [toCol, toRow] = move.destination
+    // lastMove.movedPiece = this.state.presentBoard[fromCol][fromRow]
+    //
+    // if (!move.castle) {
+    //   lastMove.capturedPiece = this.state.presentBoard[toCol][toRow]
+    //   lastMove.castleSide = null
+    // } else {
+    //   lastMove.capturedPiece = null
+    //   lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
+    // }
+    // //move this logic down to the presentBoard interface
+    //
+    // //if (move.enPassant) { etc... }
 
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
     this.updateBackend(lastMove)
     this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+  }
+
+  movePiece (origin, destination) {
+    let [fromCol, fromRow] = origin
+    let [toCol, toRow] = destination
+    let movedPiece = this.state.presentBoard[fromCol][fromRow]
+
+    if (
+      movedPiece.type === 'pawn' &&
+      toRow === gameConstants.lastRowFor(movedPiece.color)
+    ) {
+        movedPiece.type = 'queen'
+    }
+
+    let newBoardState = this.state.presentBoard
+    newBoardState[toCol][toRow] = movedPiece
+    newBoardState[fromCol][fromRow] = null
+
+    let newStateHistory = this.state.boardStateHistory.concat( [newBoardState] )
+    this.setState({
+      presentBoard: newBoardState,
+      boardStateHistory: newStateHistory,
+      displayedBoard: newBoardState,
+      displayedStateIndex: newStateHistory.length - 1
+    })
+  }
+
+  stepThroughStateHistory (step) {
+    let newStateIndex = this.state.displayedStateIndex + step
+    if (newStateIndex >= 0 && newStateIndex < this.state.boardStateHistory.length) {
+      this.changeDisplayedState(newStateIndex)
+    }
+  }
+
+  jumpToHistoryEndpoint (direction) {
+    let index
+    switch (direction) {
+    case 'back':
+      index = 0
+      break
+    case 'forward':
+      index = this.state.boardStateHistory.length - 1
+      break
+    }
+    this.changeDisplayedState(index)
+  }
+
+  changeDisplayedState (index) {
+    let newDisplayedState = this.state.boardStateHistory[index]
+    this.setState({
+      displayedBoard: newDisplayedState,
+      displayedStateIndex: index
+    })
   }
 
   updateBackend (move) {
@@ -95,38 +181,59 @@ class Board extends Component {
     .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
-  movePiece (origin, destination) {
-    let [fromCol, fromRow] = origin
-    let [toCol, toRow] = destination
-    let movedPiece = this.state.board[fromCol][fromRow]
-
-    if (
-      movedPiece.type === 'pawn' &&
-      toRow === gameConstants.lastRowFor(movedPiece.color)
-    ) {
-        movedPiece.type = 'queen'
+  render () {
+    let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
+    let stepBackward = () => { this.stepThroughStateHistory(-1) }
+    let backwardIcon = '<'
+    let stepForward = () => { this.stepThroughStateHistory(1) }
+    let forwardIcon = '>'
+    let jumpToStart = () => { this.jumpToHistoryEndpoint('back') }
+    let startIcon = '<<'
+    let jumpToNow = () => { this.jumpToHistoryEndpoint('forward') }
+    let endIcon = '>>'
+    let rewindCss = ''
+    let forwardCss = ''
+    if (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1) {
+      forwardCss = "maxed"
+    } else {
+      forwardCss = "catch-up"
+    }
+    if (this.state.displayedStateIndex === 0) {
+      rewindCss = "maxed"
     }
 
-    let newBoardState = this.state.board
-    newBoardState[toCol][toRow] = movedPiece
-    newBoardState[fromCol][fromRow] = null
-
-    this.setState({ board: newBoardState })
-  }
-
-  render () {
     return(
-      <BoardInterface
-        movePiece={this.movePiece}
-        recordMove={this.recordMove}
-        boardState={this.state.board}
-        moveHistory={this.state.moveHistory}
-        lastMove={this.state.lastMove}
-        myColor={this.props.myColor}
-        isMyTurn={this.props.isMyTurn}
-        showLegalMoves={this.props.showLegalMoves}
-        pieceSet={this.props.pieceSet}
-      />
+      <div>
+        <BoardInterface
+          upToDate={upToDate}
+          movePiece={this.movePiece}
+          recordMove={this.recordMove}
+          boardState={this.state.displayedBoard}
+          moveHistory={this.state.moveHistory}
+          lastMove={this.state.lastMove}
+          myColor={this.props.myColor}
+          isMyTurn={this.props.isMyTurn}
+          showLegalMoves={this.props.showLegalMoves}
+          pieceSet={this.props.pieceSet}
+        />
+        <br />
+        <div className="row">
+          <div className="small-6 text-center playback-buttons-container small-centered columns">
+            <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
+              {startIcon}
+            </span>
+            <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
+              {backwardIcon}
+            </span>
+            <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
+              {forwardIcon}
+            </span>
+            <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
+              {endIcon}
+            </span>
+          </div>
+        </div>
+      </div>
     )
   }
 }

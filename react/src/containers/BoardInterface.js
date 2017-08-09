@@ -46,7 +46,10 @@ class BoardInterface extends Component {
       origin: origin,
       destination: destination,
       player: this.props.myColor,
-      castle: false
+      moveNumber: this.props.moveHistory.length,
+      movedPiece: this.props.boardState[origin[0]][origin[1]],
+      capturedPiece: this.props.boardState[destination[0]][destination[1]],
+      castle: false,
     }
     this.props.recordMove(newMove)
     this.props.movePiece(origin, destination)
@@ -75,7 +78,10 @@ class BoardInterface extends Component {
       origin: kingOrigin,
       destination: kingDestination,
       player: this.props.myColor,
-      castle: true
+      moveNumber: this.props.moveHistory.length,
+      movedPiece: this.props.boardState[kingOrigin[0]][kingOrigin[1]],
+      capturedPiece: null,
+      castle: true,
     }
 
     this.props.recordMove(newMove)
@@ -110,7 +116,7 @@ class BoardInterface extends Component {
     let handleClick = () => {}
     let occupant = this.props.boardState[col][row]
 
-    if (this.props.isMyTurn) {
+    if (this.props.isMyTurn && this.props.upToDate) {
       let currentSquare = [col, row]
       if (squareMethods.sameSquare(this.state.selectedSquare, currentSquare)) {
         selected = true
@@ -207,6 +213,9 @@ class BoardInterface extends Component {
   }
 
   render () {
+    // if (!this.props.upToDate) {
+    //   this.clearSelection()
+    // }
     let chessBoard = this.renderGrid()
     return (
       <div>
