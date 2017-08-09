@@ -5,14 +5,6 @@
 $font-family-sans-serif: 'Zilla Slab', sans-serif;
 $font-family-serif: 'Zilla Slab', serif;
 
-$game-tile-bg-color: #887758;
-$game-created-color: black;
-$time-created-color: black;
-$join-button-color: #39a1c4;
-$join-button-font-color: #fff;
-$join-button-hover-color: #82bcd0;
-$join-button-hover-font-color: #fff;
-
 $white-square: #a29275; //#d6cfc2;
 $hover-non-selectable-white-square: #7d776c;
 
@@ -35,6 +27,17 @@ $square-border-color: #221e16;
 
 $main-background-color: #dddab2;
 
+$game-tile-bg-color: lighten($black-square, 5%); //#887758;
+$game-tile-your-turn-border-color: $game-tile-bg-color;
+$game-tile-your-turn-bg-color: $available-square;
+$game-created-color: black;
+$time-created-color: black;
+$join-button-color: $selected-square; //#39a1c4;
+$join-button-font-color: #fff;
+$join-button-hover-color: $hover-selectable-square;//#82bcd0;
+$join-button-hover-font-color: #fff;
+$active-game-opponents-turn-bg-color: $white-square;
+
 $square-size: 70px;
 
 body {
@@ -53,10 +56,27 @@ body {
     padding-left: $padding-h;
     padding-right: $padding-h;
     border-radius: 40px;
-    .join-button {
+    &.active-game {
+      background-color: $active-game-opponents-turn-bg-color;
+      &.my-turn {
+        border-width: 5px;
+        border-color: $game-tile-your-turn-border-color;
+        background-color: $game-tile-your-turn-bg-color;
+        .turn-text {
+
+          color: rgb(0, 89, 139)
+        }
+      }
+    }
+    .game-info-text {
+      font-size: 1em;
+    }
+    .button {
       border-radius: 15px;
-      background-color: $join-button-color;
+      background-color: $join-button-color; 
       color: $join-button-font-color;
+      border-color: darken($black-square, 3%);
+      border-width: 3px;
       &:hover {
         background-color: $join-button-hover-color;
         color: $join-button-hover-font-color;
