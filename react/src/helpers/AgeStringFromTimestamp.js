@@ -29,7 +29,7 @@ const AgeStringFromTimestamp = (now, timestamp) => {
     }
   }
   if (ageStr.length === 0) {
-    ageStr = 'Just now'
+    ageStr = 'just now'
   } else {
     ageStr += ' ago'
   }

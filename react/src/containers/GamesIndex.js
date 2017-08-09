@@ -7,7 +7,8 @@ class GamesIndex extends Component {
     super(props)
     this.state = {
       fetched: false,
-      games: []
+      activeGames: [],
+      availableGames: []
     }
     this.handleGameJoin = this.handleGameJoin.bind(this)
   }
@@ -33,7 +34,8 @@ class GamesIndex extends Component {
     .then(response => {
       this.setState({
         fetched: true,
-        games: response.games_index_data
+        activeGames: response.games_index_data.active_games,
+        availableGames: response.games_index_data.available_games
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
@@ -58,35 +60,60 @@ class GamesIndex extends Component {
   }
 
   render () {
-    let gameTiles = []
+    let activeGames = []
+    let activeGameTiles = []
+    let activeGamesHeader = null
     let availableGames = []
+    let availableGameTiles = []
+    let availableGamesHeader = null
     if (this.state.fetched) {
-      availableGames = this.state.games.filter(gameObj => {
-        return (
-          gameObj.started === false ||
-          gameObj.playing_this_game === true
-        )
-      })
+      activeGames = this.state.activeGames
+      availableGames = this.state.availableGames
       let now = Date.now()
       availableGames.forEach(gameObj => {
-        gameObj.createdStr = AgeStringFromTimestamp(now, gameObj.created_at)
-        gameObj.updatedStr = AgeStringFromTimestamp(now, gameObj.updated_at)
+        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.created_at)
       })
-      gameTiles = availableGames.map(gameObj => {
-        let joinThisGame = () => { this.handleGameJoin(gameObj.id) }
+      activeGames.forEach(gameObj => {
+        gameObj.timestampStr = AgeStringFromTimestamp(now, gameObj.updated_at)
+      })
+      activeGameTiles = activeGames.map(gameObj => {
         return(
           <GameTile
             key={gameObj.id}
+            tileType="active"
             data={gameObj}
-            joinThisGame={joinThisGame}
+            handleClick={()=>{}}
           />
         )
       })
+      availableGameTiles = availableGames.map(gameObj => {
+        let joinAndBeginGame = () => { this.handleGameJoin(gameObj.id) }
+        return(
+          <GameTile
+            key={gameObj.id}
+            tileType="available"
+            data={gameObj}
+            handleClick={joinAndBeginGame}
+          />
+        )
+      })
+      if (activeGames.length > 0) {
+        activeGamesHeader = (
+          <h2 className="active-games">Your active games</h2>
+        )
+      }
+      if (availableGames.length > 0) {
+        availableGamesHeader = (
+          <h2 className="public-games">Public games</h2>
+        )
+      }
     }
     return(
       <div>
-        <h2 className="public-games">Public games</h2>
-        {gameTiles}
+        {activeGamesHeader}
+        {activeGameTiles}
+        {availableGamesHeader}
+        {availableGameTiles}
       </div>
     )
   }
