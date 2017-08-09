@@ -182,7 +182,7 @@ class Board extends Component {
   }
 
   render () {
-    let upToDate = this.state.displayedBoard === this.state.presentBoard
+    let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let stepBackward = () => { this.stepThroughStateHistory(-1) }
     let backwardIcon = '<'
     let stepForward = () => { this.stepThroughStateHistory(1) }
