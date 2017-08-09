@@ -68,10 +68,8 @@ const GameTile = props => {
         </div>
         <div className="row">
           <div className="right">
-            <Link to={`/games/${gameId}`}>
-              <div className="button panel row" onClick={props.handleClick}>
-                {buttonText}
-              </div>
+            <Link to={`/games/${gameId}`} className="button panel row">
+              {buttonText}
             </Link>
           </div>
         </div>

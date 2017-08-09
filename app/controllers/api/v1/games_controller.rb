@@ -13,6 +13,9 @@ class Api::V1::GamesController < ApplicationController
   def show
     user = authorize_user
     game_model = Game.find(params_game_id)
+    unless game_model.started
+      join_and_begin_game(user, game_model)
+    end
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
     if [white.id, black.id].include?(user.id)
@@ -52,11 +55,6 @@ class Api::V1::GamesController < ApplicationController
     game_update_request_hash = JSON.parse(request.body.read)
     game = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
-    when "join-game"
-      white_id = game.white_id
-      if game.update(joiner_id: user.id, started: true, active_player_id: white_id)
-        render json: { joined_game: game.serializable_hash }, adapter: :json
-      end
     when "switch-turns"
       active_color = game_update_request_hash["activeColor"]
       active_player_id = (active_color == 'white') ? game.white_id : game.black_id
@@ -66,23 +64,31 @@ class Api::V1::GamesController < ApplicationController
     end
   end
 
-  # def create
-  #   if current_user
-  #     user = current_user
-  #   else
-  #     return render status: 403
-  #   end
-  #   create_game_request_hash = JSON.parse(request.body.read)
-  #   show_legal_moves = create_game_request_hash["showLegalMoves"]
-  #   new_game = Game.new(creator: current_user, show_legal_moves: show_legal_moves)
-  #   if new_game.save
-  #     render json: { new_game: new_game }, adapter: :json
-  #   else
-  #     render status: 422
-  #   end
-  # end
+  def create
+    user = authorize_user
+    create_game_request_hash = JSON.parse(request.body.read)
+    show_legal_moves = create_game_request_hash["showLegalMoves"]
+    new_game = Game.new(creator: user, show_legal_moves: show_legal_moves)
+    if new_game.save
+      render json: { new_game: new_game }, adapter: :json
+    else
+      render status: 422
+    end
+  end
 
   private
+
+  def authorize_user
+    if current_user
+      return current_user
+    else
+      return render status: 403
+    end
+  end
+
+  def join_and_begin_game(user, game_model)
+    game_model.update(joiner_id: user.id, started: true, active_player_id: game_model.white_id)
+  end
 
   def available_games(user)
     available_game_models = Game.where(started: false, finished: false)
@@ -124,6 +130,7 @@ class Api::V1::GamesController < ApplicationController
       active_games[i]['black_id'] = game_model.black_id
 
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
+      active_games[i]['moves_count'] = game_model.moves.count
 
       opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
       active_games[i]['opponent_id'] = opponent.id
@@ -145,14 +152,6 @@ class Api::V1::GamesController < ApplicationController
       break id if id != current_user.id
     end
     return opponent_id
-  end
-
-  def authorize_user
-    if current_user
-      return current_user
-    else
-      return render status: 403
-    end
   end
 
   def params_game_id

@@ -10,7 +10,6 @@ class GamesIndex extends Component {
       activeGames: [],
       availableGames: [],
     }
-    this.handleGameJoin = this.handleGameJoin.bind(this)
     this.refreshGamesList = this.refreshGamesList.bind(this)
   }
 
@@ -41,24 +40,6 @@ class GamesIndex extends Component {
     .catch(error => console.error(error.message))
   }
 
-  handleGameJoin (gameId) {
-    let joinGameRequest = { patchType: "join-game" }
-    fetch(`/api/v1/games/${gameId}`, {
-      method: 'PATCH',
-      credentials: 'same-origin',
-      body: JSON.stringify(joinGameRequest)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        throw new Error(errorMessage)
-      }
-    })
-    .catch(error => console.error(`Error in fetch (patch): ${error.message}`))
-  }
-
   render () {
     let activeGames = []
     let activeGameTiles = []
@@ -82,18 +63,15 @@ class GamesIndex extends Component {
             key={gameObj.id}
             tileType="active"
             data={gameObj}
-            handleClick={ () => {} }
           />
         )
       })
       availableGameTiles = availableGames.map(gameObj => {
-        let joinAndBeginGame = () => { this.handleGameJoin(gameObj.id) }
         return(
           <GameTile
             key={gameObj.id}
             tileType="available"
             data={gameObj}
-            handleClick={joinAndBeginGame}
           />
         )
       })
