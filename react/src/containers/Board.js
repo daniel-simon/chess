@@ -19,11 +19,11 @@ class Board extends Component {
       boardStateHistory: [],
       displayedStateIndex: null
     }
-    this.movePiece = this.movePiece.bind(this)
-    this.recordMove = this.recordMove.bind(this)
-    this.changeDisplayedState = this.changeDisplayedState.bind(this)
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
     this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
+    this.changeDisplayedState = this.changeDisplayedState.bind(this)
+    this.recordMove = this.recordMove.bind(this)
+    this.movePiece = this.movePiece.bind(this)
   }
 
   componentDidMount () {
@@ -165,22 +165,22 @@ class Board extends Component {
   render () {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let stepBackward = () => { this.stepThroughStateHistory(-1) }
-    let backwardIcon = '<'
     let stepForward = () => { this.stepThroughStateHistory(1) }
-    let forwardIcon = '>'
     let jumpToStart = () => { this.jumpToHistoryEndpoint('back') }
-    let startIcon = '<<'
     let jumpToNow = () => { this.jumpToHistoryEndpoint('forward') }
+    let backwardIcon = '<'
+    let forwardIcon = '>'
+    let startIcon = '<<'
     let endIcon = '>>'
     let rewindCss = ''
     let forwardCss = ''
     if (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1) {
-      forwardCss = "maxed"
+      forwardCss = 'maxed'
     } else {
-      forwardCss = "catch-up"
+      forwardCss = 'catch-up'
     }
     if (this.state.displayedStateIndex === 0) {
-      rewindCss = "maxed"
+      rewindCss = 'maxed'
     }
 
     return(
