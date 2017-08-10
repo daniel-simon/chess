@@ -51,9 +51,10 @@ body {
   .button {
     &.playback {
       font-size: 1em;
-      margin-left: 0.5em;
-      margin-right: 0.5em;
-      margin-top: 0.3em;
+      $margin-h: 1.15em;
+      margin-left: $margin-h;
+      margin-right: $margin-h;
+      margin-top: 1em;
       &.outer {
         $playback-padding-v: 0.3em;
         $playback-padding-h: 0.5em;
@@ -64,9 +65,10 @@ body {
         &.catch-up {
           $highlight-forward-button: #298c80;
           background-color: $highlight-forward-button;
-          border-color: white !important;
+          border-color: #bbb !important;
           &:hover{
             background-color: lighten($highlight-forward-button, 15%);
+            border-color: white !important;
           }
         }
       }

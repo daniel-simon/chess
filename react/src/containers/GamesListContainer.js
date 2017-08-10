@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
 
-class GamesListContainer  {
+class GamesListContainer extends Component {
   constructor (props) {
     super(props)
     this.handleGameJoin = this.handleGameJoin.bind(this)

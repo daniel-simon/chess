@@ -182,36 +182,43 @@ class Board extends Component {
     if (this.state.displayedStateIndex === 0) {
       rewindCss = 'maxed'
     }
-
+    let headerText
+    if (this.props.isMyTurn) {
+      headerText = `Your turn (${this.props.myColor})`
+    } else {
+      headerText = `${this.props.playerData.opponent.username}'s turn (${this.props.playerData.opponent.color})`
+    }
     return(
       <div>
-        <BoardInterface
-          upToDate={upToDate}
-          movePiece={this.movePiece}
-          recordMove={this.recordMove}
-          boardState={this.state.displayedBoard}
-          moveHistory={this.state.moveHistory}
-          lastMove={this.state.lastMove}
-          myColor={this.props.myColor}
-          isMyTurn={this.props.isMyTurn}
-          showLegalMoves={this.props.showLegalMoves}
-          pieceSet={this.props.pieceSet}
-        />
-        <br />
-        <div className="row">
-          <div className="small-6 text-center playback-buttons-container small-centered columns">
-            <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
-              {startIcon}
-            </span>
-            <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
-              {backwardIcon}
-            </span>
-            <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
-              {forwardIcon}
-            </span>
-            <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
-              {endIcon}
-            </span>
+        <div className="small-12 small-centered text-center columns">
+          <h2>{headerText}</h2>
+          <BoardInterface
+            upToDate={upToDate}
+            movePiece={this.movePiece}
+            recordMove={this.recordMove}
+            boardState={this.state.displayedBoard}
+            moveHistory={this.state.moveHistory}
+            lastMove={this.state.lastMove}
+            myColor={this.props.myColor}
+            isMyTurn={this.props.isMyTurn}
+            showLegalMoves={this.props.showLegalMoves}
+            pieceSet={this.props.pieceSet}
+          />
+          <div className="row">
+            <div className="small-6 text-center playback-buttons-container small-centered columns">
+              <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
+                {startIcon}
+              </span>
+              <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
+                {backwardIcon}
+              </span>
+              <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
+                {forwardIcon}
+              </span>
+              <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
+                {endIcon}
+              </span>
+            </div>
           </div>
         </div>
       </div>

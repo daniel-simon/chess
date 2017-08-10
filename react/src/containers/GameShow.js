@@ -117,10 +117,11 @@ class GameShow extends Component {
   }
 
   render () {
-    let headerText = "Loading..."
+    let loadingText = "Loading..."
     let pieceSet = 1
     let board = null
     if (this.state.fetchedMoves && this.state.fetchedGameData) {
+      loadingText = null
       let opponentName = this.state.playerData.opponent.username
       let opponentColor = this.state.playerData.opponent.color
       let myName = this.state.playerData.user.username
@@ -133,23 +134,19 @@ class GameShow extends Component {
         isMyTurn={this.state.isMyTurn}
         showLegalMoves={this.state.gameData.show_legal_moves}
         pieceSet={pieceSet}
+        playerData={this.state.playerData}
       />
-      if (this.state.isMyTurn) {
-        headerText = `Your turn (${myColor})`
-      } else {
-        headerText = `${opponentName}'s turn (${opponentColor})`
-      }
     }
 
     return(
       <div className="game-show-page">
-        <div className="small-12 columns">
-          <h3 className="game-header">{headerText}</h3>
+        <div className="medium-12 large-6 columns">
+          <h3 className="game-header">{loadingText}</h3>
           <div className="game-board">
             {board}
           </div>
         </div>
-        <div className="small-12 text-center columns">
+        <div className="medium-12 large-6 text-center columns">
           <h1>TEST</h1>
         </div>
       </div>
