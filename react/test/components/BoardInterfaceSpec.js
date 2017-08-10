@@ -56,8 +56,7 @@ describe('BoardInterface', () => {
     expect(wrapper.state()).toEqual({
       selectedSquare: [],
       availableSquares: [],
-      availableCastlingRooks: [],
-      activeColor: 'white'
+      availableCastlingRooks: []
     })
   })
 
