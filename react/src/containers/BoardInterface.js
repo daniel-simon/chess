@@ -42,13 +42,15 @@ class BoardInterface extends Component {
   selectDestinationAndMovePiece (col, row) {
     let origin = this.state.selectedSquare
     let destination = [col, row]
+    let [fromCol, fromRow] = origin
+    let [toCol, toRow] = destination
     let newMove = {
       origin: origin,
       destination: destination,
       player: this.props.myColor,
       moveNumber: this.props.moveHistory.length,
-      movedPiece: this.props.boardState[origin[0]][origin[1]],
-      capturedPiece: this.props.boardState[destination[0]][destination[1]],
+      movedPiece: this.props.boardState[fromCol][fromRow],
+      capturedPiece: this.props.boardState[toCol][toRow],
       castle: false,
     }
     this.props.recordMove(newMove)
@@ -79,7 +81,7 @@ class BoardInterface extends Component {
       destination: kingDestination,
       player: this.props.myColor,
       moveNumber: this.props.moveHistory.length,
-      movedPiece: this.props.boardState[kingOrigin[0]][kingOrigin[1]],
+      movedPiece: this.props.boardState[kingFromCol][homeRow],
       capturedPiece: null,
       castle: true,
     }
@@ -127,7 +129,7 @@ class BoardInterface extends Component {
         available = true
         castlingRook = true
       }
-      if (!selected && !castlingRook && occupant && occupant.color === this.props.myColor) {
+      if (occupant && occupant.color === this.props.myColor && !selected && !castlingRook) {
         handleClick = () => { this.selectPiece(...currentSquare) }
         selectable = true
       } else if (available) {
@@ -196,7 +198,7 @@ class BoardInterface extends Component {
     )
   }
 
-  renderGrid () {
+  renderBoard () {
     // let myColor = this.props.myColor
     let gridRows = []
     let rowStep = (this.props.myColor === 'white') ? -1 : 1
@@ -216,10 +218,9 @@ class BoardInterface extends Component {
     // if (!this.props.upToDate) {
     //   this.clearSelection()
     // }
-    let chessBoard = this.renderGrid()
     return (
       <div>
-        {chessBoard}
+        {this.renderBoard()}
       </div>
     )
   }

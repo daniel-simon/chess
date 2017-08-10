@@ -43,7 +43,7 @@ let pieceMoves = {
     for (let rowShift of [-1, 0, 1]) {
       for (let colShift of [-1, 0, 1]) {
         if (colShift !== 0 || rowShift !== 0) {
-          translations.push([colShift, rowShift])
+          translations.push( [colShift, rowShift] )
         }
       }
     }
@@ -57,8 +57,8 @@ let pieceMoves = {
     let translations = []
     for (let xSign of [-1, 1]) {
       for (let ySign of [-1, 1]) {
-        translations.push([2 * xSign, ySign])
-        translations.push([xSign, 2 * ySign])
+        translations.push( [2 * xSign, ySign] )
+        translations.push( [xSign, 2 * ySign] )
       }
     }
     let possibleSquares = this.convertRelativeToAbsolute(translations, col, row)
@@ -80,22 +80,22 @@ let pieceMoves = {
     let newLane = []
     let outwardLanes = []
     for (possibleRow = row - 1 ; possibleRow >= 0; possibleRow--) {
-      newLane.push([col, possibleRow])
+      newLane.push( [col, possibleRow] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (possibleRow = row + 1; possibleRow <= 7; possibleRow++) {
-      newLane.push([col, possibleRow])
+      newLane.push( [col, possibleRow] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (possibleCol = col - 1; possibleCol >= 0; possibleCol--) {
-      newLane.push([possibleCol, row])
+      newLane.push( [possibleCol, row] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (possibleCol = col + 1; possibleCol <= 7; possibleCol++) {
-      newLane.push([possibleCol, row])
+      newLane.push( [possibleCol, row] )
     }
     outwardLanes.push(newLane)
 
@@ -111,22 +111,22 @@ let pieceMoves = {
     let outwardLanes = []
     let newLane = []
     for (index = col - 1; index >= 0; index--) {
-      newLane.push([index, diagLanePlus - index])
+      newLane.push( [index, diagLanePlus - index] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (index = col + 1; index <= 7; index++) {
-      newLane.push([index, diagLanePlus - index])
+      newLane.push( [index, diagLanePlus - index] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (index = col - 1; index >= 0; index--) {
-      newLane.push([index, index + diagLaneMinus])
+      newLane.push( [index, index + diagLaneMinus] )
     }
     outwardLanes.push(newLane)
     newLane = []
     for (index = col + 1; index <= 7; index++) {
-      newLane.push([index, index + diagLaneMinus])
+      newLane.push( [index, index + diagLaneMinus] )
     }
     outwardLanes.push(newLane)
 

@@ -78,25 +78,6 @@ class Board extends Component {
   recordMove (move) {
     let lastMove = move
     move.moveNumber = this.state.moveHistory.length
-
-    // for (let property in move) {
-    //   lastMove[property] = move[property]
-    // }
-    // let [fromCol, fromRow] = move.origin
-    // let [toCol, toRow] = move.destination
-    // lastMove.movedPiece = this.state.presentBoard[fromCol][fromRow]
-    //
-    // if (!move.castle) {
-    //   lastMove.capturedPiece = this.state.presentBoard[toCol][toRow]
-    //   lastMove.castleSide = null
-    // } else {
-    //   lastMove.capturedPiece = null
-    //   lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
-    // }
-    // //move this logic down to the presentBoard interface
-    //
-    // //if (move.enPassant) { etc... }
-
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [lastMove] )
 
