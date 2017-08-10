@@ -1,8 +1,12 @@
 $font-family-sans-serif: 'Zilla Slab', sans-serif;
 $font-family-serif: 'Zilla Slab', serif;
-$main-background-color: #bdbba9;
+$main-background-color: #5b7f87;
 $button-padding-h: 0.9em;
 $button-padding-v: 0.7em;
+$join-button-color: #166985;
+$join-button-font-color: #fff;
+$join-button-hover-color: #20aede;
+$join-button-hover-font-color: #fff;
 
 body {
   h1, h2, h3, h4, h5, h6 {
@@ -19,5 +23,13 @@ body {
     padding-right: $button-padding-h;
     padding-top: $button-padding-v;
     padding-bottom: $button-padding-v;
+    background-color: $join-button-color;
+    color: $join-button-font-color;
+    margin-left: 0.5em;
+    margin-bottom: 0.3em;
+    &:hover {
+      background-color: $join-button-hover-color;
+      color: $join-button-hover-font-color;
+    }
   }
 }

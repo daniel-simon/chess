@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
 import GetTimestampString from '../helpers/GetTimestampString'
+import NewGameForm from './NewGameForm'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -88,6 +89,7 @@ class GamesIndex extends Component {
     }
     return(
       <div>
+        <NewGameForm />
         {activeGamesHeader}
         {activeGameTiles}
         {availableGamesHeader}
