@@ -17,7 +17,8 @@ class Board extends Component {
       lastMove: {},
       moveHistory: [],
       boardStateHistory: [],
-      displayedStateIndex: null
+      displayedStateIndex: null,
+      isMyTurn: this.props.initiallyMyTurn
     }
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
     this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
@@ -27,7 +28,43 @@ class Board extends Component {
   }
 
   componentDidMount () {
-    this.loadBoardState(this.props.initialMoveHistory)
+    this.loadBoardStateAndHistory(this.props.initialMoveHistory)
+    this.subscribeToGameChannel(this.props.gameId)
+  }
+
+  subscribeToGameChannel (gameId) {
+    if (App.cable.subscriptions.length > 0) {
+      App.cable.subscriptions.remove(App.cable.subscriptions[0])
+    }
+    App.gameChannel = App.cable.subscriptions.create(
+      {
+        channel: "GameChannel",
+        game_id: gameId
+      },
+      {
+        connected: () => console.log("GameChannel connected"),
+        disconnected: () => console.log("GameChannel disconnected"),
+        received: moveData => {
+          this.interpretRecievedMove(moveData)
+        }
+      }
+    )
+  }
+
+  interpretRecievedMove (moveData) {
+    this.setState({ isMyTurn: !this.state.isMyTurn })
+    let move = moveData.moveData
+    if (move.player !== this.props.myColor) {
+      if (!move.castle) {
+        this.movePiece(move.origin, move.destination)
+      }
+    }
+  }
+
+  broadcastMove (moveData) {
+    App.gameChannel.send({
+      moveData: moveData
+    })
   }
 
   snapShotBoardState (state) {
@@ -39,11 +76,10 @@ class Board extends Component {
         copiedState[col][row] = occupant
       })
     })
-
     return copiedState
   }
 
-  loadBoardState (moveHistory) {
+  loadBoardStateAndHistory (moveHistory) {
     let testBoard = new TestBoard('newGame')
     let boardStateHistory = []
     moveHistory.forEach(move => {
@@ -76,13 +112,39 @@ class Board extends Component {
   }
 
   recordMove (move) {
-    let lastMove = move
     move.moveNumber = this.state.moveHistory.length
     let moveHistory = this.state.moveHistory
-    let newMoveHistory = moveHistory.concat( [lastMove] )
+    let newMoveHistory = moveHistory.concat( [move] )
+    this.setState({ lastMove: move, moveHistory: newMoveHistory })
 
-    this.updateBackend(lastMove)
-    this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+    if (move.player === this.props.myColor) {
+      this.updateBackend(move)
+      this.broadcastMove(move)
+    }
+  }
+
+  updateBackend (move) {
+    this.persistMove(move)
+    this.props.toggleActivePlayer()
+  }
+
+  persistMove (move) {
+    move.gameId = this.props.gameId
+    let moveRequest = { move: move }
+    fetch('/api/v1/moves', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: JSON.stringify(moveRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
   movePiece (origin, destination) {
@@ -138,30 +200,6 @@ class Board extends Component {
     })
   }
 
-  updateBackend (move) {
-    this.persistMove(move)
-    this.props.toggleActivePlayer()
-  }
-
-  persistMove (move) {
-    move.gameId = this.props.gameId
-    let moveRequest = { move: move }
-    fetch('/api/v1/moves', {
-      method: 'POST',
-      credentials: 'same-origin',
-      body: JSON.stringify(moveRequest)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        throw new Error(errorMessage)
-      }
-    })
-    .catch(error => console.error(`Error posting move to database: ${error.message}`))
-  }
-
   render () {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let stepBackward = () => { this.stepThroughStateHistory(-1) }
@@ -183,7 +221,7 @@ class Board extends Component {
       rewindCss = 'maxed'
     }
     let headerText
-    if (this.props.isMyTurn) {
+    if (this.state.isMyTurn) {
       headerText = `Your turn (${this.props.myColor})`
     } else {
       headerText = `${this.props.playerData.opponent.username}'s turn (${this.props.playerData.opponent.color})`
@@ -196,11 +234,11 @@ class Board extends Component {
             upToDate={upToDate}
             movePiece={this.movePiece}
             recordMove={this.recordMove}
+            isMyTurn={this.state.isMyTurn}
             boardState={this.state.displayedBoard}
             moveHistory={this.state.moveHistory}
             lastMove={this.state.lastMove}
             myColor={this.props.myColor}
-            isMyTurn={this.props.isMyTurn}
             showLegalMoves={this.props.showLegalMoves}
             pieceSet={this.props.pieceSet}
           />

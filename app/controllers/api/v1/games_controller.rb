@@ -14,12 +14,17 @@ class Api::V1::GamesController < ApplicationController
     user = authorize_user
     game_model = Game.find(params_game_id)
     unless game_model.started
-      join_and_begin_game(user, game_model)
+      if game_model.creator_id == user.id
+        flash[:alert] = "Can't join a game that you also created"
+        return redirect_to games_path
+      else
+        join_and_begin_game(user, game_model)
+      end
     end
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
     if [white.id, black.id].include?(user.id)
-      opponent = User.find( get_opponent_id(white.id, black.id) )
+      opponent = User.find( get_opponent_id(white.id, black.id, user) )
     else
       return render status: 403
     end
@@ -53,13 +58,12 @@ class Api::V1::GamesController < ApplicationController
   def update
     user = authorize_user
     game_update_request_hash = JSON.parse(request.body.read)
-    game = Game.find(params_game_id)
+    game_model = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
     when "switch-turns"
-      active_color = game_update_request_hash["activeColor"]
-      active_player_id = (active_color == 'white') ? game.white_id : game.black_id
-      if game.update(active_player_id: active_player_id)
-        render json: { updated_game: game.serializable_hash }, adapter: :json
+      active_player_id = get_opponent_id(game_model.white_id, game_model.black_id, user)
+      if game_model.update(active_player_id: active_player_id)
+        render json: { updated_game: game_model.serializable_hash }, adapter: :json
       end
     end
   end
@@ -111,6 +115,11 @@ class Api::V1::GamesController < ApplicationController
 
   def active_games(user)
     all_active_game_models = Game.where(started: true, finished: false)
+    all_active_game_models.each do |game_model|
+      if game_model.creator_id == game_model.joiner_id
+        Game.find(game_model.id).destroy
+      end
+    end
     active_game_models = all_active_game_models.select do |game_model|
       game_model.creator_id == user.id || game_model.joiner_id == user.id
     end
@@ -132,7 +141,7 @@ class Api::V1::GamesController < ApplicationController
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
       active_games[i]['moves_count'] = game_model.moves.count
 
-      opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
+      opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id, user) )
       active_games[i]['opponent_id'] = opponent.id
       active_games[i]['opponent_username'] = opponent.username
     end
@@ -146,10 +155,10 @@ class Api::V1::GamesController < ApplicationController
     return sorted_active_games
   end
 
-  def get_opponent_id(player1_id, player2_id)
+  def get_opponent_id(player1_id, player2_id, player)
     player_ids = [ player1_id, player2_id ]
     opponent_id = player_ids.each do |id|
-      break id if id != current_user.id
+      break id if id != player.id
     end
     return opponent_id
   end
