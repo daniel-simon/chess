@@ -38,7 +38,9 @@ const GamesListContainer = props => {
       <h2 className="games-list-header">
         {headerText}
       </h2>
-      {gameTiles}
+      <div className="games-list-tiles">
+        {gameTiles}
+      </div>
     </div>
   )
 }

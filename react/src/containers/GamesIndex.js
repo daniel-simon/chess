@@ -41,10 +41,16 @@ class GamesIndex extends Component {
   }
 
   render () {
-
     let activeGamesList, availableGamesList, pendingGamesList
-    
+    let gamesListFoundationClass = ''
+    let loadingHeader = (
+      <h2 className="games-list-header loading-text">
+        Loading...
+      </h2>
+    )
     if (this.state.fetched) {
+      gamesListFoundationClass = "small-6 small-centered columns"
+      loadingHeader = null
       activeGamesList = (
         <GamesListContainer
           listType="active"
@@ -60,8 +66,13 @@ class GamesIndex extends Component {
     }
     return(
       <div>
-        {activeGamesList}
-        {availableGamesList}
+        {loadingHeader}
+        <div className={gamesListFoundationClass}>
+          {activeGamesList}
+        </div>
+        <div className={gamesListFoundationClass}>
+          {availableGamesList}
+        </div>
       </div>
     )
   }

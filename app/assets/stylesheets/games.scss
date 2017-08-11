@@ -102,7 +102,7 @@ body {
     &.active-game {
       background-color: $active-game-tile-opponents-turn-bg-color;
       // border-width: 5px;
-      &.my-turn {
+      &.your-turn {
         // border-color: $game-tile-your-turn-border-color;
         background-color: $game-tile-your-turn-bg-color;
       }

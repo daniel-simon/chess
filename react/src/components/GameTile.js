@@ -6,11 +6,12 @@ const GameTile = props => {
   let gameId = props.data.id
   let opponentHeader = ''
   let timestampText = ''
-  let cssClass = ''
   let buttonText = ''
   let turnText = ''
   let movesCountText = ''
   let whiteName, blackName
+  let turnTextCssClass = 'turn-text-left'
+  let tileCssClass = 'game-tile panel'
 
   if (props.data.white_id === props.data.opponent_id) {
     whiteName = props.data.opponent_username
@@ -23,10 +24,11 @@ const GameTile = props => {
   switch (props.tileType) {
   case 'active':
     let opponentName = props.data.opponent_username
-    opponentHeader = `Game against ${opponentName}`
-    cssClass = 'active-game'
+    opponentHeader = `Opponent: ${opponentName}`
+    tileCssClass += ' active-game'
     if (props.data.my_turn) {
-      cssClass += ' my-turn'
+      tileCssClass += ' your-turn'
+      turnTextCssClass += ' your-turn-text'
       turnText = "Your turn"
     } else {
       turnText = `${opponentName}'s turn`
@@ -42,14 +44,14 @@ const GameTile = props => {
   case 'available':
     opponentHeader = `Open game created by ${props.data.creator_username}`
     timestampText = `Created ${props.data.timestampStr}`
-    cssClass = 'available-game'
+    tileCssClass += ' available-game'
     buttonText = "Join Game"
     break
   }
 
   return(
     <div className="row">
-      <div className={cssClass + " game-tile small-12 medium-10 large-8 game-tile small-centered panel columns"}>
+      <div className={tileCssClass}>
         <div className="row">
           <h3>
             <span className="opponent-header left">{opponentHeader}</span>
@@ -59,7 +61,7 @@ const GameTile = props => {
         <br />
         <div className="game-info-text">
           <p className="row">
-            <span className="turn-text left">{turnText}</span>
+            <span className={turnTextCssClass}>{turnText}</span>
             <span className="move-suggestions-text right">Move suggestions: {showMovesText}</span>
           </p>
           <p className="row">
