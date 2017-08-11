@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
 import TestBoard from '../helpers/TestBoard'
 let gameConstants = require('../helpers/GameConstants')
+let getLegalSquares = require('../helpers/GetLegalSquares')
+let checkHelper = require('../helpers/CheckHelper')
 let boardSetter = require('../helpers/BoardSetter')
 
 class Board extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      presentBoard: [
+      currentBoard: [
         [],[],[],[],[],[],[],[]
       ],
       displayedBoard: [
@@ -17,7 +19,9 @@ class Board extends Component {
       moveHistory: [],
       boardStateHistory: [],
       displayedStateIndex: null,
-      isMyTurn: this.props.initiallyMyTurn
+      isMyTurn: this.props.initiallyMyTurn,
+      gameOver: false,
+      result: null,
     }
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
     this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
@@ -28,12 +32,31 @@ class Board extends Component {
 
   componentDidMount () {
     let gameId = this.props.gameId
-    this.refreshMoveHistory(gameId, true, )
+    this.refreshMoveHistory(gameId, true)
     this.subscribeToGameChannel(gameId, this.props.myColor, this.refreshMoveHistory)
   }
 
+  checkForGameOver (activePlayer, currentBoard) {
+    let result = 'continue'
+    let legalMoves = getLegalSquares.forPlayer(activePlayer, currentBoard)
+    if (legalMoves.length === 0) {
+      if (checkHelper.kingInCheck(activePlayer, currentBoard)) {
+        result = `Checkmate! ${gameConstants.enemyOf(activePlayer)} wins!`
+        let outcome = (activePlayer === this.props.myColor ? 'loss' : 'win')
+        this.setState({ gameOver: true, result: outcome })
+      } else {
+        result = `Stalemate! ${activePlayer} is not in check and has no legal moves`
+        this.setState({ gameOver: true, result: 'tie' })
+      }
+      alert(result)
+    }
+    return result
+  }
+
   refreshMoveHistory (gameId, forceDisplayUpdate) {
-    let loadBoardStateAndHistory = (moveHistory, forceDisplayUpdate) => { this.loadBoardStateAndHistory(moveHistory, forceDisplayUpdate) }
+    let loadBoardStateAndHistory = (moveHistory, forceDisplayUpdate) => {
+      this.loadBoardStateAndHistory(moveHistory, forceDisplayUpdate)
+    }
     fetch(`/api/v1/games/${gameId}/moves`, {
       credentials: 'same-origin',
     })
@@ -46,7 +69,6 @@ class Board extends Component {
       }
     })
     .then(response => {
-      // debugger
       loadBoardStateAndHistory(response.moves, forceDisplayUpdate)
     })
     .catch(error => console.error(`Couldn't fetch move history: ${error.message}`))
@@ -82,30 +104,34 @@ class Board extends Component {
         testBoard.movePiece(rookOrigin, rookDestination)
       }
     })
-    let presentBoard = snapShotBoardState(testBoard.state)
-    boardStateHistory.push(presentBoard)
-
+    let currentBoard = snapShotBoardState(testBoard.state)
+    boardStateHistory.push(currentBoard)
     // let newDisplayedBoard, newDisplayedStateIndex
     // if (forceDisplayUpdate) {
-    //   newDisplayedBoard = presentBoard,
+    //   newDisplayedBoard = currentBoard,
     //   newDisplayedStateIndex = boardStateHistory.length - 1
     // } else {
     //   newDisplayedBoard = this.state.displayedBoard
     //   newDisplayedStateIndex = this.state.displayedStateIndex
     // }
-
+    let lastMove = moveHistory[moveHistory.length - 1]
+    let myColor = this.props.myColor
+    let myTurnNext = lastMove.player_color !== myColor
+    let nextActiveColor = myTurnNext ? myColor : gameConstants.enemyOf(myColor)
     this.setState({
-      presentBoard: presentBoard,
-      displayedBoard: presentBoard,
+      currentBoard: currentBoard,
+      displayedBoard: currentBoard,
       boardStateHistory: boardStateHistory,
       displayedStateIndex: boardStateHistory.length - 1,
       moveHistory: moveHistory,
+      isMyTurn: myTurnNext,
     })
+    this.checkForGameOver(nextActiveColor, currentBoard)
   }
 
   subscribeToGameChannel (gameId, myColor) {
     let refreshMoveHistory = () => { this.refreshMoveHistory(gameId, true) }
-    let localToggleTurn = () => { this.setState({ isMyTurn: !this.state.isMyTurn }) }
+
     if (App.cable.subscriptions.length > 0) {
       App.cable.subscriptions.remove(App.cable.subscriptions[0])
     }
@@ -119,7 +145,6 @@ class Board extends Component {
         disconnected: () => console.log("GameChannel disconnected"),
         received: (fetchCue) => {
           if (fetchCue.gameId === gameId) {
-            localToggleTurn()
             refreshMoveHistory()
           }
         }
@@ -169,7 +194,7 @@ class Board extends Component {
     let [fromCol, fromRow] = origin
     let [toCol, toRow] = destination
 
-    let movedPiece = this.state.presentBoard[fromCol][fromRow]
+    let movedPiece = this.state.currentBoard[fromCol][fromRow]
     if (
       movedPiece.type === 'pawn' &&
       toRow === gameConstants.lastRowFor(movedPiece.color)
@@ -177,13 +202,13 @@ class Board extends Component {
         movedPiece.type = 'queen'
     }
 
-    let newBoardState = this.state.presentBoard
+    let newBoardState = this.state.currentBoard
     newBoardState[toCol][toRow] = movedPiece
     newBoardState[fromCol][fromRow] = null
 
     let newStateHistory = this.state.boardStateHistory.concat( [newBoardState] )
     this.setState({
-      presentBoard: newBoardState,
+      currentBoard: newBoardState,
       displayedBoard: newBoardState,
       boardStateHistory: newStateHistory,
       displayedStateIndex: newStateHistory.length - 1

@@ -52,6 +52,10 @@ class GameShow extends Component {
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
+  handleGameOver (winner) {
+    //LATER
+  }
+
   toggleActivePlayer (gameId) {
     let changeActivePlayerRequest = {
       patchType: "switch-turns"
