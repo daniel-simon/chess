@@ -1,31 +1,31 @@
 <h1>Create your account</h1>
 
 <%= form_for @user do |f| %>
-
-  <div class="field">
-    <%= f.text_field :username,
-      autofocus: true,
-      placeholder: 'Username'
-    %>
+  <div class="small-6 small-centered columns">
+    <div class="field">
+      <%= f.text_field :username,
+        autofocus: true,
+        placeholder: 'Username'
+      %>
+    </div>
+    <div class="field">
+      <%= f.text_field :email,
+        placeholder: 'Email'
+      %>
+    </div>
+    <div class="field">
+      <%= f.password_field :password,
+        autocomplete: "off",
+        placeholder: 'Password'
+      %>
+    </div>
+    <div class="field">
+      <%= f.password_field :password_confirmation,
+        autocomplete: "off",
+        placeholder: 'Confirm Password'
+      %>
+    </div>
+    <%= f.submit "Submit", class: "button right" %>
+    <%= link_to "Log in to existing account", new_session_path, class: "button secondary right" %>
   </div>
-  <div class="field">
-    <%= f.text_field :email,
-      placeholder: 'Email'
-    %>
-  </div>
-  <div class="field">
-    <%= f.password_field :password,
-      autocomplete: "off",
-      placeholder: 'Password'
-    %>
-  </div>
-  <div class="field">
-    <%= f.password_field :password_confirmation,
-      autocomplete: "off" ,
-      placeholder: 'Confirm Password'
-    %>
-  </div>
-  <%= f.submit "Submit", class: "button" %>
-  <%= link_to "Log in to existing account", new_session_path, class: "button secondary" %>
-
 <% end %>

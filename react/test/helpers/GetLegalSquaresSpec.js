@@ -76,8 +76,10 @@ describe("getLegalSquares", () => {
 
     it("should return no moves for a victim of the four move checkmate", () => {
       let board = new TestBoard()
-      board.addNonPawns()
-      board.addPawns()
+      board.addNonPawns('white')
+      board.addNonPawns('black')
+      board.addPawns('white')
+      board.addPawns('black')
       board.movePiece( [4,6], [4,5] )
       board.movePiece( [5,7], [2,4] )
       board.movePiece( [3,7], [5,5] )

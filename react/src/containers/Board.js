@@ -17,17 +17,54 @@ class Board extends Component {
       lastMove: {},
       moveHistory: [],
       boardStateHistory: [],
-      displayedStateIndex: null
+      displayedStateIndex: null,
+      isMyTurn: this.props.initiallyMyTurn
     }
-    this.movePiece = this.movePiece.bind(this)
-    this.recordMove = this.recordMove.bind(this)
-    this.changeDisplayedState = this.changeDisplayedState.bind(this)
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
     this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
+    this.changeDisplayedState = this.changeDisplayedState.bind(this)
+    this.recordMove = this.recordMove.bind(this)
+    this.movePiece = this.movePiece.bind(this)
   }
 
   componentDidMount () {
-    this.loadBoardState(this.props.initialMoveHistory)
+    this.loadBoardStateAndHistory(this.props.initialMoveHistory)
+    this.subscribeToGameChannel(this.props.gameId)
+  }
+
+  subscribeToGameChannel (gameId) {
+    if (App.cable.subscriptions.length > 0) {
+      App.cable.subscriptions.remove(App.cable.subscriptions[0])
+    }
+    App.gameChannel = App.cable.subscriptions.create(
+      {
+        channel: "GameChannel",
+        game_id: gameId
+      },
+      {
+        connected: () => console.log("GameChannel connected"),
+        disconnected: () => console.log("GameChannel disconnected"),
+        received: moveData => {
+          this.interpretRecievedMove(moveData)
+        }
+      }
+    )
+  }
+
+  interpretRecievedMove (moveData) {
+    this.setState({ isMyTurn: !this.state.isMyTurn })
+    let move = moveData.moveData
+    if (move.player !== this.props.myColor) {
+      if (!move.castle) {
+        this.movePiece(move.origin, move.destination)
+      }
+    }
+  }
+
+  broadcastMove (moveData) {
+    App.gameChannel.send({
+      moveData: moveData
+    })
   }
 
   snapShotBoardState (state) {
@@ -39,11 +76,10 @@ class Board extends Component {
         copiedState[col][row] = occupant
       })
     })
-
     return copiedState
   }
 
-  loadBoardState (moveHistory) {
+  loadBoardStateAndHistory (moveHistory) {
     let testBoard = new TestBoard('newGame')
     let boardStateHistory = []
     moveHistory.forEach(move => {
@@ -76,32 +112,39 @@ class Board extends Component {
   }
 
   recordMove (move) {
-    let lastMove = move
     move.moveNumber = this.state.moveHistory.length
-
-    // for (let property in move) {
-    //   lastMove[property] = move[property]
-    // }
-    // let [fromCol, fromRow] = move.origin
-    // let [toCol, toRow] = move.destination
-    // lastMove.movedPiece = this.state.presentBoard[fromCol][fromRow]
-    //
-    // if (!move.castle) {
-    //   lastMove.capturedPiece = this.state.presentBoard[toCol][toRow]
-    //   lastMove.castleSide = null
-    // } else {
-    //   lastMove.capturedPiece = null
-    //   lastMove.castleSide = toCol > 4 ? 'kingside' : 'queenside'
-    // }
-    // //move this logic down to the presentBoard interface
-    //
-    // //if (move.enPassant) { etc... }
-
     let moveHistory = this.state.moveHistory
-    let newMoveHistory = moveHistory.concat( [lastMove] )
+    let newMoveHistory = moveHistory.concat( [move] )
+    this.setState({ lastMove: move, moveHistory: newMoveHistory })
 
-    this.updateBackend(lastMove)
-    this.setState({ lastMove: lastMove, moveHistory: newMoveHistory })
+    if (move.player === this.props.myColor) {
+      this.updateBackend(move)
+      this.broadcastMove(move)
+    }
+  }
+
+  updateBackend (move) {
+    this.persistMove(move)
+    this.props.toggleActivePlayer()
+  }
+
+  persistMove (move) {
+    move.gameId = this.props.gameId
+    let moveRequest = { move: move }
+    fetch('/api/v1/moves', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: JSON.stringify(moveRequest)
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
   movePiece (origin, destination) {
@@ -157,80 +200,63 @@ class Board extends Component {
     })
   }
 
-  updateBackend (move) {
-    this.persistMove(move)
-    this.props.toggleActivePlayer()
-  }
-
-  persistMove (move) {
-    move.gameId = this.props.gameId
-    let moveRequest = { move: move }
-    fetch('/api/v1/moves', {
-      method: 'POST',
-      credentials: 'same-origin',
-      body: JSON.stringify(moveRequest)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`
-        throw new Error(errorMessage)
-      }
-    })
-    .catch(error => console.error(`Error posting move to database: ${error.message}`))
-  }
-
   render () {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let stepBackward = () => { this.stepThroughStateHistory(-1) }
-    let backwardIcon = '<'
     let stepForward = () => { this.stepThroughStateHistory(1) }
-    let forwardIcon = '>'
     let jumpToStart = () => { this.jumpToHistoryEndpoint('back') }
-    let startIcon = '<<'
     let jumpToNow = () => { this.jumpToHistoryEndpoint('forward') }
+    let backwardIcon = '<'
+    let forwardIcon = '>'
+    let startIcon = '<<'
     let endIcon = '>>'
     let rewindCss = ''
     let forwardCss = ''
     if (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1) {
-      forwardCss = "maxed"
+      forwardCss = 'maxed'
     } else {
-      forwardCss = "catch-up"
+      forwardCss = 'catch-up'
     }
     if (this.state.displayedStateIndex === 0) {
-      rewindCss = "maxed"
+      rewindCss = 'maxed'
     }
-
+    let headerText
+    if (this.state.isMyTurn) {
+      headerText = `Your turn (${this.props.myColor})`
+    } else {
+      headerText = `${this.props.playerData.opponent.username}'s turn (${this.props.playerData.opponent.color})`
+    }
     return(
       <div>
-        <BoardInterface
-          upToDate={upToDate}
-          movePiece={this.movePiece}
-          recordMove={this.recordMove}
-          boardState={this.state.displayedBoard}
-          moveHistory={this.state.moveHistory}
-          lastMove={this.state.lastMove}
-          myColor={this.props.myColor}
-          isMyTurn={this.props.isMyTurn}
-          showLegalMoves={this.props.showLegalMoves}
-          pieceSet={this.props.pieceSet}
-        />
-        <br />
-        <div className="row">
-          <div className="small-6 text-center playback-buttons-container small-centered columns">
-            <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
-              {startIcon}
-            </span>
-            <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
-              {backwardIcon}
-            </span>
-            <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
-              {forwardIcon}
-            </span>
-            <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
-              {endIcon}
-            </span>
+        <div className="small-12 small-centered text-center columns">
+          <h2>{headerText}</h2>
+          <BoardInterface
+            upToDate={upToDate}
+            movePiece={this.movePiece}
+            recordMove={this.recordMove}
+            isMyTurn={this.state.isMyTurn}
+            boardState={this.state.displayedBoard}
+            moveHistory={this.state.moveHistory}
+            lastMove={this.state.lastMove}
+            myColor={this.props.myColor}
+            showLegalMoves={this.props.showLegalMoves}
+            pieceSet={this.props.pieceSet}
+          />
+          <div className="row">
+            <div className="small-6 text-center playback-buttons-container small-centered columns">
+              <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
+                {startIcon}
+              </span>
+              <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
+                {backwardIcon}
+              </span>
+              <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
+                {forwardIcon}
+              </span>
+              <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
+                {endIcon}
+              </span>
+            </div>
           </div>
         </div>
       </div>

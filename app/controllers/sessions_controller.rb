@@ -11,6 +11,7 @@ class SessionsController < ApplicationController
     @user = User.find_by(username: login_params[:username])
     if @user && @user.authenticate(login_params[:password])
       session[:user_id] = @user.id
+      cookies.signed[:user_id] = @user.id
       flash[:notice] = "Logged in successfully"
       redirect_to games_path
     else
@@ -25,14 +26,15 @@ class SessionsController < ApplicationController
         errors += "Invalid username or password."
       end
       flash[:alert] = errors
-      render :new
     end
   end
 
   def destroy
+    ActionCable.server.disconnect(current_user: current_user)
+    cookies.delete(:user_id)
     session[:user_id] = nil
     flash[:notice] = "Logged out successfully"
-    redirect_to '/'
+    redirect_to new_session_path
   end
 
   private
