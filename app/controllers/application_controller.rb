@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  # include Authentication
   protect_from_forgery with: :exception
 
   def current_user
@@ -7,6 +8,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
 
   def authorize
-    redirect_to new_session_path unless current_user
+    unless current_user && current_user.id == cookies.signed[:user_id]
+      redirect_to new_session_path 
+    end
   end
 end
