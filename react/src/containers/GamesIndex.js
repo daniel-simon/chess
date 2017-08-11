@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import GameTile from '../components/GameTile'
 import GetTimestampString from '../helpers/GetTimestampString'
 import NewGameForm from './NewGameForm'
+import BackButton from '../components/BackButton'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -11,15 +12,14 @@ class GamesIndex extends Component {
       activeGames: [],
       availableGames: [],
     }
-    this.refreshGamesList = this.refreshGamesList.bind(this)
+    this.loadGamesList = this.loadGamesList.bind(this)
   }
 
   componentDidMount () {
-    this.refreshGamesList()
+    this.loadGamesList()
   }
 
-  refreshGamesList () {
-    console.log('refreshed')
+  loadGamesList () {
     fetch('/api/v1/games', {
       credentials: 'same-origin'
     })
@@ -48,7 +48,9 @@ class GamesIndex extends Component {
     let availableGames = []
     let availableGameTiles = []
     let availableGamesHeader = null
+    let loadingText = <h2>Loading...</h2>
     if (this.state.fetched) {
+      loadingText = null
       activeGames = this.state.activeGames
       availableGames = this.state.availableGames
       let now = Date.now()
@@ -89,7 +91,9 @@ class GamesIndex extends Component {
     }
     return(
       <div>
-        <NewGameForm />
+        <BackButton />
+        {loadingText}
+        {/* <NewGameForm /> */}
         {activeGamesHeader}
         {activeGameTiles}
         {availableGamesHeader}
