@@ -66,11 +66,9 @@ class GamesIndex extends Component {
     }
     return(
       <div>
-        {loadingHeader}
         <div className={gamesListFoundationClass}>
+          {loadingHeader}
           {activeGamesList}
-        </div>
-        <div className={gamesListFoundationClass}>
           {availableGamesList}
         </div>
       </div>

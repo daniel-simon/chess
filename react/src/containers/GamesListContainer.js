@@ -5,23 +5,27 @@ import GetTimestampString from '../helpers/GetTimestampString'
 const GamesListContainer = props => {
 
   let headerText = null
+  let timestampColumn = ''
   if (props.games.length > 0) {
     switch (props.listType) {
     case 'active':
       headerText = 'Your Active Games'
+      timestampColumn = 'updated_at'
       break
     case 'available':
       headerText = 'Available Games'
+      timestampColumn = 'created_at'
       break
     case 'pending':
       headerText = 'Your Pending Games'
+      timestampColumn = 'created_at'
       break
     }
   }
 
   let now = Date.now()
   props.games.forEach(gameObj => {
-    gameObj.timestampStr = GetTimestampString(now, gameObj.created_at)
+    gameObj.timestampStr = GetTimestampString(now, gameObj[timestampColumn])
   })
   let gameTiles = props.games.map(gameObj => {
     return(

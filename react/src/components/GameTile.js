@@ -33,17 +33,18 @@ const GameTile = props => {
     } else {
       turnText = `${opponentName}'s turn`
     }
-    movesCountText = `Total moves: ${props.data.moves_count}`
     if (props.data.moves_count > 0) {
-      timestampText = `Last move made ${props.data.timestampStr}`
+      timestampText = `Last move: ${props.data.timestampStr}`
+      movesCountText = `Total moves: ${props.data.moves_count}`
     } else {
-      timestampText = `Game started ${props.data.timestampStr}`
+      timestampText = `Game started: ${props.data.timestampStr}`
+      movesCountText = `No moves yet`
     }
     buttonText = "Continue Game"
     break
   case 'available':
-    opponentHeader = `Open game created by ${props.data.creator_username}`
-    timestampText = `Created ${props.data.timestampStr}`
+    opponentHeader = `${props.data.creator_username}'s game`
+    timestampText = `Created: ${props.data.timestampStr}`
     tileCssClass += ' available-game'
     buttonText = "Join Game"
     break
