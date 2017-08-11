@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import GameTile from '../components/GameTile'
-import GetTimestampString from '../helpers/GetTimestampString'
 import NewGameForm from './NewGameForm'
 import BackButton from '../components/BackButton'
+import GamesListContainer from './GamesListContainer'
 
 class GamesIndex extends Component {
   constructor (props) {
@@ -42,62 +41,27 @@ class GamesIndex extends Component {
   }
 
   render () {
-    let activeGames = []
-    let activeGameTiles = []
-    let activeGamesHeader = null
-    let availableGames = []
-    let availableGameTiles = []
-    let availableGamesHeader = null
-    let loadingText = <h2>Loading...</h2>
+
+    let activeGamesList, availableGamesList, pendingGamesList
+    
     if (this.state.fetched) {
-      loadingText = null
-      activeGames = this.state.activeGames
-      availableGames = this.state.availableGames
-      let now = Date.now()
-      availableGames.forEach(gameObj => {
-        gameObj.timestampStr = GetTimestampString(now, gameObj.created_at)
-      })
-      activeGames.forEach(gameObj => {
-        gameObj.timestampStr = GetTimestampString(now, gameObj.updated_at)
-      })
-      activeGameTiles = activeGames.map(gameObj => {
-        return(
-          <GameTile
-            key={gameObj.id}
-            tileType="active"
-            data={gameObj}
-          />
-        )
-      })
-      availableGameTiles = availableGames.map(gameObj => {
-        return(
-          <GameTile
-            key={gameObj.id}
-            tileType="available"
-            data={gameObj}
-          />
-        )
-      })
-      if (activeGames.length > 0) {
-        activeGamesHeader = (
-          <h2 className="active-games">Your active games</h2>
-        )
-      }
-      if (availableGames.length > 0) {
-        availableGamesHeader = (
-          <h2 className="public-games">Public games</h2>
-        )
-      }
+      activeGamesList = (
+        <GamesListContainer
+          listType="active"
+          games={this.state.activeGames}
+        />
+      )
+      availableGamesList = (
+        <GamesListContainer
+          listType="available"
+          games={this.state.availableGames}
+        />
+      )
     }
     return(
       <div>
-        <BackButton />
-        {loadingText}
-        {/* <NewGameForm /> */}
-        {activeGamesHeader}
-        {activeGameTiles}
-        {availableGamesHeader}
-        {availableGameTiles}
+        {activeGamesList}
+        {availableGamesList}
       </div>
     )
   }
