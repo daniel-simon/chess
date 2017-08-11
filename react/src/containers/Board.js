@@ -14,7 +14,6 @@ class Board extends Component {
       displayedBoard: [
         [],[],[],[],[],[],[],[]
       ],
-      lastMove: {},
       moveHistory: [],
       boardStateHistory: [],
       displayedStateIndex: null,
@@ -28,11 +27,85 @@ class Board extends Component {
   }
 
   componentDidMount () {
-    this.loadBoardStateAndHistory(this.props.initialMoveHistory)
-    this.subscribeToGameChannel(this.props.gameId)
+    let gameId = this.props.gameId
+    this.refreshMoveHistory(gameId, true, )
+    this.subscribeToGameChannel(gameId, this.props.myColor, this.refreshMoveHistory)
   }
 
-  subscribeToGameChannel (gameId) {
+  refreshMoveHistory (gameId, forceDisplayUpdate) {
+    let loadBoardStateAndHistory = (moveHistory, forceDisplayUpdate) => { this.loadBoardStateAndHistory(moveHistory, forceDisplayUpdate) }
+    fetch(`/api/v1/games/${gameId}/moves`, {
+      credentials: 'same-origin',
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .then(response => {
+      // debugger
+      loadBoardStateAndHistory(response.moves, forceDisplayUpdate)
+    })
+    .catch(error => console.error(`Couldn't fetch move history: ${error.message}`))
+  }
+
+  loadBoardStateAndHistory (moveHistory, forceDisplayUpdate) {
+    let snapShotBoardState = boardState => {
+      let copiedState = [
+        [],[],[],[],[],[],[],[]
+      ]
+      boardState.map((colArray, col) => {
+        colArray.map((occupant, row) => {
+          copiedState[col][row] = occupant
+        })
+      })
+      return copiedState
+    }
+
+    let testBoard = new TestBoard('newGame')
+    let boardStateHistory = []
+    moveHistory.forEach(move => {
+      boardStateHistory.push(snapShotBoardState(testBoard.state))
+      if (!move.castle) {
+        testBoard.movePiece(move.origin, move.destination)
+      }
+      if (move.castle) {
+        let rookOriginCol = move.destination[0] > 4 ? 7 : 0
+        let rookDestinationCol = move.destination[0] > 4 ? 5 : 3
+        let homeRow = move.origin[1]
+        let rookOrigin = [rookOriginCol, homeRow]
+        let rookDestination = [rookDestinationCol, homeRow]
+        testBoard.movePiece(move.origin, move.destination)
+        testBoard.movePiece(rookOrigin, rookDestination)
+      }
+    })
+    let presentBoard = snapShotBoardState(testBoard.state)
+    boardStateHistory.push(presentBoard)
+
+    // let newDisplayedBoard, newDisplayedStateIndex
+    // if (forceDisplayUpdate) {
+    //   newDisplayedBoard = presentBoard,
+    //   newDisplayedStateIndex = boardStateHistory.length - 1
+    // } else {
+    //   newDisplayedBoard = this.state.displayedBoard
+    //   newDisplayedStateIndex = this.state.displayedStateIndex
+    // }
+
+    this.setState({
+      presentBoard: presentBoard,
+      displayedBoard: presentBoard,
+      boardStateHistory: boardStateHistory,
+      displayedStateIndex: boardStateHistory.length - 1,
+      moveHistory: moveHistory,
+    })
+  }
+
+  subscribeToGameChannel (gameId, myColor) {
+    let refreshMoveHistory = () => { this.refreshMoveHistory(gameId, true) }
+    let localToggleTurn = () => { this.setState({ isMyTurn: !this.state.isMyTurn }) }
     if (App.cable.subscriptions.length > 0) {
       App.cable.subscriptions.remove(App.cable.subscriptions[0])
     }
@@ -44,92 +117,34 @@ class Board extends Component {
       {
         connected: () => console.log("GameChannel connected"),
         disconnected: () => console.log("GameChannel disconnected"),
-        received: moveData => {
-          this.interpretRecievedMove(moveData)
+        received: (fetchCue) => {
+          if (fetchCue.gameId === gameId) {
+            localToggleTurn()
+            refreshMoveHistory()
+          }
         }
       }
     )
   }
 
-  interpretRecievedMove (moveData) {
-    this.setState({ isMyTurn: !this.state.isMyTurn })
-    let move = moveData.moveData
-    if (move.player !== this.props.myColor) {
-      if (!move.castle) {
-        this.movePiece(move.origin, move.destination)
-      }
-    }
-  }
-
-  broadcastMove (moveData) {
+  broadcastFetchCue () {
     App.gameChannel.send({
-      moveData: moveData
-    })
-  }
-
-  snapShotBoardState (state) {
-    let copiedState = [
-      [],[],[],[],[],[],[],[]
-    ]
-    state.map((colArray, col) => {
-      colArray.map((occupant, row) => {
-        copiedState[col][row] = occupant
-      })
-    })
-    return copiedState
-  }
-
-  loadBoardStateAndHistory (moveHistory) {
-    let testBoard = new TestBoard('newGame')
-    let boardStateHistory = []
-    moveHistory.forEach(move => {
-      boardStateHistory.push(this.snapShotBoardState(testBoard.state))
-      if (!move.castle) {
-        testBoard.movePiece(move.origin, move.destination)
-      }
-      if (move.castle) {
-        testBoard.movePiece(move.origin, move.destination)
-        let rookOriginCol = move.destination[0] > 4 ? 7 : 0
-        let rookDestinationCol = move.destination[0] > 4 ? 5 : 3
-        let homeRow = move.origin[1]
-        let rookOrigin = [rookOriginCol, homeRow]
-        let rookDestination = [rookDestinationCol, homeRow]
-        testBoard.movePiece(rookOrigin, rookDestination)
-      }
-    })
-    boardStateHistory.push(this.snapShotBoardState(testBoard.state))
-    let newBoardState = testBoard.state
-    let totalMoves = moveHistory.length
-    let totalStates = moveHistory.length + 1
-    this.setState({
-      moveHistory: moveHistory,
-      lastMove: moveHistory[totalMoves - 1],
-      presentBoard: newBoardState,
-      displayedBoard: newBoardState,
-      boardStateHistory: boardStateHistory,
-      displayedStateIndex: totalStates - 1
+      gameId: this.props.gameId,
+      playerColor: this.props.myColor,
     })
   }
 
   recordMove (move) {
-    move.moveNumber = this.state.moveHistory.length
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [move] )
-    this.setState({ lastMove: move, moveHistory: newMoveHistory })
-
-    if (move.player === this.props.myColor) {
-      this.updateBackend(move)
-      this.broadcastMove(move)
-    }
-  }
-
-  updateBackend (move) {
+    this.setState({ moveHistory: newMoveHistory })
     this.persistMove(move)
     this.props.toggleActivePlayer()
   }
 
   persistMove (move) {
     move.gameId = this.props.gameId
+    let broadcastFetchCue = () => { this.broadcastFetchCue() }
     let moveRequest = { move: move }
     fetch('/api/v1/moves', {
       method: 'POST',
@@ -144,14 +159,17 @@ class Board extends Component {
         throw new Error(errorMessage)
       }
     })
+    .then(response => {
+      broadcastFetchCue()
+    })
     .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
   movePiece (origin, destination) {
     let [fromCol, fromRow] = origin
     let [toCol, toRow] = destination
-    let movedPiece = this.state.presentBoard[fromCol][fromRow]
 
+    let movedPiece = this.state.presentBoard[fromCol][fromRow]
     if (
       movedPiece.type === 'pawn' &&
       toRow === gameConstants.lastRowFor(movedPiece.color)
@@ -166,10 +184,11 @@ class Board extends Component {
     let newStateHistory = this.state.boardStateHistory.concat( [newBoardState] )
     this.setState({
       presentBoard: newBoardState,
-      boardStateHistory: newStateHistory,
       displayedBoard: newBoardState,
+      boardStateHistory: newStateHistory,
       displayedStateIndex: newStateHistory.length - 1
     })
+    // this.changeDisplayedState(newStateHistory.length - 1)
   }
 
   stepThroughStateHistory (step) {
@@ -182,7 +201,7 @@ class Board extends Component {
   jumpToHistoryEndpoint (direction) {
     let index
     switch (direction) {
-    case 'back':
+    case 'backward':
       index = 0
       break
     case 'forward':
@@ -193,10 +212,11 @@ class Board extends Component {
   }
 
   changeDisplayedState (index) {
+    // debugger
     let newDisplayedState = this.state.boardStateHistory[index]
     this.setState({
       displayedBoard: newDisplayedState,
-      displayedStateIndex: index
+      displayedStateIndex: index,
     })
   }
 
@@ -204,7 +224,7 @@ class Board extends Component {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let stepBackward = () => { this.stepThroughStateHistory(-1) }
     let stepForward = () => { this.stepThroughStateHistory(1) }
-    let jumpToStart = () => { this.jumpToHistoryEndpoint('back') }
+    let jumpToStart = () => { this.jumpToHistoryEndpoint('backward') }
     let jumpToNow = () => { this.jumpToHistoryEndpoint('forward') }
     let backwardIcon = '<'
     let forwardIcon = '>'
@@ -237,7 +257,6 @@ class Board extends Component {
             isMyTurn={this.state.isMyTurn}
             boardState={this.state.displayedBoard}
             moveHistory={this.state.moveHistory}
-            lastMove={this.state.lastMove}
             myColor={this.props.myColor}
             showLegalMoves={this.props.showLegalMoves}
             pieceSet={this.props.pieceSet}
