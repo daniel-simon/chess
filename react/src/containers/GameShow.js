@@ -39,22 +39,35 @@ class GameShow extends Component {
       let playerData = response.game_show_data.player_data
       let activePlayerData = playerData[playerData.initial_active_player_label]
       let myColor = playerData.user.color
-      let isMyTurn = playerData.initial_active_player_label === 'user'
+      let initiallyMyTurn = playerData.initial_active_player_label === 'user'
       this.setState({
         fetchedGameData: true,
         gameData: response.game_show_data,
         playerData: playerData,
         activePlayerData: activePlayerData,
         myColor: myColor,
-        initiallyMyTurn: isMyTurn
+        initiallyMyTurn: initiallyMyTurn,
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
-  handleGameOver (winner) {
-    //LATER
-  }
+  // persistGameResult (outcome) {
+  //   let gameId = this.props.params.id
+  //   fetch(`/api/v1/games/${gameId}`)
+  //   .then(response => {
+  //     if (response.ok) {
+  //       return response.json()
+  //     } else {
+  //       let errorMessage = `${response.status} (${response.statusText})`
+  //       throw new Error(errorMessage)
+  //     }
+  //   })
+  //   .then(response => {
+  //
+  //   })
+  //   .catch(error => console.error(`Error in fetch: ${error.message}`))
+  // }
 
   toggleActivePlayer (gameId) {
     let changeActivePlayerRequest = {
@@ -102,10 +115,9 @@ class GameShow extends Component {
 
     return(
       <div className="game-show-page">
-        <BackButton />
-        <div className="medium-12 large-6 columns">
+        <div className="small-12 small-centered columns">
           <h3 className="game-header">{loadingText}</h3>
-          <div className="game-board">
+          <div className="chess-board-container">
             {board}
           </div>
         </div>
