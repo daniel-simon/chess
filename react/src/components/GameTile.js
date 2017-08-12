@@ -6,11 +6,12 @@ const GameTile = props => {
   let gameId = props.data.id
   let opponentHeader = ''
   let timestampText = ''
-  let cssClass = ''
   let buttonText = ''
   let turnText = ''
   let movesCountText = ''
   let whiteName, blackName
+  let turnTextCssClass = 'turn-text-left'
+  let tileCssClass = 'game-tile panel'
 
   if (props.data.white_id === props.data.opponent_id) {
     whiteName = props.data.opponent_username
@@ -23,33 +24,48 @@ const GameTile = props => {
   switch (props.tileType) {
   case 'active':
     let opponentName = props.data.opponent_username
-    opponentHeader = `Game against ${opponentName}`
-    cssClass = 'active-game'
+    opponentHeader = `Opponent: ${opponentName}`
+    tileCssClass += ' active-game'
     if (props.data.my_turn) {
-      cssClass += ' my-turn'
+      tileCssClass += ' your-turn'
+      turnTextCssClass += ' your-turn-text'
       turnText = "Your turn"
     } else {
       turnText = `${opponentName}'s turn`
     }
-    movesCountText = `Total moves: ${props.data.moves_count}`
     if (props.data.moves_count > 0) {
-      timestampText = `Last move made ${props.data.timestampStr}`
+      timestampText = `Last move: ${props.data.timestampStr}`
+      movesCountText = `Total moves: ${props.data.moves_count}`
     } else {
-      timestampText = `Game started ${props.data.timestampStr}`
+      timestampText = `Game started: ${props.data.timestampStr}`
+      movesCountText = `No moves yet`
     }
     buttonText = "Continue Game"
     break
   case 'available':
-    opponentHeader = `Open game created by ${props.data.creator_username}`
-    timestampText = `Created ${props.data.timestampStr}`
-    cssClass = 'available-game'
+    opponentHeader = `${props.data.creator_username}'s game`
+    timestampText = `Created: ${props.data.timestampStr}`
+    tileCssClass += ' available-game'
     buttonText = "Join Game"
     break
+  case 'pending':
+    opponentHeader = `Your game - no opponent yet`
+    timestampText = `Created: ${props.data.timestampStr}`
+    tileCssClass += ' available-game'
+    break
+  }
+  let enterGameButton = (
+    <Link to={`/games/${gameId}`} className="button panel row">
+      {buttonText}
+    </Link>
+  )
+  if (props.tileType === 'pending') {
+    enterGameButton = null
   }
 
   return(
     <div className="row">
-      <div className={cssClass + " game-tile small-12 medium-10 large-8 game-tile small-centered panel columns"}>
+      <div className={tileCssClass}>
         <div className="row">
           <h3>
             <span className="opponent-header left">{opponentHeader}</span>
@@ -59,8 +75,7 @@ const GameTile = props => {
         <br />
         <div className="game-info-text">
           <p className="row">
-            <span className="turn-text left">{turnText}</span>
-            <span className="move-suggestions-text right">Move suggestions: {showMovesText}</span>
+            <span className={turnTextCssClass}>{turnText}</span>
           </p>
           <p className="row">
             <span className="moves-count-text left">{movesCountText}</span>
@@ -68,9 +83,7 @@ const GameTile = props => {
         </div>
         <div className="row">
           <div className="right">
-            <Link to={`/games/${gameId}`} className="button panel row">
-              {buttonText}
-            </Link>
+            {enterGameButton}
           </div>
         </div>
       </div>

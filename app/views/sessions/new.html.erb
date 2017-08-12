@@ -1,7 +1,7 @@
-<h1>Log in</h1>
+<div class="small-6 small-centered columns">
+  <h1>Log in</h1>
 
-<%= form_for :user, url: '/sessions' do |f| %>
-  <div class="small-6 small-centered columns">
+  <%= form_for :user, url: '/sessions' do |f| %>
     <div class="field">
       <%= f.text_field :username,
         placeholder: 'Username'
@@ -15,5 +15,5 @@
     </div>
     <%= f.submit "Submit", class: "button right" %>
     <%= link_to "Create new account", new_user_path, class: "button secondary right" %>
-  </div>
-<% end %>
+  <% end %>
+</div>

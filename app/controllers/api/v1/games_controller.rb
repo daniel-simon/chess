@@ -4,9 +4,11 @@ class Api::V1::GamesController < ApplicationController
   def index
     user = authorize_user
     games = {
+      pending_games: pending_games(user),
       active_games: active_games(user),
       available_games: available_games(user)
     }
+
     render json: { games_index_data: games }, adapter: :json
   end
 
@@ -57,7 +59,7 @@ class Api::V1::GamesController < ApplicationController
 
   def update
     user = authorize_user
-    game_update_request_hash = JSON.parse(request.body.read)
+    game_update_request_hash = JSON.parse(request.body.read)["patchRequest"]
     game_model = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
     when "switch-turns"
@@ -70,9 +72,8 @@ class Api::V1::GamesController < ApplicationController
 
   def create
     user = authorize_user
-    create_game_request_hash = JSON.parse(request.body.read)
-    show_legal_moves = create_game_request_hash["showLegalMoves"]
-    new_game = Game.new(creator: user, show_legal_moves: show_legal_moves)
+    create_game_request_hash = JSON.parse(request.body.read)["postRequest"]
+    new_game = Game.new(creator: user)
     if new_game.save
       render json: { new_game: new_game }, adapter: :json
     else
@@ -95,11 +96,23 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def available_games(user)
-    available_game_models = Game.where(started: false, finished: false)
-    available_game_models = available_game_models.sort_by { |game| game.created_at }
-    available_games = []
-    available_game_models.each_with_index do |game_model, i|
-      available_games << game_model.serializable_hash(
+    games_list = non_started_games
+    available_games = games_list.reject { |game_hash| game_hash["creator_id"] == user.id }
+    return available_games
+  end
+
+  def pending_games(user)
+    games_list = non_started_games
+    pending_games = games_list.select { |game_hash| game_hash["creator_id"] == user.id }
+    return pending_games
+  end
+
+  def non_started_games
+    non_started_game_models = Game.where(started: false, finished: false)
+    non_started_game_models = non_started_game_models.sort_by { |game| game.created_at }
+    non_started_games = []
+    non_started_game_models.each_with_index do |game_model, i|
+      non_started_games << game_model.serializable_hash(
         only: [
           :id,
           :show_legal_moves,
@@ -107,10 +120,9 @@ class Api::V1::GamesController < ApplicationController
           :creator_id
         ]
       )
-      available_games[i]["creator_username"] = User.find(game_model.creator_id).username
+      non_started_games[i]["creator_username"] = User.find(game_model.creator_id).username
     end
-    available_games = available_games.reject { |game_hash| game_hash["creator_id"] == user.id }
-    return available_games
+    return non_started_games
   end
 
   def active_games(user)

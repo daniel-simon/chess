@@ -54,8 +54,8 @@ class BoardInterface extends Component {
       castle: false,
     }
     this.props.recordMove(newMove)
-    this.props.movePiece(origin, destination)
     this.clearSelection()
+    // this.endTurn()
   }
 
   castleWithRook (col, row) {
@@ -85,11 +85,7 @@ class BoardInterface extends Component {
       capturedPiece: null,
       castle: true,
     }
-
     this.props.recordMove(newMove)
-
-    this.props.movePiece(kingOrigin, kingDestination)
-    this.props.movePiece(rookOrigin, rookDestination)
     this.clearSelection()
     // this.endTurn()
   }
@@ -105,7 +101,7 @@ class BoardInterface extends Component {
     this.setState({
       selectedSquare: [],
       availableSquares: [],
-      availableCastlingRooks: []
+      availableCastlingRooks: [],
     })
   }
 
@@ -118,7 +114,7 @@ class BoardInterface extends Component {
     let handleClick = () => {}
     let occupant = this.props.boardState[col][row]
 
-    if (this.props.isMyTurn && this.props.upToDate) {
+    if (this.props.isMyTurn && this.props.upToDate && (this.props.gameStatus == null || this.props.gameStatus[0] === 'check')) {
       let currentSquare = [col, row]
       if (squareMethods.sameSquare(this.state.selectedSquare, currentSquare)) {
         selected = true
@@ -163,6 +159,9 @@ class BoardInterface extends Component {
         pieceSet={this.props.pieceSet}
         asViewedBy={this.props.myColor}
         showLegalMoves={this.props.showLegalMoves}
+        gameStatus={this.props.gameStatus}
+        handleHideMessage={this.props.handleHideMessage}
+        showMessageBool={this.props.showMessageBool}
       />
     )
   }
@@ -215,11 +214,8 @@ class BoardInterface extends Component {
   }
 
   render () {
-    // if (!this.props.upToDate) {
-    //   this.clearSelection()
-    // }
     return (
-      <div>
+      <div className="small-centered small-12 columns">
         {this.renderBoard()}
       </div>
     )

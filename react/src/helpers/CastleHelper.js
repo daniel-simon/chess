@@ -7,7 +7,7 @@ let castleHelper = {
   kingHasNotMoved (moveHistory, player) {
     let kingHasNotMoved = true
     moveHistory.forEach(move => {
-      if (move.player === player && move.movedPiece.type === 'king') {
+      if (move.player_color === player && move.moved_piece === 'king') {
         kingHasNotMoved = false
       }
     })
@@ -18,9 +18,9 @@ let castleHelper = {
     let rookHasNotMoved = true
     moveHistory.forEach(move => {
       let fromCol = move.origin[0]
-      if (move.player === player) {
+      if (move.player_color === player) {
         if (
-          move.movedPiece.type === 'rook' &&
+          move.moved_piece === 'rook' &&
           fromCol === col
         ) {
             rookHasNotMoved = false
