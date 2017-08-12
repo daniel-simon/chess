@@ -87,7 +87,7 @@ class Board extends Component {
     moveHistory.forEach(move => {
       boardStateHistory.push(snapShotBoardState(testBoard.state))
       if (!move.castle) {
-        testBoard.movePiece(move.origin, move.destination)
+        testBoard.movePiece(move.origin, move.destination, true)
       }
       if (move.castle) {
         let rookOriginCol = move.destination[0] > 4 ? 7 : 0

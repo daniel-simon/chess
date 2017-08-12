@@ -86,7 +86,7 @@ class TestBoard {
     }
   }
 
-  movePiece (origin, destination) {
+  movePiece (origin, destination, loadingRealMove = false) {
     let [fromCol, fromRow] = origin
     let [toCol, toRow] = destination
     let movedPiece = this.state[fromCol][fromRow]
@@ -102,9 +102,21 @@ class TestBoard {
       player: player,
       castle: false
     }
-    this.recordMove(move)
-    this.state[toCol][toRow] = movedPiece
+
+    if (
+      loadingRealMove &&
+      movedPiece.type === 'pawn' &&
+      toRow === gameConstants.lastRowFor(movedPiece.color)
+    ) {
+        let promotedPawn = new Object
+        promotedPawn.color = movedPiece.color
+        promotedPawn.type = 'queen'
+        this.state[toCol][toRow] = promotedPawn
+    } else {
+        this.state[toCol][toRow] = movedPiece
+    }
     this.state[fromCol][fromRow] = null
+    this.recordMove(move)
   }
 
   recordMove (move) {
