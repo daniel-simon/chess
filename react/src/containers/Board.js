@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
 import TestBoard from '../helpers/TestBoard'
+import GamePlaybackButtonsContainer from './GamePlaybackButtonsContainer'
 let gameConstants = require('../helpers/GameConstants')
 let getLegalSquares = require('../helpers/GetLegalSquares')
 let checkHelper = require('../helpers/CheckHelper')
@@ -237,7 +238,6 @@ class Board extends Component {
   }
 
   changeDisplayedState (index) {
-    // debugger
     let newDisplayedState = this.state.boardStateHistory[index]
     this.setState({
       displayedBoard: newDisplayedState,
@@ -247,24 +247,6 @@ class Board extends Component {
 
   render () {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
-    let stepBackward = () => { this.stepThroughStateHistory(-1) }
-    let stepForward = () => { this.stepThroughStateHistory(1) }
-    let jumpToStart = () => { this.jumpToHistoryEndpoint('backward') }
-    let jumpToNow = () => { this.jumpToHistoryEndpoint('forward') }
-    let backwardIcon = '<'
-    let forwardIcon = '>'
-    let startIcon = '<<'
-    let endIcon = '>>'
-    let rewindCss = ''
-    let forwardCss = ''
-    if (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1) {
-      forwardCss = 'maxed'
-    } else {
-      forwardCss = 'catch-up'
-    }
-    if (this.state.displayedStateIndex === 0) {
-      rewindCss = 'maxed'
-    }
     let headerText
     if (this.state.isMyTurn) {
       headerText = `Your turn (${this.props.myColor})`
@@ -287,20 +269,12 @@ class Board extends Component {
             pieceSet={this.props.pieceSet}
           />
           <div className="row">
-            <div className="small-6 text-center playback-buttons-container small-centered columns">
-              <span className={`playback outer button panel ${rewindCss}`} onClick={jumpToStart}>
-                {startIcon}
-              </span>
-              <span className={`playback inner button panel ${rewindCss}`} onClick={stepBackward}>
-                {backwardIcon}
-              </span>
-              <span className={`playback inner button panel ${forwardCss}`} onClick={stepForward}>
-                {forwardIcon}
-              </span>
-              <span className={`playback outer button panel ${forwardCss}`} onClick={jumpToNow}>
-                {endIcon}
-              </span>
-            </div>
+            <GamePlaybackButtonsContainer
+              displayedStateIndex={this.state.displayedStateIndex}
+              upToDate={upToDate}
+              stepThroughStateHistory={this.stepThroughStateHistory}
+              jumpToHistoryEndpoint={this.jumpToHistoryEndpoint}
+            />
           </div>
         </div>
       </div>
