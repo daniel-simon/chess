@@ -33,8 +33,9 @@ class GamesIndex extends Component {
     .then(response => {
       this.setState({
         fetched: true,
+        pendingGames: response.games_index_data.pending_games,
         activeGames: response.games_index_data.active_games,
-        availableGames: response.games_index_data.available_games
+        availableGames: response.games_index_data.available_games,
       })
     })
     .catch(error => console.error(error.message))
@@ -49,8 +50,14 @@ class GamesIndex extends Component {
       </h2>
     )
     if (this.state.fetched) {
-      gamesListFoundationClass = "small-8 small-centered columns"
+      gamesListFoundationClass = "small-10 small-centered columns"
       loadingHeader = null
+      pendingGamesList = (
+        <GamesListContainer
+          listType="pending"
+          games={this.state.pendingGames}
+        />
+      )
       activeGamesList = (
         <GamesListContainer
           listType="active"
@@ -64,10 +71,15 @@ class GamesIndex extends Component {
         />
       )
     }
+    let refreshList = () => { this.loadGamesList() }
     return(
       <div>
         <div className={gamesListFoundationClass}>
+          <NewGameForm
+            refreshList={refreshList}
+          />
           {loadingHeader}
+          {pendingGamesList}
           {activeGamesList}
           {availableGamesList}
         </div>

@@ -48,6 +48,19 @@ const GameTile = props => {
     tileCssClass += ' available-game'
     buttonText = "Join Game"
     break
+  case 'pending':
+    opponentHeader = `Your game - no opponent yet`
+    timestampText = `Created: ${props.data.timestampStr}`
+    tileCssClass += ' available-game'
+    break
+  }
+  let enterGameButton = (
+    <Link to={`/games/${gameId}`} className="button panel row">
+      {buttonText}
+    </Link>
+  )
+  if (props.tileType === 'pending') {
+    enterGameButton = null
   }
 
   return(
@@ -70,9 +83,7 @@ const GameTile = props => {
         </div>
         <div className="row">
           <div className="right">
-            <Link to={`/games/${gameId}`} className="button panel row">
-              {buttonText}
-            </Link>
+            {enterGameButton}
           </div>
         </div>
       </div>

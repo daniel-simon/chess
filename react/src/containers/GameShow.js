@@ -11,7 +11,7 @@ class GameShow extends Component {
       playerData: {},
       activePlayerData: {},
       myColor: '',
-      initiallyMyTurn: null
+      initiallyMyTurn: null,
     }
     this.toggleActivePlayer = this.toggleActivePlayer.bind(this)
   }
@@ -71,9 +71,10 @@ class GameShow extends Component {
 
   toggleActivePlayer (gameId) {
     let changeActivePlayerRequest = {
-      patchType: "switch-turns"
+      patchRequest: {
+        patchType: "switch-turns"
+      }
     }
-
     fetch(`/api/v1/games/${gameId}`, {
       method: 'PATCH',
       credentials: 'same-origin',
@@ -116,14 +117,13 @@ class GameShow extends Component {
     return(
       <div className="game-show-page">
         <div className="small-12 small-centered columns">
-          <h3 className="game-header">{loadingText}</h3>
+          <h3 className="game-header">
+            {loadingText}
+          </h3>
           <div className="chess-board-container">
             {board}
           </div>
         </div>
-        {/* <div className="medium-12 large-6 text-center columns"> */}
-          {/* <h1>TEST</h1> */}
-        {/* </div> */}
       </div>
     )
   }

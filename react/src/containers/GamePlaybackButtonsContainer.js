@@ -13,8 +13,8 @@ const GamePlaybackButtonsContainer = props => {
   let forwardCss = ''
   if (props.upToDate) {
     forwardCss = 'maxed'
-  } else {
-    forwardCss = 'catch-up'
+  // } else {
+  //   forwardCss = 'catch-up'
   }
   if (props.displayedStateIndex === 0) {
     rewindCss = 'maxed'

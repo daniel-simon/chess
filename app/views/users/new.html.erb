@@ -1,7 +1,7 @@
-<h1>Create your account</h1>
+<div class="small-6 small-centered columns">
 
-<%= form_for @user do |f| %>
-  <div class="small-6 small-centered columns">
+  <h1>Create your account</h1>
+  <%= form_for @user do |f| %>
     <div class="field">
       <%= f.text_field :username,
         autofocus: true,
@@ -27,5 +27,5 @@
     </div>
     <%= f.submit "Submit", class: "button right" %>
     <%= link_to "Log in to existing account", new_session_path, class: "button secondary right" %>
-  </div>
-<% end %>
+  <% end %>
+</div>

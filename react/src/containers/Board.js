@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
 import TestBoard from '../helpers/TestBoard'
-import GameOverMessage from '../components/GameOverMessage'
+import GameStatusMessage from '../components/GameStatusMessage'
 import GamePlaybackButtonsContainer from './GamePlaybackButtonsContainer'
 let gameConstants = require('../helpers/GameConstants')
 let getLegalSquares = require('../helpers/GetLegalSquares')
@@ -22,7 +22,7 @@ class Board extends Component {
       boardStateHistory: [],
       displayedStateIndex: null,
       isMyTurn: this.props.initiallyMyTurn,
-      gameOutcome: null,
+      gameStatus: null,
       showMessageBool: false,
     }
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
@@ -35,17 +35,6 @@ class Board extends Component {
     let gameId = this.props.gameId
     this.refreshMoveHistory(gameId, true)
     this.subscribeToGameChannel(gameId, this.props.myColor, this.refreshMoveHistory)
-  }
-
-  checkForGameOver (activePlayer, currentBoard) {
-    let legalMoves = getLegalSquares.forPlayer(activePlayer, currentBoard)
-    if (legalMoves.length === 0) {
-      if (checkHelper.kingInCheck(activePlayer, currentBoard)) {
-        this.setState({ gameOutcome: ['checkmate', activePlayer], showMessageBool: true })
-      } else {
-        this.setState({ gameOutcome: ['stalemate', activePlayer], showMessageBool: true })
-      }
-    }
   }
 
   refreshMoveHistory (gameId, forceDisplayUpdate) {
@@ -122,7 +111,7 @@ class Board extends Component {
         moveHistory: moveHistory,
         isMyTurn: myTurnNext,
       })
-      this.checkForGameOver(nextActiveColor, currentBoard)
+      this.doesMoveRequireMessage(nextActiveColor, currentBoard)
     } else {
       this.setState({
         currentBoard: currentBoard,
@@ -132,6 +121,22 @@ class Board extends Component {
         moveHistory: moveHistory,
         isMyTurn: (myColor === 'white'),
       })
+    }
+  }
+
+  doesMoveRequireMessage (activePlayer, currentBoard) {
+    let legalMoves = getLegalSquares.forPlayer(activePlayer, currentBoard)
+    let isPlayerInCheck = checkHelper.kingInCheck(activePlayer, currentBoard)
+    if (legalMoves.length === 0) {
+      if (isPlayerInCheck) {
+        this.setState({ gameStatus: ['checkmate', activePlayer], showMessageBool: true })
+      } else {
+        this.setState({ gameStatus: ['stalemate', activePlayer], showMessageBool: true })
+      }
+    } else if (isPlayerInCheck) {
+      this.setState({ gameStatus: ['check', activePlayer], showMessageBool: true })
+    } else {
+      this.setState({ gameStatus: null, showMessageBool: false })
     }
   }
 
@@ -158,13 +163,6 @@ class Board extends Component {
     )
   }
 
-  broadcastFetchCue () {
-    App.gameChannel.send({
-      gameId: this.props.gameId,
-      playerColor: this.props.myColor,
-    })
-  }
-
   recordMove (move) {
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [move] )
@@ -184,14 +182,13 @@ class Board extends Component {
     })
     .then(response => {
       if (response.ok) {
-        return response.json()
+        App.gameChannel.send({
+          gameId: this.props.gameId,
+        })
       } else {
         let errorMessage = `${response.status} (${response.statusText})`
         throw new Error(errorMessage)
       }
-    })
-    .then(response => {
-      broadcastFetchCue()
     })
     .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
@@ -258,7 +255,7 @@ class Board extends Component {
               myColor={this.props.myColor}
               showLegalMoves={this.props.showLegalMoves}
               pieceSet={this.props.pieceSet}
-              gameOutcome={this.state.gameOutcome}
+              gameStatus={this.state.gameStatus}
               showMessageBool={this.state.showMessageBool}
               handleHideMessage={handleHideMessage}
             />

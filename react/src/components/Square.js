@@ -1,6 +1,6 @@
 import React from 'react';
 import Piece from './Piece';
-import GameOverMessage from './GameOverMessage'
+import GameStatusMessage from './GameStatusMessage'
 
 const Square = props => {
   let foundationClass = ' small-1 text-center columns';
@@ -14,7 +14,7 @@ const Square = props => {
   if (topLeft && props.showMessageBool) {
     messageDiv = (
       <div onClick={props.handleHideMessage}>
-        <GameOverMessage gameOutcome={props.gameOutcome} />
+        <GameStatusMessage gameStatus={props.gameStatus} />
       </div>
     )
   }
