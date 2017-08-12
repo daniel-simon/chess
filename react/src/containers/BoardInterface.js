@@ -54,7 +54,6 @@ class BoardInterface extends Component {
       castle: false,
     }
     this.props.recordMove(newMove)
-    this.props.movePiece(origin, destination)
     this.clearSelection()
   }
 
@@ -87,9 +86,6 @@ class BoardInterface extends Component {
     }
 
     this.props.recordMove(newMove)
-
-    this.props.movePiece(kingOrigin, kingDestination)
-    this.props.movePiece(rookOrigin, rookDestination)
     this.clearSelection()
     // this.endTurn()
   }

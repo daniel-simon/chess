@@ -185,32 +185,6 @@ class Board extends Component {
     .catch(error => console.error(`Error posting move to database: ${error.message}`))
   }
 
-  movePiece (origin, destination) {
-    let [fromCol, fromRow] = origin
-    let [toCol, toRow] = destination
-
-    let movedPiece = this.state.currentBoard[fromCol][fromRow]
-    if (
-      movedPiece.type === 'pawn' &&
-      toRow === gameConstants.lastRowFor(movedPiece.color)
-    ) {
-        movedPiece.type = 'queen'
-    }
-
-    let newBoardState = this.state.currentBoard
-    newBoardState[toCol][toRow] = movedPiece
-    newBoardState[fromCol][fromRow] = null
-
-    let newStateHistory = this.state.boardStateHistory.concat( [newBoardState] )
-    this.setState({
-      currentBoard: newBoardState,
-      displayedBoard: newBoardState,
-      boardStateHistory: newStateHistory,
-      displayedStateIndex: newStateHistory.length - 1
-    })
-    // this.changeDisplayedState(newStateHistory.length - 1)
-  }
-
   stepThroughStateHistory (step) {
     let newStateIndex = this.state.displayedStateIndex + step
     if (newStateIndex >= 0 && newStateIndex < this.state.boardStateHistory.length) {
