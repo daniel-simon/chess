@@ -34,8 +34,11 @@ $active-game-tile-opponents-turn-bg-color: #d7c4a1;
 $game-created-color: black;
 $time-created-color: black;
 
-$square-size: 75px;
-
+$square-size: 63px;
+$row-width: 8 * $square-size + (2 * $board-border-width);
+@font-face {
+  font-family: 'Ubuntu', sans-serif !important;
+}
 body {
   .game-show-page {
     padding-top: 2em;
@@ -50,7 +53,7 @@ body {
   }
   .button {
     &.playback {
-      font-size: 1em;
+      font-size: 24px;
       $margin-h: 1.15em;
       margin-left: $margin-h;
       margin-right: $margin-h;
@@ -85,6 +88,26 @@ body {
       }
     }
   }
+  .game-over-message {
+    color: rgb(171, 207, 255);
+    background-color: rgba(5, 0, 103, 0.4);
+    z-index: 10;
+    left: -1 * $board-border-width;
+    top: -1 * $board-border-width;
+    position: absolute;
+    width: $row-width;
+    height: $row-width;
+    font-size: 1.7em;
+  }
+  .game-over-text{
+    top: 260px;
+    position: relative;
+    text-align: center;
+    font-size: 35px;
+  }
+  .chess-board-container {
+    position: sticky;
+  }
   .game-tile {
     h2 {
       color: black;
@@ -92,8 +115,8 @@ body {
     border-color: black;
     border-width: 2px;
     background-color: $game-tile-bg-color;
-    $padding-v: 1em;
-    $padding-h: 1.8em;
+    $padding-v: 10px;
+    $padding-h: 40px;
     padding-top: $padding-v;
     padding-bottom: $padding-v;
     padding-left: $padding-h;
@@ -109,7 +132,7 @@ body {
     }
     .game-info-text {
       p {
-        font-size: 0.84em;
+        font-size: 1.4em;
       }
     }
     .game-created-by {
@@ -173,6 +196,7 @@ body {
     }
   }
   .chess-row {
+    position: relative;
     margin-top: 0;
     margin-left: auto;
     margin-right: auto;

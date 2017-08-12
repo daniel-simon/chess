@@ -214,11 +214,8 @@ class BoardInterface extends Component {
   }
 
   render () {
-    // if (!this.props.upToDate) {
-    //   this.clearSelection()
-    // }
     return (
-      <div>
+      <div className="small-centered small-12 columns">
         {this.renderBoard()}
       </div>
     )

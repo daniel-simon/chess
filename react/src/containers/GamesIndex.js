@@ -49,7 +49,7 @@ class GamesIndex extends Component {
       </h2>
     )
     if (this.state.fetched) {
-      gamesListFoundationClass = "small-6 small-centered columns"
+      gamesListFoundationClass = "small-8 small-centered columns"
       loadingHeader = null
       activeGamesList = (
         <GamesListContainer

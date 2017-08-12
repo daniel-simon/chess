@@ -63,7 +63,6 @@ const GameTile = props => {
         <div className="game-info-text">
           <p className="row">
             <span className={turnTextCssClass}>{turnText}</span>
-            <span className="move-suggestions-text right">Move suggestions: {showMovesText}</span>
           </p>
           <p className="row">
             <span className="moves-count-text left">{movesCountText}</span>

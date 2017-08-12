@@ -1,6 +1,6 @@
 $font-family-sans-serif: 'Zilla Slab', sans-serif;
 $font-family-serif: 'Zilla Slab', serif;
-$main-background-color: #5b7f87;
+$main-background-color: #a9cbd2;
 $button-padding-h: 0.9em;
 $button-padding-v: 0.7em;
 $join-button-color: #166985;
@@ -9,13 +9,21 @@ $join-button-hover-color: #20aede;
 $join-button-hover-font-color: #fff;
 
 body {
+  font-family: 'Ubuntu', sans-serif !important;
+  padding-left: 1em;
   h1, h2, h3, h4, h5, h6 {
     text-align: center;
+    font-family: 'Ubuntu', sans-serif !important;
+  }
+  .title-area {
+    font-size: 24px;
+    padding-left: 10px;
   }
   // font-family: $font-family-serif;
-  font-size: 24px;
   background-color: $main-background-color;
   .button {
+
+    font-family: 'Ubuntu', sans-serif !important;
     border-color: black !important;
     border-width: 2px;
     border-radius: 8px;

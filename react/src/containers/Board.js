@@ -217,9 +217,19 @@ class Board extends Component {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
     let headerText
     if (this.state.isMyTurn) {
-      headerText = `Your turn (${this.props.myColor})`
+      headerText = (
+        <span>
+          Your turn
+          &nbsp;(<img src={require(`../sprites/set1/${this.props.myColor}pawn.png`)} />)
+        </span>
+      )
     } else {
-      headerText = `${this.props.playerData.opponent.username}'s turn (${this.props.playerData.opponent.color})`
+      headerText = (
+        <span>
+          {this.props.playerData.opponent.username}'s turn
+          &nbsp;(<img src={require(`../sprites/set1/${this.props.playerData.opponent.color}pawn.png`)} />)
+        </span>
+      )
     }
     let handleHideMessage = () => { this.setState({ showMessageBool: false }) }
     return(
