@@ -95,8 +95,8 @@ class Board extends Component {
         let homeRow = move.origin[1]
         let rookOrigin = [rookOriginCol, homeRow]
         let rookDestination = [rookDestinationCol, homeRow]
-        testBoard.movePiece(move.origin, move.destination)
-        testBoard.movePiece(rookOrigin, rookDestination)
+        testBoard.movePiece(move.origin, move.destination, true)
+        testBoard.movePiece(rookOrigin, rookDestination, true)
       }
     })
     let currentBoard = snapShotBoardState(testBoard.state)
