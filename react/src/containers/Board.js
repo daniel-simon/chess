@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import BoardInterface from './BoardInterface'
 import TestBoard from '../helpers/TestBoard'
+import GameOverMessage from '../components/GameOverMessage'
 import GamePlaybackButtonsContainer from './GamePlaybackButtonsContainer'
 let gameConstants = require('../helpers/GameConstants')
 let getLegalSquares = require('../helpers/GetLegalSquares')
@@ -21,14 +22,13 @@ class Board extends Component {
       boardStateHistory: [],
       displayedStateIndex: null,
       isMyTurn: this.props.initiallyMyTurn,
-      gameOver: false,
-      result: null,
+      gameOutcome: null,
+      showMessageBool: false,
     }
     this.stepThroughStateHistory = this.stepThroughStateHistory.bind(this)
     this.jumpToHistoryEndpoint = this.jumpToHistoryEndpoint.bind(this)
     this.changeDisplayedState = this.changeDisplayedState.bind(this)
     this.recordMove = this.recordMove.bind(this)
-    this.movePiece = this.movePiece.bind(this)
   }
 
   componentDidMount () {
@@ -38,20 +38,14 @@ class Board extends Component {
   }
 
   checkForGameOver (activePlayer, currentBoard) {
-    let result = 'continue'
     let legalMoves = getLegalSquares.forPlayer(activePlayer, currentBoard)
     if (legalMoves.length === 0) {
       if (checkHelper.kingInCheck(activePlayer, currentBoard)) {
-        result = `Checkmate! ${gameConstants.enemyOf(activePlayer)} wins!`
-        let outcome = (activePlayer === this.props.myColor ? 'loss' : 'win')
-        this.setState({ gameOver: true, result: outcome })
+        this.setState({ gameOutcome: ['checkmate', activePlayer], showMessageBool: true })
       } else {
-        result = `Stalemate! ${activePlayer} is not in check and has no legal moves`
-        this.setState({ gameOver: true, result: 'tie' })
+        this.setState({ gameOutcome: ['stalemate', activePlayer], showMessageBool: true })
       }
-      alert(result)
     }
-    return result
   }
 
   refreshMoveHistory (gameId, forceDisplayUpdate) {
@@ -253,21 +247,27 @@ class Board extends Component {
     } else {
       headerText = `${this.props.playerData.opponent.username}'s turn (${this.props.playerData.opponent.color})`
     }
+    let handleHideMessage = () => { this.setState({ showMessageBool: false }) }
     return(
       <div>
         <div className="small-12 small-centered text-center columns">
           <h2>{headerText}</h2>
-          <BoardInterface
-            upToDate={upToDate}
-            movePiece={this.movePiece}
-            recordMove={this.recordMove}
-            isMyTurn={this.state.isMyTurn}
-            boardState={this.state.displayedBoard}
-            moveHistory={this.state.moveHistory}
-            myColor={this.props.myColor}
-            showLegalMoves={this.props.showLegalMoves}
-            pieceSet={this.props.pieceSet}
-          />
+          <div className="chess-board-container">
+            <BoardInterface
+              upToDate={upToDate}
+              movePiece={this.movePiece}
+              recordMove={this.recordMove}
+              isMyTurn={this.state.isMyTurn}
+              boardState={this.state.displayedBoard}
+              moveHistory={this.state.moveHistory}
+              myColor={this.props.myColor}
+              showLegalMoves={this.props.showLegalMoves}
+              pieceSet={this.props.pieceSet}
+              gameOutcome={this.state.gameOutcome}
+              showMessageBool={this.state.showMessageBool}
+              handleHideMessage={handleHideMessage}
+            />
+          </div>
           <div className="row">
             <GamePlaybackButtonsContainer
               displayedStateIndex={this.state.displayedStateIndex}
