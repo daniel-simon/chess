@@ -109,19 +109,30 @@ class Board extends Component {
     //   newDisplayedBoard = this.state.displayedBoard
     //   newDisplayedStateIndex = this.state.displayedStateIndex
     // }
-    let lastMove = moveHistory[moveHistory.length - 1]
     let myColor = this.props.myColor
-    let myTurnNext = lastMove.player_color !== myColor
-    let nextActiveColor = myTurnNext ? myColor : gameConstants.enemyOf(myColor)
-    this.setState({
-      currentBoard: currentBoard,
-      displayedBoard: currentBoard,
-      boardStateHistory: boardStateHistory,
-      displayedStateIndex: boardStateHistory.length - 1,
-      moveHistory: moveHistory,
-      isMyTurn: myTurnNext,
-    })
-    this.checkForGameOver(nextActiveColor, currentBoard)
+    if (moveHistory.length !== 0) {
+      let lastMove = moveHistory[moveHistory.length - 1]
+      let myTurnNext = lastMove.player_color !== myColor
+      let nextActiveColor = myTurnNext ? myColor : gameConstants.enemyOf(myColor)
+      this.setState({
+        currentBoard: currentBoard,
+        displayedBoard: currentBoard,
+        boardStateHistory: boardStateHistory,
+        displayedStateIndex: boardStateHistory.length - 1,
+        moveHistory: moveHistory,
+        isMyTurn: myTurnNext,
+      })
+      this.checkForGameOver(nextActiveColor, currentBoard)
+    } else {
+      this.setState({
+        currentBoard: currentBoard,
+        displayedBoard: currentBoard,
+        boardStateHistory: boardStateHistory,
+        displayedStateIndex: boardStateHistory.length - 1,
+        moveHistory: moveHistory,
+        isMyTurn: (myColor === 'white'),
+      })
+    }
   }
 
   subscribeToGameChannel (gameId, myColor) {
@@ -158,11 +169,11 @@ class Board extends Component {
     let moveHistory = this.state.moveHistory
     let newMoveHistory = moveHistory.concat( [move] )
     this.setState({ moveHistory: newMoveHistory })
-    this.persistMove(move)
+    this.persistAndBroadcastMove(move)
     this.props.toggleActivePlayer()
   }
 
-  persistMove (move) {
+  persistAndBroadcastMove (move) {
     move.gameId = this.props.gameId
     let broadcastFetchCue = () => { this.broadcastFetchCue() }
     let moveRequest = { move: move }
