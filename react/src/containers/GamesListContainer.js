@@ -38,7 +38,7 @@ const GamesListContainer = props => {
   })
 
   return(
-    <div>
+    <div className="small-collapse">
       <h2 className="games-list-header">
         {headerText}
       </h2>

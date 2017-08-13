@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import NewGameForm from './NewGameForm'
+import NewGameFormAccordion from './NewGameFormAccordion'
 import BackButton from '../components/BackButton'
 import GamesListContainer from './GamesListContainer'
 
@@ -43,14 +43,12 @@ class GamesIndex extends Component {
 
   render () {
     let activeGamesList, availableGamesList, pendingGamesList
-    let gamesListFoundationClass = ''
     let loadingHeader = (
       <h2 className="games-list-header loading-text">
         Loading...
       </h2>
     )
     if (this.state.fetched) {
-      gamesListFoundationClass = "small-10 small-centered columns"
       loadingHeader = null
       pendingGamesList = (
         <GamesListContainer
@@ -73,15 +71,17 @@ class GamesIndex extends Component {
     }
     let refreshList = () => { this.loadGamesList() }
     return(
-      <div>
-        <div className={gamesListFoundationClass}>
-          <NewGameForm
-            refreshList={refreshList}
-          />
-          {loadingHeader}
-          {pendingGamesList}
-          {activeGamesList}
-          {availableGamesList}
+      <div className="row">
+        <div className="row">
+          <div className="small-12 small-centered columns">
+            <NewGameFormAccordion refreshList={refreshList} />
+          </div>
+          <div className="small-12 small-centered columns">
+            {loadingHeader}
+            {pendingGamesList}
+            {activeGamesList}
+            {availableGamesList}
+          </div>
         </div>
       </div>
     )
