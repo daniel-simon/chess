@@ -1,9 +1,9 @@
-import React from 'react';
-import Piece from './Piece';
+import React from 'react'
+import Piece from './Piece'
 import GameStatusMessage from './GameStatusMessage'
 
 const Square = props => {
-  let foundationClass = ' small-1 text-center columns';
+  let foundationClass = ' small-1 text-center columns'
   let lastCol = (props.asViewedBy === 'white') ? 7 : 0
   if (props.col == lastCol) {
     foundationClass += ' end'
@@ -18,9 +18,9 @@ const Square = props => {
       </div>
     )
   }
-  let highlightCssClass = '';
+  let highlightCssClass = ''
   if (props.selected) {
-    highlightCssClass = ' selected';
+    highlightCssClass = ' selected'
   } else if (props.showLegalMoves && props.available) {
     highlightCssClass = (props.victim) ? ' victim' : ' available'
   }
@@ -28,12 +28,12 @@ const Square = props => {
     highlightCssClass += ' selectable'
   }
 
-  let squareColors = ['black', 'white'];
-  let colorIndex = (props.col + props.row) % 2;
+  let squareColors = ['black', 'white']
+  let colorIndex = (props.col + props.row) % 2
 
   let cssClass = `${squareColors[colorIndex]}${highlightCssClass}${foundationClass} square`
 
-  let occupant = null;
+  let occupant = null
   if (props.occupant) {
     occupant = <Piece
       color={props.occupant.color}
@@ -52,4 +52,4 @@ const Square = props => {
   )
 }
 
-export default Square;
+export default Square

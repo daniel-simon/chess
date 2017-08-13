@@ -17,8 +17,7 @@ class GameShow extends Component {
   }
 
   componentDidMount () {
-    let gameId = this.props.params.id
-    this.fetchGameData(gameId)
+    this.fetchGameData(this.props.params.id)
   }
 
   fetchGameData (gameId) {

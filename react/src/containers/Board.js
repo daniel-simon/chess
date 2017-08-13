@@ -223,27 +223,55 @@ class Board extends Component {
 
   render () {
     let upToDate = (this.state.displayedStateIndex === this.state.boardStateHistory.length - 1)
-    let headerText
-    if (this.state.isMyTurn) {
-      headerText = (
+    let myColor = this.props.myColor
+    let header, headerText, headerSpriteColor, headerSpritePath
+    let players = [this.props.playerData.user, this.props.playerData.opponent]
+    let demoPiece = 'king'
+    if (this.state.gameStatus == null || this.state.gameStatus[0] === 'check') {
+      if (this.state.isMyTurn) {
+        headerText = 'Your turn'
+        headerSpriteColor = myColor
+      } else {
+        headerText = `${players[1].username}'s turn`
+        headerSpriteColor = players[1].color
+      }
+      if (this.state.gameStatus != null) {
+        headerText += ' (check) '
+      }
+      headerSpritePath = require(`../sprites/set1/${headerSpriteColor}${demoPiece}.png`)
+      header = (
         <span>
-          Your turn
-          &nbsp;(<img src={require(`../sprites/set1/${this.props.myColor}pawn.png`)} />)
+          {headerText}
+          <img src={headerSpritePath} />
         </span>
       )
     } else {
-      headerText = (
-        <span>
-          {this.props.playerData.opponent.username}'s turn
-          &nbsp;(<img src={require(`../sprites/set1/${this.props.playerData.opponent.color}pawn.png`)} />)
-        </span>
-      )
+      if (this.state.gameStatus[0] === 'checkmate') {
+        let winnerColor = gameConstants.enemyOf(this.state.gameStatus[1])
+        let winnerUsername
+        players.forEach(player => {
+          if (player.color === winnerColor) {
+            winnerUsername = player.username
+          }
+        })
+        headerText = `${winnerUsername} wins!`
+        headerSpritePath = require(`../sprites/set1/${winnerColor}${demoPiece}.png`)
+        header = (
+          <span>
+            {headerText}
+            <img src={headerSpritePath} />
+          </span>
+        )
+      } else {
+        header = <span>Stalemate!</span>
+      }
     }
+
     let handleHideMessage = () => { this.setState({ showMessageBool: false }) }
     return(
       <div>
         <div className="small-12 small-centered text-center columns">
-          <h2>{headerText}</h2>
+          <h2>{header}</h2>
           <div className="chess-board-container">
             <BoardInterface
               upToDate={upToDate}
