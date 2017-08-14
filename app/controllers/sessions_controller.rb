@@ -19,10 +19,10 @@ class SessionsController < ApplicationController
       if login_params[:username].strip.blank?
         errors += "Please enter a username. "
       end
-      if login_params[:password].blank?
+      if login_params[:password].length == 0
         errors += "Please enter a password. "
       end
-      if !(login_params[:username].strip.blank? || login_params[:password].strip.blank?)
+      if !(login_params[:username].strip.blank? || login_params[:password].length == 0)
         errors += "Invalid username or password."
       end
       flash[:alert] = errors
