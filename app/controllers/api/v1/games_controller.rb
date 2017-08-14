@@ -6,7 +6,8 @@ class Api::V1::GamesController < ApplicationController
     games = {
       pending_games: pending_games(user),
       active_games: active_games(user),
-      available_games: available_games(user)
+      available_games: available_games(user),
+      user_id: user.id
     }
 
     render json: { games_index_data: games }, adapter: :json
@@ -122,7 +123,7 @@ class Api::V1::GamesController < ApplicationController
       )
       non_started_games[i]["creator_username"] = User.find(game_model.creator_id).username
     end
-    return non_started_games
+    return non_started_games.reverse
   end
 
   def active_games(user)

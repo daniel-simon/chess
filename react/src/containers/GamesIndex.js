@@ -8,14 +8,47 @@ class GamesIndex extends Component {
     super(props)
     this.state = {
       fetched: false,
+      pendingGames: [],
       activeGames: [],
       availableGames: [],
+      myId: null
     }
     this.loadGamesList = this.loadGamesList.bind(this)
+    this.handleCreateGame = this.handleCreateGame.bind(this)
+  }
+
+  handleCreateGame () {
+    debugger
+    this.loadGamesList()
+    console.log(`sent cue`)
+    App.gamesIndexChannel.send({
+      senderId: this.state.myId,
+    })
   }
 
   componentDidMount () {
     this.loadGamesList()
+    this.subscribeToGamesIndexChannel()
+  }
+
+  subscribeToGamesIndexChannel () {
+    let loadGamesList = () => { this.loadGamesList() }
+    let myId = this.state.myId
+    App.gamesIndexChannel = App.cable.subscriptions.create(
+      {
+        channel: "GamesIndexChannel"
+      },
+      {
+        connected: () => console.log("GamesIndexChannel connected"),
+        disconnected: () => console.log("GamesIndexChannel disconnected"),
+        received: (fetchCue) => {
+          console.log(`recieved cue from user with id ${fetchCue.senderId}`)
+          if (fetchCue.senderId !== myId) {
+            loadGamesList()
+          }
+        }
+      }
+    )
   }
 
   loadGamesList () {
@@ -36,6 +69,7 @@ class GamesIndex extends Component {
         pendingGames: response.games_index_data.pending_games,
         activeGames: response.games_index_data.active_games,
         availableGames: response.games_index_data.available_games,
+        myId: response.games_index_data.user_id
       })
     })
     .catch(error => console.error(error.message))
@@ -69,14 +103,14 @@ class GamesIndex extends Component {
         />
       )
     }
-    let refreshList = () => { this.loadGamesList() }
+
     return(
       <div className="row">
         <div className="row">
-          <div className="small-12 small-centered columns">
-            <NewGameFormAccordion refreshList={refreshList} />
+          <div className="small-10 small-centered medium-4 medium-end medium-right columns">
+            <NewGameFormAccordion refreshList={this.handleCreateGame} />
           </div>
-          <div className="small-12 small-centered columns">
+          <div className="small-10 small-centered medium-8 columns">
             {loadingHeader}
             {pendingGamesList}
             {activeGamesList}
