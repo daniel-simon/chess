@@ -101,11 +101,6 @@ class NewGameFormAccordion extends Component {
                 Create Game
               </div>
             </div>
-            {/* <div className="left">
-              <div className="button" onClick={toggleAccordion}>
-                Collapse
-              </div>
-            </div> */}
           </div>
         </div>
       )

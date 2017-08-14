@@ -74,7 +74,7 @@ class GamesIndex extends Component {
         pendingGames: response.games_index_data.pending_games,
         activeGames: response.games_index_data.active_games,
         availableGames: response.games_index_data.available_games,
-        myId: response.games_index_data.user_id
+        myId: response.games_index_data.user_id,
       })
     })
     .catch(error => console.error(error.message))
