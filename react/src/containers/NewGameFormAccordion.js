@@ -28,6 +28,7 @@ class NewGameFormAccordion extends Component {
     .then(response => {
       if (response.ok) {
         this.setState({ creatingGame: false })
+        this.props.handleCreateGame()
       } else {
         let errorMessage = `${response.status} (${response.statusText})`
         throw new Error(errorMessage)

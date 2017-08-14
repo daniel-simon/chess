@@ -27,7 +27,7 @@ class Api::V1::GamesController < ApplicationController
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
     if [white.id, black.id].include?(user.id)
-      opponent = User.find( get_opponent_id(white.id, black.id, user) )
+      opponent = User.find( get_opponent_id(white.id, black.id) )
     else
       return render status: 403
     end
@@ -64,7 +64,7 @@ class Api::V1::GamesController < ApplicationController
     game_model = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
     when "switch-turns"
-      active_player_id = get_opponent_id(game_model.white_id, game_model.black_id, user)
+      active_player_id = get_opponent_id(game_model.white_id, game_model.black_id)
       if game_model.update(active_player_id: active_player_id)
         render json: { updated_game: game_model.serializable_hash }, adapter: :json
       end
@@ -94,6 +94,7 @@ class Api::V1::GamesController < ApplicationController
 
   def join_and_begin_game(user, game_model)
     game_model.update(joiner_id: user.id, started: true, active_player_id: game_model.white_id)
+    ActionCable.server.broadcast("games_index", { type: "start_game", creator_id: game_model.creator_id })
   end
 
   def available_games(user)
@@ -154,7 +155,7 @@ class Api::V1::GamesController < ApplicationController
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
       active_games[i]['moves_count'] = game_model.moves.count
 
-      opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id, user) )
+      opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
       active_games[i]['opponent_id'] = opponent.id
       active_games[i]['opponent_username'] = opponent.username
     end
@@ -166,14 +167,6 @@ class Api::V1::GamesController < ApplicationController
 
     sorted_active_games = my_turn_games.reverse + opponents_turn_games.reverse
     return sorted_active_games
-  end
-
-  def get_opponent_id(player1_id, player2_id, player)
-    player_ids = [ player1_id, player2_id ]
-    opponent_id = player_ids.each do |id|
-      break id if id != player.id
-    end
-    return opponent_id
   end
 
   def params_game_id

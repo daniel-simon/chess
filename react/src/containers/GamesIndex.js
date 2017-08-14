@@ -18,10 +18,10 @@ class GamesIndex extends Component {
   }
 
   handleCreateGame () {
-    debugger
     this.loadGamesList()
     console.log(`sent cue`)
     App.gamesIndexChannel.send({
+      type: "new_game",
       senderId: this.state.myId,
     })
   }
@@ -33,7 +33,6 @@ class GamesIndex extends Component {
 
   subscribeToGamesIndexChannel () {
     let loadGamesList = () => { this.loadGamesList() }
-    let myId = this.state.myId
     App.gamesIndexChannel = App.cable.subscriptions.create(
       {
         channel: "GamesIndexChannel"
@@ -42,8 +41,14 @@ class GamesIndex extends Component {
         connected: () => console.log("GamesIndexChannel connected"),
         disconnected: () => console.log("GamesIndexChannel disconnected"),
         received: (fetchCue) => {
-          console.log(`recieved cue from user with id ${fetchCue.senderId}`)
-          if (fetchCue.senderId !== myId) {
+          console.log(`recieved fetch cue: ${JSON.stringify(fetchCue)}`)
+          let myId = this.state.myId
+          let shouldListRefresh = (
+            (fetchCue.type === "new_game" && fetchCue.senderId !== myId)
+            || (fetchCue.type === "new_move" && fetchCue.opponent_id === myId)
+            || (fetchCue.type === "start_game" && fetchCue.creator_id === myId)
+          )
+          if (shouldListRefresh) {
             loadGamesList()
           }
         }
@@ -108,7 +113,7 @@ class GamesIndex extends Component {
       <div className="row">
         <div className="row">
           <div className="small-10 small-centered medium-4 medium-end medium-right columns">
-            <NewGameFormAccordion refreshList={this.handleCreateGame} />
+            <NewGameFormAccordion handleCreateGame={this.handleCreateGame} />
           </div>
           <div className="small-10 small-centered medium-8 columns">
             {loadingHeader}

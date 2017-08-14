@@ -31,7 +31,11 @@ class Api::V1::MovesController < ApplicationController
     if move_request_hash["capturedPiece"]
       new_move_obj.captured_piece = move_request_hash["capturedPiece"]["type"]
     end
+    game_model = Game.find(move_request_hash["gameId"])
+    player_ids = [ game_model.white_id, game_model.black_id ]
+    opponent_id = get_opponent_id(*player_ids)
     if new_move_obj.save
+      ActionCable.server.broadcast("games_index", { type: "new_move", opponent_id: opponent_id })
       render json: { move: new_move_obj }, adapter: :json
     else
       render json: { errors: new_move_obj.errors.full_messages }, status: 422
