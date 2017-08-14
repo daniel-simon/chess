@@ -10,6 +10,7 @@ class NewGameFormAccordion extends Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRadioClick = this.handleRadioClick.bind(this)
+    this.toggleAccordion = this.toggleAccordion.bind(this)
   }
 
   handleSubmit () {
@@ -26,8 +27,10 @@ class NewGameFormAccordion extends Component {
     })
     .then(response => {
       if (response.ok) {
+        debugger
         this.setState({ creatingGame: false })
         this.props.refreshList()
+        debugger
       } else {
         let errorMessage = `${response.status} (${response.statusText})`
         throw new Error(errorMessage)
@@ -40,43 +43,47 @@ class NewGameFormAccordion extends Component {
     this.setState({ colorSelection: option })
   }
 
+  toggleAccordion () {
+    this.setState({ expanded: !this.state.expanded })
+  }
+
   render () {
-    let toggleAccordion = () => { this.setState({ expanded: !this.state.expanded }) }
-    let selectWhite = () => { this.handleRadioClick('white') }
-    let selectBlack = () => { this.handleRadioClick('black') }
-    let buttonCssClass = ' button'
-    let handleSubmitClick = () => { this.handleSubmit() }
-    if (this.state.colorSelection == null || this.state.creatingGame) {
-      buttonCssClass += ' unavailable'
-      handleSubmitClick = () => {}
-    }
-
-    let whiteButtonSpan = (
-      <span onClick={selectWhite}>
-        <input
-          type="radio"
-          checked={this.state.colorSelection === 'white'}
-        />
-        &nbsp; White
-      </span>
-    )
-
-    let blackButtonSpan = (
-      <span onClick={selectBlack}>
-        <input
-          type="radio"
-          checked={this.state.colorSelection === 'black'}
-        />
-        &nbsp; Black
-      </span>
-    )
-
+    let toggleAccordion = () => { this.toggleAccordion() }
     let accordion = null
-    let cssToggle = 'hidden button'
-    let handleDivClick = () => { toggleAccordion() }
+    let cssToggle = 'hidden'
+    let faClass = "fa fa-plus-square-o fa-lg"
     if (this.state.expanded) {
-      handleDivClick = () => {}
+      faClass = "fa fa-minus-square-o fa-lg"
       cssToggle = ''
+      let selectWhite = () => { this.handleRadioClick('white') }
+      let selectBlack = () => { this.handleRadioClick('black') }
+      let buttonCssClass = ' button'
+      let handleSubmitClick = () => { this.handleSubmit() }
+      if (this.state.colorSelection == null || this.state.creatingGame) {
+        buttonCssClass += ' disabled'
+        handleSubmitClick = () => {}
+      }
+
+      let whiteButtonSpan = (
+        <span onClick={selectWhite}>
+          <input
+            type="radio"
+            checked={this.state.colorSelection === 'white'}
+          />
+          &nbsp; White
+        </span>
+      )
+
+      let blackButtonSpan = (
+        <span onClick={selectBlack}>
+          <input
+            type="radio"
+            checked={this.state.colorSelection === 'black'}
+          />
+          &nbsp; Black
+        </span>
+      )
+
       accordion = (
         <div>
           <div className="game-info-text">
@@ -95,23 +102,21 @@ class NewGameFormAccordion extends Component {
                 Create Game
               </div>
             </div>
-            <div className="left">
+            {/* <div className="left">
               <div className="button" onClick={toggleAccordion}>
                 Collapse
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )
     }
 
     return (
-      <div
-        className={`row game-tile new-game-form-container panel ${cssToggle}`}
-        onClick={handleDivClick}
-      >
-        <h4 className={`games-list-header`} >
-          Create A New Game
+      <div className={`row game-tile new-game-form-container panel ${cssToggle}`}>
+        <h4 className={`games-list-header`}>
+          Create A New Game &nbsp;
+          <i className={faClass} aria-hidden="true" onClick={toggleAccordion} />
         </h4>
         {accordion}
       </div>

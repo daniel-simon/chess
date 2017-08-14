@@ -9,6 +9,7 @@ gem 'jquery-rails'
 gem 'foundation-rails'
 gem 'bcrypt', '~> 3.1.7'
 gem 'redis'
+gem 'font-awesome-sass'
 
 group :development do
   gem 'listen', '~> 3.0.5'

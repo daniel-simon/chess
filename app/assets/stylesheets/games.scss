@@ -120,9 +120,17 @@ body {
     &.new-game-form-container {
       background-color: $new-game-form-bg-color;
       margin-top: 1em;
-      &.hidden:hover{
-        background-color: lighten($new-game-form-bg-color, 10%);
+      .fa {
+        color: black;
+        &:hover {
+          color: lighten(black, 35%);
+          opacity: 1;
+        }
       }
+      // .fa-background {
+      //   &:hover {
+      //   }
+      // }
     }
     h2 {
       color: black;
@@ -144,6 +152,10 @@ body {
         // border-color: $game-tile-your-turn-border-color;
         background-color: $game-tile-your-turn-bg-color;
       }
+    }
+    .your-turn-text {
+      font-size: 1.4em;
+      font-style: italic bold;
     }
     .game-info-text {
       p {

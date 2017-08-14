@@ -99,7 +99,6 @@ class GameShow extends Component {
       let opponentName = this.state.playerData.opponent.username
       let opponentColor = this.state.playerData.opponent.color
       let myName = this.state.playerData.user.username
-      // let myColor = this.state.myColor
       let gameId = this.props.params.id
       let toggleActivePlayer = () => { this.toggleActivePlayer(gameId) }
       board = <Board

@@ -12,12 +12,12 @@ const GamePlaybackButtonsContainer = props => {
   let rewindCss = ''
   let forwardCss = ''
   if (props.upToDate) {
-    forwardCss = 'maxed'
+    forwardCss = 'disabled '
   // } else {
   //   forwardCss = 'catch-up'
   }
   if (props.displayedStateIndex === 0) {
-    rewindCss = 'maxed'
+    rewindCss = 'disabled '
   }
   return(
     <div className="small-6 text-center playback-buttons-container small-centered columns">
