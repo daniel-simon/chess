@@ -16,10 +16,10 @@ class SessionsController < ApplicationController
       redirect_to games_path
     else
       errors = ''
-      if login_params[:username].blank?
+      if login_params[:username].strip.blank?
         errors += "Please enter a username. "
       end
-      if login_params[:password].blank?
+      if login_params[:password].strip.blank?
         errors += "Please enter a password. "
       end
       if !(login_params[:username].strip.blank? || login_params[:password].strip.blank?)
