@@ -26,6 +26,7 @@ class SessionsController < ApplicationController
         errors += "Invalid username or password."
       end
       flash[:alert] = errors
+      render :new
     end
   end
 
