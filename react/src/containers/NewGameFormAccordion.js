@@ -14,10 +14,10 @@ class NewGameFormAccordion extends Component {
   }
 
   handleSubmit () {
-    this.setState({ creatingGame: true })
+    this.setState({ creatingGame: true, expanded: false })
     let payload = {
       postRequest: {
-        creatorColor: 'white'
+        creatorColor: this.state.colorSelection
       }
     }
     fetch(`/api/v1/games/`, {
@@ -27,10 +27,7 @@ class NewGameFormAccordion extends Component {
     })
     .then(response => {
       if (response.ok) {
-        debugger
         this.setState({ creatingGame: false })
-        this.props.refreshList()
-        debugger
       } else {
         let errorMessage = `${response.status} (${response.statusText})`
         throw new Error(errorMessage)
@@ -48,12 +45,13 @@ class NewGameFormAccordion extends Component {
   }
 
   render () {
-    let toggleAccordion = () => { this.toggleAccordion() }
+    let plusIcon = 'fa fa-plus-square-o fa-lg'
+    let minusIcon = 'fa fa-minus-square-o fa-lg'
     let accordion = null
     let cssToggle = 'hidden'
-    let faClass = "fa fa-plus-square-o fa-lg"
+    let faClass = plusIcon
     if (this.state.expanded) {
-      faClass = "fa fa-minus-square-o fa-lg"
+      faClass = minusIcon
       cssToggle = ''
       let selectWhite = () => { this.handleRadioClick('white') }
       let selectBlack = () => { this.handleRadioClick('black') }
@@ -116,7 +114,7 @@ class NewGameFormAccordion extends Component {
       <div className={`row game-tile new-game-form-container panel ${cssToggle}`}>
         <h4 className={`games-list-header`}>
           Create A New Game &nbsp;
-          <i className={faClass} aria-hidden="true" onClick={toggleAccordion} />
+          <i className={faClass} aria-hidden="true" onClick={this.toggleAccordion} />
         </h4>
         {accordion}
       </div>
