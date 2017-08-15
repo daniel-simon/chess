@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 
 class BackButton extends Component {
   constructor (props) {

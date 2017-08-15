@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import NewGameForm from './NewGameForm'
+import NewGameFormAccordion from './NewGameFormAccordion'
 import BackButton from '../components/BackButton'
 import GamesListContainer from './GamesListContainer'
 
@@ -8,14 +8,52 @@ class GamesIndex extends Component {
     super(props)
     this.state = {
       fetched: false,
+      pendingGames: [],
       activeGames: [],
       availableGames: [],
+      myId: null
     }
     this.loadGamesList = this.loadGamesList.bind(this)
+    this.handleCreateGame = this.handleCreateGame.bind(this)
+  }
+
+  handleCreateGame () {
+    this.loadGamesList()
+    console.log(`sent cue`)
+    App.gamesIndexChannel.send({
+      type: "new_game",
+      senderId: this.state.myId,
+    })
   }
 
   componentDidMount () {
     this.loadGamesList()
+    this.subscribeToGamesIndexChannel()
+  }
+
+  subscribeToGamesIndexChannel () {
+    let loadGamesList = () => { this.loadGamesList() }
+    App.gamesIndexChannel = App.cable.subscriptions.create(
+      {
+        channel: "GamesIndexChannel"
+      },
+      {
+        connected: () => console.log("GamesIndexChannel connected"),
+        disconnected: () => console.log("GamesIndexChannel disconnected"),
+        received: (fetchCue) => {
+          console.log(`recieved fetch cue: ${JSON.stringify(fetchCue)}`)
+          let myId = this.state.myId
+          let shouldListRefresh = (
+            (fetchCue.type === "new_game" && fetchCue.senderId !== myId)
+            || (fetchCue.type === "new_move" && fetchCue.opponent_id === myId)
+            || (fetchCue.type === "start_game" && fetchCue.creator_id === myId)
+          )
+          if (shouldListRefresh) {
+            loadGamesList()
+          }
+        }
+      }
+    )
   }
 
   loadGamesList () {
@@ -36,6 +74,7 @@ class GamesIndex extends Component {
         pendingGames: response.games_index_data.pending_games,
         activeGames: response.games_index_data.active_games,
         availableGames: response.games_index_data.available_games,
+        myId: response.games_index_data.user_id,
       })
     })
     .catch(error => console.error(error.message))
@@ -43,14 +82,12 @@ class GamesIndex extends Component {
 
   render () {
     let activeGamesList, availableGamesList, pendingGamesList
-    let gamesListFoundationClass = ''
     let loadingHeader = (
       <h2 className="games-list-header loading-text">
         Loading...
       </h2>
     )
     if (this.state.fetched) {
-      gamesListFoundationClass = "small-10 small-centered columns"
       loadingHeader = null
       pendingGamesList = (
         <GamesListContainer
@@ -71,17 +108,19 @@ class GamesIndex extends Component {
         />
       )
     }
-    let refreshList = () => { this.loadGamesList() }
+
     return(
-      <div>
-        <div className={gamesListFoundationClass}>
-          <NewGameForm
-            refreshList={refreshList}
-          />
-          {loadingHeader}
-          {pendingGamesList}
-          {activeGamesList}
-          {availableGamesList}
+      <div className="row">
+        <div className="row">
+          <div className="small-10 small-centered medium-4 medium-end medium-right columns">
+            <NewGameFormAccordion handleCreateGame={this.handleCreateGame} />
+          </div>
+          <div className="small-10 small-centered medium-8 columns">
+            {loadingHeader}
+            {pendingGamesList}
+            {activeGamesList}
+            {availableGamesList}
+          </div>
         </div>
       </div>
     )

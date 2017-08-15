@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Piece = props => {
 
@@ -8,7 +8,7 @@ const Piece = props => {
     <div className={`${props.color} piece text-center`}>
       <img src={sprite} />
     </div>
-  );
+  )
 }
 
-export default Piece;
+export default Piece

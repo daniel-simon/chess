@@ -31,7 +31,7 @@ $main-background-color: #867056;
 $new-game-form-bg-color: #bfa88a;
 $pending-game-bg-color: #99b5b4;
 $game-tile-your-turn-bg-color: #84d0e8;
-$active-game-tile-opponents-turn-bg-color: #47a6b3;
+$active-game-tile-opponents-turn-bg-color: #94c3cb;
 $game-created-color: black;
 $time-created-color: black;
 
@@ -116,16 +116,28 @@ body {
     position: sticky;
   }
   .game-tile {
+    background-color: $pending-game-bg-color;
+    &.new-game-form-container {
+      background-color: $new-game-form-bg-color;
+      margin-top: 1em;
+      .fa {
+        color: black;
+        &:hover {
+          color: lighten(black, 35%);
+          opacity: 1;
+        }
+      }
+      // .fa-background {
+      //   &:hover {
+      //   }
+      // }
+    }
     h2 {
       color: black;
       font-size: 1em;
     }
     border-color: black;
     border-width: 2px;
-    background-color: $pending-game-bg-color;
-    &.new-game-form-container {
-      background-color: $new-game-form-bg-color;
-    }
     $padding-v: 10px;
     $padding-h: 40px;
     padding-top: $padding-v;
@@ -140,6 +152,10 @@ body {
         // border-color: $game-tile-your-turn-border-color;
         background-color: $game-tile-your-turn-bg-color;
       }
+    }
+    .your-turn-text {
+      font-size: 1.4em;
+      font-style: italic bold;
     }
     .game-info-text {
       p {

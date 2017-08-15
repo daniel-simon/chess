@@ -8,7 +8,7 @@ class GameChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def receive(move)
-    ActionCable.server.broadcast("game_#{params[:game_id]}", move)
+  def receive(fetch_cue)
+    ActionCable.server.broadcast("game_#{params[:game_id]}", fetch_cue)
   end
 end

@@ -1,5 +1,5 @@
-$font-family-sans-serif: 'Zilla Slab', sans-serif;
-$font-family-serif: 'Zilla Slab', serif;
+@import "font-awesome-sprockets";
+@import "font-awesome";
 $main-background-color: #a9cbd2;
 $button-padding-h: 0.9em;
 $button-padding-v: 0.7em;
@@ -8,7 +8,9 @@ $join-button-font-color: #fff;
 $join-button-hover-color: #20aede;
 $join-button-hover-font-color: #fff;
 
-nav {
+nav, div.alert-box {
+  margin-left: -20px;
+  margin-right: -20px;
 }
 
 body {
@@ -20,6 +22,9 @@ body {
   .title-area {
     font-size: 36px;
     margin-left: 0.4em !important;
+    a {
+      color: #000;
+    }
   }
   // font-family: $font-family-serif;
   background-color: $main-background-color;
@@ -39,6 +44,9 @@ body {
     &:hover {
       background-color: $join-button-hover-color;
       color: $join-button-hover-font-color;
+    }
+    &.secondary:hover{
+      background-color: rgb(95, 154, 176);
     }
   }
 }
