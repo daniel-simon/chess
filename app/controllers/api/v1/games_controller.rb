@@ -2,7 +2,11 @@ class Api::V1::GamesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    user = authorize_user
+    if current_user
+      user = current_user
+    else
+      return render status: 403
+    end
     games = {
       pending_games: pending_games(user),
       active_games: active_games(user),
@@ -14,7 +18,11 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def show
-    user = authorize_user
+    if current_user
+      user = current_user
+    else
+      return render status: 403
+    end
     game_model = Game.find(params_game_id)
     unless game_model.started
       if game_model.creator_id == user.id
@@ -59,7 +67,11 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def update
-    user = authorize_user
+    if current_user
+      user = current_user
+    else
+      return render status: 403
+    end
     game_update_request_hash = JSON.parse(request.body.read)["patchRequest"]
     game_model = Game.find(params_game_id)
     case game_update_request_hash["patchType"]
@@ -72,7 +84,11 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def create
-    user = authorize_user
+    if current_user
+      user = current_user
+    else
+      return render status: 403
+    end
     create_game_request_hash = JSON.parse(request.body.read)["postRequest"]
     new_game = Game.new(creator: user)
     if new_game.save
@@ -83,14 +99,6 @@ class Api::V1::GamesController < ApplicationController
   end
 
   private
-
-  def authorize_user
-    if current_user
-      return current_user
-    else
-      return render status: 403
-    end
-  end
 
   def join_and_begin_game(user, game_model)
     game_model.update(joiner_id: user.id, started: true, active_player_id: game_model.white_id)
