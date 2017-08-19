@@ -14,7 +14,7 @@ class NewGameFormAccordion extends Component {
   }
 
   handleSubmit () {
-    this.setState({ creatingGame: true, expanded: false })
+    this.setState({ creatingGame: true, colorSelection: null })
     let payload = {
       postRequest: {
         creatorColor: this.state.colorSelection
@@ -48,7 +48,7 @@ class NewGameFormAccordion extends Component {
   render () {
     let plusIcon = 'fa fa-plus-square-o fa-lg'
     let minusIcon = 'fa fa-minus-square-o fa-lg'
-    let accordion = null
+    let accordionBody = null
     let cssToggle = 'hidden'
     let faClass = plusIcon
     if (this.state.expanded) {
@@ -64,7 +64,7 @@ class NewGameFormAccordion extends Component {
       }
 
       let whiteButtonSpan = (
-        <span onClick={selectWhite}>
+        <span className="color-selection-radio" onClick={selectWhite}>
           <input
             type="radio"
             checked={this.state.colorSelection === 'white'}
@@ -74,7 +74,7 @@ class NewGameFormAccordion extends Component {
       )
 
       let blackButtonSpan = (
-        <span onClick={selectBlack}>
+        <span className="color-selection-radio" onClick={selectBlack}>
           <input
             type="radio"
             checked={this.state.colorSelection === 'black'}
@@ -83,9 +83,9 @@ class NewGameFormAccordion extends Component {
         </span>
       )
 
-      accordion = (
+      accordionBody = (
         <div>
-          <div className="game-info-text">
+          <div className="new-game-form-accordion">
             <p className="row">
               Choose your color:
             </p>
@@ -107,12 +107,14 @@ class NewGameFormAccordion extends Component {
     }
 
     return (
-      <div className={`row game-tile new-game-form-container panel ${cssToggle}`}>
-        <h4 className={`games-list-header`}>
-          Create A New Game &nbsp;
-          <i className={faClass} aria-hidden="true" onClick={this.toggleAccordion} />
+      <div className={`row game-tile new-game-form-container panel text-center ${cssToggle}`}>
+        <h4 className="accordion-title button" onClick={this.toggleAccordion}>
+          <i className={faClass} aria-hidden="true" />
+          &nbsp; Create A New Game
         </h4>
-        {accordion}
+        <div className="accordion-body">
+          {accordionBody}
+        </div>
       </div>
     )
   }

@@ -11,7 +11,7 @@ class GamesIndex extends Component {
       pendingGames: [],
       activeGames: [],
       availableGames: [],
-      myId: null
+      myId: null,
     }
     this.loadGamesList = this.loadGamesList.bind(this)
     this.handleCreateGame = this.handleCreateGame.bind(this)
@@ -19,7 +19,6 @@ class GamesIndex extends Component {
 
   handleCreateGame () {
     this.loadGamesList()
-    console.log(`sent cue`)
     App.gamesIndexChannel.send({
       type: "new_game",
       senderId: this.state.myId,
@@ -112,7 +111,7 @@ class GamesIndex extends Component {
     return(
       <div className="row">
         <div className="row">
-          <div className="small-10 small-centered medium-4 medium-end medium-right columns">
+          <div className="small-10 small-centered medium-8 medium-end medium-right columns">
             <NewGameFormAccordion handleCreateGame={this.handleCreateGame} />
           </div>
           <div className="small-10 small-centered medium-8 columns">
