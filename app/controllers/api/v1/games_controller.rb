@@ -90,7 +90,14 @@ class Api::V1::GamesController < ApplicationController
       return render status: 403
     end
     create_game_request_hash = JSON.parse(request.body.read)["postRequest"]
+    creator_color = create_game_request_hash["creatorColor"]
     new_game = Game.new(creator: user)
+    case creator_color
+    when 'white'
+      new_game.white_id = user.id
+    when 'black'
+      new_game.black_id = user.id
+    end
     if new_game.save
       render json: { new_game: new_game }, adapter: :json
     else
@@ -101,7 +108,17 @@ class Api::V1::GamesController < ApplicationController
   private
 
   def join_and_begin_game(user, game_model)
-    game_model.update(joiner_id: user.id, started: true, active_player_id: game_model.white_id)
+    update_hash = {
+      joiner_id: user.id,
+      started: true,
+      active_player_id: game_model.white_id,
+    }
+    if game_model.white_id
+      update_hash[:black_id] = user.id
+    else
+      update_hash[:white_id] = user.id
+    end
+    game_model.update(update_hash)
     ActionCable.server.broadcast("games_index", { type: "start_game", creator_id: game_model.creator_id })
   end
 
