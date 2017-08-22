@@ -69,7 +69,7 @@ class NewGameFormAccordion extends Component {
             type="radio"
             checked={this.state.colorSelection === 'white'}
           />
-          &nbsp; White
+          <img src={require('../sprites/set1/whiteking.png')} />
         </span>
       )
 
@@ -79,7 +79,7 @@ class NewGameFormAccordion extends Component {
             type="radio"
             checked={this.state.colorSelection === 'black'}
           />
-          &nbsp; Black
+          <img src={require('../sprites/set1/blackking.png')} />
         </span>
       )
 
@@ -108,10 +108,10 @@ class NewGameFormAccordion extends Component {
 
     return (
       <div className={`row game-tile new-game-form-container panel text-center ${cssToggle}`}>
-        <h4 className="accordion-title button" onClick={this.toggleAccordion}>
+        <div className="accordion-title button" onClick={this.toggleAccordion}>
           <i className={faClass} aria-hidden="true" />
           &nbsp; Create A New Game
-        </h4>
+        </div>
         <div className="accordion-body">
           {accordionBody}
         </div>

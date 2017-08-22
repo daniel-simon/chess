@@ -171,15 +171,13 @@ class Api::V1::GamesController < ApplicationController
           :show_legal_moves,
           :updated_at,
           :creator_id,
-          :active_player_id
+          :active_player_id,
+          :white_id,
+          :black_id
         ]
       )
-      active_games[i]['white_id'] = game_model.white_id
-      active_games[i]['black_id'] = game_model.black_id
-
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
       active_games[i]['moves_count'] = game_model.moves.count
-
       opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
       active_games[i]['opponent_id'] = opponent.id
       active_games[i]['opponent_username'] = opponent.username
@@ -197,5 +195,4 @@ class Api::V1::GamesController < ApplicationController
   def params_game_id
     params.require(:id)
   end
-
 end
