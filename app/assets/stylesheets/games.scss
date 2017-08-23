@@ -53,6 +53,9 @@ body {
     margin-right: auto;
   }
   .button {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     &.unavailable {
       background-color: #555;
       &:hover{
@@ -120,13 +123,30 @@ body {
     &.new-game-form-container {
       background-color: $new-game-form-bg-color;
       margin-top: 1em;
-      .fa {
-        color: black;
-        &:hover {
-          color: lighten(black, 35%);
-          opacity: 1;
-        }
+      .color-selection-radio:hover {
+        color: lighten(black, 35%);
+        opacity: 1;
       }
+      .accordion-body {
+        text-align: left;
+      }
+      // .accordion-title {
+        // border: 1px solid black;
+        // $bg-color: #ac8862;
+        // $padding-h: 1px;
+        // border-radius: 8px;
+        // padding-top: 4px;
+        // padding-bottom: 2px;
+        // padding-left: $padding-h;
+        // padding-right: $padding-h;
+        // background-color: $bg-color;
+        // $margin-h: 2.8em;
+        // margin-left: $margin-h;
+        // margin-right: $margin-h;
+        // &:hover {
+        //   background-color: lighten($bg-color, 4%)
+        // }
+      // }
       // .fa-background {
       //   &:hover {
       //   }
@@ -162,6 +182,16 @@ body {
         font-size: 1.4em;
       }
     }
+    .new-game-form-accordion {
+      p {
+        font-size: 1.4em;
+      }
+      // p, h2, h4 {
+      //   -webkit-user-select: none;
+      //   -moz-user-select: none;
+      //   -ms-user-select: none;
+      // }
+    }
     .game-created-by {
       color: black;
     }
@@ -173,6 +203,9 @@ body {
   .piece {
     position: relative;
     top: 15px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
   .square {
     font-size: 14px; // <-- temporary
