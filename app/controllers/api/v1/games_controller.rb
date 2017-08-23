@@ -13,8 +13,7 @@ class Api::V1::GamesController < ApplicationController
       available_games: available_games(user),
       user_id: user.id
     }
-
-    render json: { games_index_data: games }, adapter: :json
+    return render json: { games_index_data: games }, adapter: :json
   end
 
   def show
@@ -24,14 +23,6 @@ class Api::V1::GamesController < ApplicationController
       return render status: 403
     end
     game_model = Game.find(params_game_id)
-    unless game_model.started
-      if game_model.creator_id == user.id
-        flash[:alert] = "Can't join a game that you also created"
-        return redirect_to games_path
-      else
-        join_and_begin_game(user, game_model)
-      end
-    end
     white = User.find(game_model.white_id)
     black = User.find(game_model.black_id)
     if [white.id, black.id].include?(user.id)
@@ -80,6 +71,22 @@ class Api::V1::GamesController < ApplicationController
       if game_model.update(active_player_id: active_player_id)
         render json: { updated_game: game_model.serializable_hash }, adapter: :json
       end
+    when "join-game"
+      update_hash = {
+        joiner_id: user.id,
+        started: true,
+      }
+      if game_model.white_id.nil?
+        update_hash[:white_id] = user.id
+        update_hash[:active_player_id] = user.id
+      else
+        update_hash[:black_id] = user.id
+        update_hash[:active_player_id] = game_model.white_id
+      end
+      if game_model.update(update_hash)
+        ActionCable.server.broadcast("games_index", { type: "start_game", creator_id: game_model.creator_id })
+        return redirect_to game_path(game_model)
+      end
     end
   end
 
@@ -99,28 +106,13 @@ class Api::V1::GamesController < ApplicationController
       new_game.black_id = user.id
     end
     if new_game.save
-      render json: { new_game: new_game }, adapter: :json
+      return render json: { new_game: new_game }, adapter: :json
     else
-      render status: 422
+      return render status: 422
     end
   end
 
   private
-
-  def join_and_begin_game(user, game_model)
-    update_hash = {
-      joiner_id: user.id,
-      started: true,
-      active_player_id: game_model.white_id,
-    }
-    if game_model.white_id
-      update_hash[:black_id] = user.id
-    else
-      update_hash[:white_id] = user.id
-    end
-    game_model.update(update_hash)
-    ActionCable.server.broadcast("games_index", { type: "start_game", creator_id: game_model.creator_id })
-  end
 
   def available_games(user)
     games_list = non_started_games
@@ -144,7 +136,9 @@ class Api::V1::GamesController < ApplicationController
           :id,
           :show_legal_moves,
           :created_at,
-          :creator_id
+          :creator_id,
+          :white_id,
+          :black_id
         ]
       )
       non_started_games[i]["creator_username"] = User.find(game_model.creator_id).username
@@ -176,12 +170,15 @@ class Api::V1::GamesController < ApplicationController
           :black_id
         ]
       )
+
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
+
       active_games[i]['moves_count'] = game_model.moves.count
       opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
       active_games[i]['opponent_id'] = opponent.id
       active_games[i]['opponent_username'] = opponent.username
     end
+
 
     my_turn_games = active_games.select { |game_hash| game_hash["my_turn"] }
     my_turn_games.sort_by! { |game_hash| game_hash["updated_at"] }

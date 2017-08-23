@@ -4,26 +4,24 @@ import { Link } from 'react-router'
 const GameTile = props => {
   let showMovesText = props.data.show_legal_moves ? 'enabled' : 'disabled'
   let gameId = props.data.id
+  let opponentName = ''
   let opponentHeader = ''
   let timestampText = ''
   let buttonText = ''
   let turnText = ''
   let movesCountText = ''
-  let whiteName, blackName
+  let enterGameButton = null
   let turnTextCssClass = 'turn-text-left'
   let tileCssClass = 'game-tile panel'
-
-  if (props.data.white_id === props.data.opponent_id) {
-    whiteName = props.data.opponent_username
-    blackName = 'You'
-  } else {
-    blackName = props.data.opponent_username
-    whiteName = 'You'
-  }
+  let whiteKingSprite = <img src={require('../sprites/set1/whiteking.png')} />
+  let blackKingSprite = <img src={require('../sprites/set1/blackking.png')} />
+  let opponentSprite
+  let userSprite
+  let playerColorsDiv
 
   switch (props.tileType) {
   case 'active':
-    let opponentName = props.data.opponent_username
+    opponentName = props.data.opponent_username
     opponentHeader = `Opponent: ${opponentName}`
     tileCssClass += ' active-game'
     if (props.data.my_turn) {
@@ -40,27 +38,82 @@ const GameTile = props => {
       timestampText = `Game started: ${props.data.timestampStr}`
       movesCountText = `No moves yet`
     }
-    buttonText = "Continue Game"
+    if (props.data.white_id === props.data.opponent_id) {
+      opponentSprite = whiteKingSprite
+      userSprite = blackKingSprite
+    } else {
+      opponentSprite = blackKingSprite
+      userSprite = whiteKingSprite
+    }
+    playerColorsDiv = (
+      <div>
+        You: {userSprite}
+        {opponentName}: {opponentSprite}
+      </div>
+    )
+    enterGameButton = (
+      <Link to={`/games/${gameId}`} className="button panel row">
+        Continue Game
+      </Link>
+    )
     break
   case 'available':
-    opponentHeader = `${props.data.creator_username}'s game`
+    let joinGame = () => {
+      let payload = {
+        patchRequest: {
+          patchType: "join-game"
+        }
+      }
+      fetch(`api/v1/games/${gameId}`, {
+        credentials: 'same-origin',
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url
+        } else {
+          let errorMessage = `${response.status} (${response.statusText})`
+          throw new Error(errorMessage)
+        }
+      })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
+    }
+    opponentName = props.data.creator_username
+    opponentHeader = `${opponentName}'s game`
     timestampText = `Created: ${props.data.timestampStr}`
     tileCssClass += ' available-game'
-    buttonText = "Join Game"
+    if (props.data.white_id === props.data.creator_id) {
+      opponentSprite = whiteKingSprite
+    } else {
+      opponentSprite = blackKingSprite
+    }
+    playerColorsDiv = (
+      <div>
+        {opponentName}: {opponentSprite}
+      </div>
+    )
+    enterGameButton = (
+      <div className="button panel row" onClick={joinGame}>
+        Join Game
+      </div>
+    )
     break
   case 'pending':
     opponentHeader = `Your game - no opponent yet`
     timestampText = `Created: ${props.data.timestampStr}`
     tileCssClass += ' available-game'
+    if (props.data.white_id === props.data.creator_id) {
+      userSprite = whiteKingSprite
+    } else {
+      userSprite = blackKingSprite
+    }
+    playerColorsDiv = (
+      <div>
+        You: {userSprite}
+      </div>
+    )
     break
-  }
-  let enterGameButton = (
-    <Link to={`/games/${gameId}`} className="button panel row">
-      {buttonText}
-    </Link>
-  )
-  if (props.tileType === 'pending') {
-    enterGameButton = null
   }
 
   return(
@@ -82,6 +135,9 @@ const GameTile = props => {
           </p>
         </div>
         <div className="row">
+          <div className="left">
+            {playerColorsDiv}
+          </div>
           <div className="right">
             {enterGameButton}
           </div>
