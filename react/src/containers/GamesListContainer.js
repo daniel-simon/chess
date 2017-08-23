@@ -10,7 +10,7 @@ const GamesListContainer = props => {
     switch (props.listType) {
     case 'active':
       headerText = 'Your Active Games'
-      timestampColumn = 'updated_at'
+      timestampColumn = 'relevant_timestamp'
       break
     case 'available':
       headerText = 'Available Games'
