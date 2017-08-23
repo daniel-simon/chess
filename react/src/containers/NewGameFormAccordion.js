@@ -14,7 +14,7 @@ class NewGameFormAccordion extends Component {
   }
 
   handleSubmit () {
-    this.setState({ creatingGame: true, colorSelection: null })
+    this.setState({ creatingGame: true })
     let payload = {
       postRequest: {
         creatorColor: this.state.colorSelection
@@ -27,7 +27,7 @@ class NewGameFormAccordion extends Component {
     })
     .then(response => {
       if (response.ok) {
-        this.setState({ creatingGame: false })
+        this.setState({ creatingGame: false, colorSelection: null })
         this.props.handleCreateGame()
       } else {
         let errorMessage = `${response.status} (${response.statusText})`

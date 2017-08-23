@@ -10,9 +10,6 @@ class Game < ApplicationRecord
 
   has_many :moves
 
-  validates :creator_id, inclusion: { in: [:white_id, :black_id] }
-  validates :joiner_id, inclusion: { in: [:white_id, :black_id, nil] }
-
   def captured_pieces(capturer_color)
     capture_moves = self.moves.select do |move|
       move.player_color == capturer_color &&
