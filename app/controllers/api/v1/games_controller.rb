@@ -157,29 +157,31 @@ class Api::V1::GamesController < ApplicationController
       game_model.creator_id == user.id || game_model.joiner_id == user.id
     end
     active_games = []
-
     active_game_models.each_with_index do |game_model, i|
-      active_games << game_model.serializable_hash(
+      game_hash = game_model.serializable_hash(
         only: [
           :id,
           :show_legal_moves,
-          :updated_at,
+          :created_at,
           :creator_id,
           :active_player_id,
           :white_id,
           :black_id
         ]
       )
-
+      active_games << game_hash
+      game_moves = active_game_models[i].moves
+      if game_moves.length > 0
+        active_games[i]['relevant_timestamp'] = game_moves.last.created_at
+      else
+        active_games[i]['relevant_timestamp'] = active_games[i]['created_at']
+      end
       active_games[i]['my_turn'] = (game_model.active_player_id == user.id)
-
       active_games[i]['moves_count'] = game_model.moves.count
       opponent = User.find( get_opponent_id(game_model.white_id, game_model.black_id) )
       active_games[i]['opponent_id'] = opponent.id
       active_games[i]['opponent_username'] = opponent.username
     end
-
-
     my_turn_games = active_games.select { |game_hash| game_hash["my_turn"] }
     my_turn_games.sort_by! { |game_hash| game_hash["updated_at"] }
     opponents_turn_games = active_games.select { |game_hash| !game_hash["my_turn"] }

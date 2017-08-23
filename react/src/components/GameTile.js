@@ -7,6 +7,30 @@ class GameTile extends Component {
     this.state = { joiningGame: false }
   }
 
+  joinGame () {
+    this.setState({ joiningGame: true })
+    let payload = {
+      patchRequest: {
+        patchType: "join-game"
+      }
+    }
+    fetch(`api/v1/games/${this.props.data.id}`, {
+      credentials: 'same-origin',
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url
+        this.setState({ joiningGame: false })
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        throw new Error(errorMessage)
+      }
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
+  }
+
   render () {
     let showMovesText = this.props.data.show_legal_moves ? 'enabled' : 'disabled'
     let gameId = this.props.data.id
@@ -16,7 +40,6 @@ class GameTile extends Component {
     let buttonText = ''
     let turnText = ''
     let movesCountText = ''
-    let enterGameButton = null
     let turnTextCssClass = 'turn-text-left'
     let tileCssClass = 'game-tile panel'
     let whiteKingSprite = <img src={require('../sprites/set1/whiteking.png')} />
@@ -24,6 +47,7 @@ class GameTile extends Component {
     let opponentSprite
     let userSprite
     let playerColorsDiv
+    let enterGameButton
 
     switch (this.props.tileType) {
     case 'active':
@@ -59,34 +83,11 @@ class GameTile extends Component {
       )
       enterGameButton = (
         <Link to={`/games/${gameId}`} className="button panel row">
-        Continue Game
-      </Link>
+          Continue Game
+        </Link>
       )
       break
     case 'available':
-      let joinGame = () => {
-        this.setState({ joiningGame: true })
-        let payload = {
-          patchRequest: {
-            patchType: "join-game"
-          }
-        }
-        fetch(`api/v1/games/${gameId}`, {
-          credentials: 'same-origin',
-          method: 'PATCH',
-          body: JSON.stringify(payload)
-        })
-        .then(response => {
-          if (response.redirected) {
-            window.location.href = response.url
-            this.setState({ joiningGame: false })
-          } else {
-            let errorMessage = `${response.status} (${response.statusText})`
-            throw new Error(errorMessage)
-          }
-        })
-        .catch(error => console.error(`Error in fetch: ${error.message}`))
-      }
       opponentName = this.props.data.creator_username
       opponentHeader = `${opponentName}'s game`
       timestampText = `Created: ${this.props.data.timestampStr}`
@@ -104,7 +105,7 @@ class GameTile extends Component {
       let isButtonDisabled = this.state.joiningGame === true
       let isButtonDisabledCss = isButtonDisabled ? ' disabled' : ''
       enterGameButton = (
-        <div className={`button panel row ${isButtonDisabledCss}`} onClick={joinGame}>
+        <div className={`button panel row ${isButtonDisabledCss}`} onClick={this.joinGame}>
           Join Game
         </div>
       )
@@ -123,6 +124,7 @@ class GameTile extends Component {
           You: {userSprite}
         </div>
       )
+      enterGameButton = null
       break
     }
 
