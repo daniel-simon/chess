@@ -127,8 +127,7 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def non_started_games
-    non_started_game_models = Game.where(started: false, finished: false)
-    non_started_game_models = non_started_game_models.sort_by { |game| game.created_at }
+    non_started_game_models = Game.where(started: false, finished: false).order(created_at: :desc)
     non_started_games = []
     non_started_game_models.each_with_index do |game_model, i|
       non_started_games << game_model.serializable_hash(
@@ -143,7 +142,7 @@ class Api::V1::GamesController < ApplicationController
       )
       non_started_games[i]["creator_username"] = User.find(game_model.creator_id).username
     end
-    return non_started_games.reverse
+    return non_started_games
   end
 
   def active_games(user)

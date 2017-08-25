@@ -5,6 +5,7 @@ class GameTile extends Component {
   constructor (props) {
     super(props)
     this.state = { joiningGame: false }
+    this.joinGame = this.joinGame.bind(this)
   }
 
   joinGame () {

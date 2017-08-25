@@ -39,9 +39,9 @@ let castleHelper = {
     let homeRow = gameConstants.firstRowFor(player)
     let occupant = boardState[col][homeRow]
     return (
-      occupant &&
-      occupant.type === 'rook' &&
-      occupant.color === player
+      occupant
+      && occupant.type === 'rook'
+      && occupant.color === player
     )
   },
 
@@ -50,7 +50,7 @@ let castleHelper = {
     let pathSquares = []
     let colStep = Math.sign(endCol - startCol)
     for (let col = startCol; col !== endCol + colStep; col += colStep) {
-      pathSquares.push([col, row])
+      pathSquares.push( [col, row] )
     }
     return pathSquares
   },
@@ -89,7 +89,7 @@ let castleHelper = {
         this.castlePathIsClear(player, 1, 3, boardState) &&
         this.castlePathIsSafe(player, 2, 4, boardState)
       ) {
-          rookSquares.push([0, homeRow])
+          rookSquares.push( [0, homeRow] )
       }
       if (
         this.rookIsHome(player, 7, boardState) &&
@@ -97,7 +97,7 @@ let castleHelper = {
         this.castlePathIsClear(player, 5, 6, boardState) &&
         this.castlePathIsSafe(player, 4, 6, boardState)
       ) {
-          rookSquares.push([7, homeRow])
+          rookSquares.push( [7, homeRow] )
       }
     }
     return rookSquares
